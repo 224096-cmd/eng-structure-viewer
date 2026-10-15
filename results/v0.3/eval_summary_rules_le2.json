@@ -1,0 +1,80 @@
+{
+  "ruleLevel": 2,
+  "n": 100,
+  "correct": 71,
+  "accuracy": 0.71,
+  "perPattern": {
+    "SV": {
+      "n": 23,
+      "correct": 18,
+      "acc": 0.782608695652174
+    },
+    "SVC": {
+      "n": 23,
+      "correct": 18,
+      "acc": 0.782608695652174
+    },
+    "SVO": {
+      "n": 34,
+      "correct": 26,
+      "acc": 0.7647058823529411
+    },
+    "SVOO": {
+      "n": 9,
+      "correct": 4,
+      "acc": 0.4444444444444444
+    },
+    "SVOC": {
+      "n": 11,
+      "correct": 5,
+      "acc": 0.45454545454545453
+    }
+  },
+  "confusion": {
+    "SV": {
+      "SV": 18,
+      "SVC": 0,
+      "SVO": 1,
+      "SVOO": 0,
+      "SVOC": 0,
+      "UNKNOWN": 4
+    },
+    "SVC": {
+      "SV": 0,
+      "SVC": 18,
+      "SVO": 0,
+      "SVOO": 0,
+      "SVOC": 0,
+      "UNKNOWN": 5
+    },
+    "SVO": {
+      "SV": 0,
+      "SVC": 1,
+      "SVO": 26,
+      "SVOO": 1,
+      "SVOC": 0,
+      "UNKNOWN": 6
+    },
+    "SVOO": {
+      "SV": 0,
+      "SVC": 0,
+      "SVO": 0,
+      "SVOO": 4,
+      "SVOC": 1,
+      "UNKNOWN": 4
+    },
+    "SVOC": {
+      "SV": 0,
+      "SVC": 0,
+      "SVO": 2,
+      "SVOO": 1,
+      "SVOC": 5,
+      "UNKNOWN": 3
+    }
+  },
+  "avgMs": 0.6880000000000003,
+  "dataset": "testset_eval.csv",
+  "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+  "evaluatedAt": "2026-10-15T11:50:02.886Z",
+  "testsetSize": 100
+}
