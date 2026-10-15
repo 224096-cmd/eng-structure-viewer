@@ -1,0 +1,51 @@
+id,level,sentence,pattern,grammar_tag
+L1-001,1,Birds fly.,SV,自動詞
+L1-002,1,The baby is sleeping.,SV,現在進行形
+L1-003,1,My father works in a hospital.,SV,前置詞句の修飾
+L1-004,1,She runs every morning.,SV,副詞句の修飾
+L1-005,1,We arrived at the station.,SV,自動詞＋前置詞句
+L1-006,1,I am a student.,SVC,be＋名詞
+L1-007,1,The flowers are beautiful.,SVC,be＋形容詞
+L1-008,1,He looks tired.,SVC,連結動詞＋形容詞
+L1-009,1,She became a teacher.,SVC,連結動詞＋名詞
+L1-010,1,This soup tastes good.,SVC,感覚動詞＋形容詞
+L1-011,1,I like music.,SVO,他動詞＋名詞
+L1-012,1,She plays the piano.,SVO,他動詞＋名詞句
+L1-013,1,We watched a movie last night.,SVO,副詞句の修飾
+L1-014,1,They bought a new car.,SVO,形容詞つき目的語
+L1-015,1,Tom knows her well.,SVO,副詞の修飾
+L1-016,1,My mother gave me a present.,SVOO,give A B
+L1-017,1,He showed us the picture.,SVOO,show A B
+L1-018,1,I will send you an email.,SVOO,助動詞＋SVOO
+L1-019,1,She told him the truth.,SVOO,tell A B
+L1-020,1,The teacher asked me a question.,SVOO,ask A B
+L1-021,1,Open the window.,SVO,命令文
+L1-022,1,Please sit down.,SV,命令文
+L1-023,1,The cat is on the table.,SV,be＋場所
+L1-024,1,He can swim fast.,SV,助動詞＋自動詞
+L1-025,1,I have a dog.,SVO,have 本動詞
+L1-026,1,We are happy.,SVC,be＋形容詞
+L1-027,1,The students study English.,SVO,複数主語
+L1-028,1,It rained yesterday.,SV,天候の it
+L1-029,1,She does not like coffee.,SVO,否定文
+L1-030,1,They were very kind.,SVC,副詞＋形容詞
+L2-001,2,She made him happy.,SVOC,make O C
+L2-002,2,We call him Ken.,SVOC,call O C
+L2-003,2,The news made me sad.,SVOC,make O C
+L2-004,2,I found the book interesting.,SVOC,find O C
+L2-005,2,They keep the room clean.,SVOC,keep O C
+L2-006,2,The window was broken.,SV,受動態
+L2-007,2,This book was written by a famous author.,SV,受動態＋by
+L2-008,2,I think that he is right.,SVO,that 節の目的語
+L2-009,2,She knows that we are busy.,SVO,that 節の目的語
+L2-010,2,I want to go home.,SVO,不定詞の目的語
+L2-011,2,He decided to study abroad.,SVO,不定詞の目的語
+L2-012,2,The man who lives next door is a doctor.,SVC,関係代名詞（主格）
+L2-013,2,This is the book which I bought yesterday.,SVC,関係代名詞（目的格）
+L2-014,2,Running is good for your health.,SVC,動名詞主語
+L2-015,2,I have finished my homework.,SVO,現在完了
+L2-016,2,The children were playing in the park.,SV,過去進行形
+L2-017,2,She has been to London twice.,SV,現在完了（経験）
+L2-018,2,We should leave now.,SV,助動詞
+L2-019,2,He is studying hard because he has an exam.,SV,because 節
+L2-020,2,If it rains tomorrow we will stay home.,SV,if 節

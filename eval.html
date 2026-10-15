@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>評価モード - English Structure Viewer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>評価モード</h1>
+    <p class="sub">テストセット（<code>data/testset.csv</code>）を一括解析し、文型の正解率・混同行列・処理時間を算出して CSV / JSON で保存します。</p>
+    <nav><a href="index.html">← 解析画面へ</a></nav>
+  </header>
+  <main>
+    <section class="card">
+      <div class="controls">
+        <label>有効にする規則のレベル
+          <select id="level">
+            <option value="1">1 のみ</option>
+            <option value="2" selected>1 + 2</option>
+            <option value="3">1 + 2 + 3</option>
+          </select>
+        </label>
+        <button id="run" class="primary">一括評価</button>
+        <button id="runAll">全レベル × 全規則のクロス評価</button>
+        <label>自分の CSV を読む <input type="file" id="file" accept=".csv"></label>
+      </div>
+      <p id="status" class="muted">読み込み中…</p>
+      <p class="small muted">CSV 形式: <code>id,level,sentence,pattern,grammar_tag</code>（pattern は SV / SVC / SVO / SVOO / SVOC）</p>
+    </section>
+
+    <section class="card" id="summary" style="display:none">
+      <h2>結果</h2>
+      <div id="metrics"></div>
+      <h3>文型ごとの正解率</h3>
+      <div id="perPattern"></div>
+      <h3>混同行列（行＝正解、列＝出力）</h3>
+      <div id="confusion"></div>
+      <div class="controls">
+        <button id="dlDetail">詳細 CSV を保存</button>
+        <button id="dlSummary">集計 JSON を保存</button>
+      </div>
+    </section>
+
+    <section class="card" id="crossSec" style="display:none">
+      <h2>クロス評価（行＝文のレベル、列＝有効規則）</h2>
+      <div id="cross"></div>
+      <button id="dlCross">クロス表 CSV を保存</button>
+    </section>
+
+    <section class="card" id="detailSec" style="display:none">
+      <h2>詳細（誤りは赤）</h2>
+      <div id="detail"></div>
+    </section>
+  </main>
+  <script src="vendor/compromise.js"></script>
+  <script type="module" src="eval.js"></script>
+</body>
+</html>

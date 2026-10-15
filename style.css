@@ -1,10 +1,65 @@
-:root { --bg:#f7f8fa; --fg:#1d2330; --accent:#2f5cff; --card:#ffffff; }
+:root {
+  --bg: #f4f6f9; --fg: #1d2330; --muted: #6b7280; --card: #fff; --accent: #2f5cff; --line: #dfe3ea;
+  /* 役割の色（色覚多様性に配慮し、色＋記号＋ラベルを併用） */
+  --S: #1f6fd6; --S-bg: #e3eefc;
+  --V: #d6342f; --V-bg: #fde6e5;
+  --O: #1e8f4e; --O-bg: #e2f5ea;
+  --C: #c7860c; --C-bg: #fdf2d5;
+  --M: #6b7280; --M-bg: #eef0f3;
+}
 * { box-sizing: border-box; }
-body { margin:0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; background:var(--bg); color:var(--fg); }
-header, main, footer { max-width: 760px; margin: 0 auto; padding: 16px; }
-h1 { margin: 0 0 4px; font-size: 1.5rem; }
-.sub { margin: 0; color:#555; }
-.card { background:var(--card); border-radius:12px; padding:16px; box-shadow:0 1px 4px rgba(0,0,0,.08); }
-textarea { width:100%; font-size:1rem; padding:8px; border:1px solid #ccc; border-radius:8px; }
-button { margin-top:8px; padding:8px 16px; font-size:1rem; border:0; border-radius:8px; background:var(--accent); color:#fff; cursor:pointer; }
-footer { color:#777; }
+body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Noto Sans JP", sans-serif; background: var(--bg); color: var(--fg); line-height: 1.6; }
+header, main, footer { max-width: 820px; margin: 0 auto; padding: 12px 16px; }
+h1 { margin: 0; font-size: 1.4rem; }
+.sub { margin: 2px 0 4px; color: var(--muted); }
+.ver { font-size: .8rem; background: #e5e7eb; padding: 1px 6px; border-radius: 6px; margin-left: 6px; }
+nav a { color: var(--accent); font-size: .9rem; }
+.card { background: var(--card); border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,.07); }
+.lab { font-weight: 600; font-size: .9rem; }
+textarea { width: 100%; font-size: 1rem; padding: 8px; border: 1px solid #ccc; border-radius: 8px; margin-top: 4px; font-family: inherit; }
+.controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 8px; }
+.controls label { font-size: .9rem; }
+select { font-size: .95rem; padding: 4px 6px; border-radius: 6px; }
+button { padding: 8px 14px; font-size: .95rem; border: 1px solid var(--line); border-radius: 8px; background: #fff; cursor: pointer; }
+button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+button:disabled { opacity: .5; cursor: default; }
+.muted { color: var(--muted); } .small { font-size: .85rem; }
+footer { color: var(--muted); text-align: center; }
+
+.legend { display: flex; flex-wrap: wrap; gap: 6px; font-size: .85rem; }
+.legend span { padding: 2px 8px; border-radius: 6px; border: 1px solid; }
+.legend .role-S { color: var(--S); background: var(--S-bg); }
+.legend .role-V { color: var(--V); background: var(--V-bg); }
+.legend .role-O { color: var(--O); background: var(--O-bg); }
+.legend .role-C { color: var(--C); background: var(--C-bg); }
+.legend .role-M { color: var(--M); background: var(--M-bg); border-style: dashed; }
+
+.sentence { border-top: 1px solid var(--line); padding: 10px 0; }
+.sentence-head { display: flex; gap: 10px; align-items: baseline; font-size: .85rem; color: var(--muted); flex-wrap: wrap; }
+.pattern-badge { font-weight: 700; color: #fff; background: #374151; padding: 1px 8px; border-radius: 6px; font-size: .85rem; }
+.time { margin-left: auto; }
+.tokens { font-size: 1.15rem; line-height: 2.6; margin-top: 4px; }
+.chunk { display: inline-block; padding: 0 4px; margin: 2px 2px; border-radius: 6px; border-bottom: 3px solid transparent; position: relative; }
+.chunk.role-S { background: var(--S-bg); border-bottom-color: var(--S); }
+.chunk.role-V { background: var(--V-bg); border-bottom-color: var(--V); }
+.chunk.role-O { background: var(--O-bg); border-bottom-color: var(--O); }
+.chunk.role-C { background: var(--C-bg); border-bottom-color: var(--C); }
+.chunk.role-M { background: var(--M-bg); border-bottom: 2px dashed var(--M); }
+.role-label { font-size: .65rem; font-weight: 700; margin-left: 2px; vertical-align: super; opacity: .85; }
+.role-S .role-label { color: var(--S); } .role-V .role-label { color: var(--V); } .role-O .role-label { color: var(--O); } .role-C .role-label { color: var(--C); } .role-M .role-label { color: var(--M); }
+.tok { cursor: pointer; border-radius: 4px; outline: none; }
+.tok:hover, .tok:focus { background: rgba(0,0,0,.08); }
+
+.card-pop { position: absolute; display: none; z-index: 10; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; box-shadow: 0 6px 20px rgba(0,0,0,.15); font-size: .85rem; max-width: 280px; }
+.cp-word { font-weight: 700; font-size: 1.05rem; margin-bottom: 4px; }
+.cp-row b { display: inline-block; min-width: 3em; color: var(--muted); font-weight: 600; }
+.cp-note { margin-top: 6px; color: var(--muted); border-top: 1px dashed var(--line); padding-top: 4px; }
+
+/* 評価ページ */
+table { border-collapse: collapse; width: 100%; font-size: .85rem; margin-top: 8px; }
+th, td { border: 1px solid var(--line); padding: 4px 6px; text-align: left; }
+th { background: #f0f2f5; }
+td.ok { color: var(--O); } td.ng { color: var(--V); font-weight: 600; }
+.metric { display: inline-block; background: #f0f2f5; padding: 6px 12px; border-radius: 8px; margin: 4px 6px 4px 0; }
+.metric b { font-size: 1.2rem; }
+@media (max-width: 480px) { .tokens { font-size: 1.05rem; } h1 { font-size: 1.2rem; } }

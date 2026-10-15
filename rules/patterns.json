@@ -1,0 +1,21 @@
+{
+  "_comment": "文型規則。core は修飾語（PP, ADVP）を除いた主要チャンク列。level 以下の規則のみ有効になる。上から順に照合し最初に一致した規則を採用する。",
+  "version": "0.2",
+  "rules": [
+    { "id": "SVC_be_adj",   "level": 1, "core": ["NP", "VP_be", "ADJP"],       "type": "SVC",  "roles": ["S", "V", "C"], "note": "be動詞＋形容詞の補語" },
+    { "id": "SVC_be_np",    "level": 1, "core": ["NP", "VP_be", "NP"],         "type": "SVC",  "roles": ["S", "V", "C"], "note": "be動詞＋名詞の補語（S＝C の関係）" },
+    { "id": "SV_be",        "level": 1, "core": ["NP", "VP_be"],               "type": "SV",   "roles": ["S", "V"],      "note": "be動詞＋場所などの修飾語（There is 構文を含む）" },
+    { "id": "SVC_link_adj", "level": 1, "core": ["NP", "VP:linking", "ADJP"],  "type": "SVC",  "roles": ["S", "V", "C"], "note": "look/become など連結動詞＋形容詞" },
+    { "id": "SVC_link_np",  "level": 1, "core": ["NP", "VP:linking", "NP"],    "type": "SVC",  "roles": ["S", "V", "C"], "note": "become など連結動詞＋名詞" },
+    { "id": "SVOC_adj",     "level": 2, "core": ["NP", "VP", "NP", "ADJP"],    "type": "SVOC", "roles": ["S", "V", "O", "C"], "note": "make O C（O＝C の関係）" },
+    { "id": "SVOC_naming",  "level": 2, "core": ["NP", "VP:naming", "NP", "NP"], "type": "SVOC", "roles": ["S", "V", "O", "C"], "note": "call/name/elect O C（O＝C の関係。動詞辞書で SVOO と区別）" },
+    { "id": "SVOO",         "level": 1, "core": ["NP", "VP", "NP", "NP"],      "type": "SVOO", "roles": ["S", "V", "O", "O"], "note": "give A B 型の二重目的語" },
+    { "id": "SVO",          "level": 1, "core": ["NP", "VP", "NP"],            "type": "SVO",  "roles": ["S", "V", "O"], "note": "他動詞＋目的語" },
+    { "id": "SV",           "level": 1, "core": ["NP", "VP"],                  "type": "SV",   "roles": ["S", "V"],      "note": "自動詞" },
+    { "id": "SV_passive",   "level": 2, "core": ["NP", "VP:passive"],          "type": "SV",   "roles": ["S", "V"],      "note": "受動態（be＋過去分詞）は SV として扱う" },
+    { "id": "IMP_VO",       "level": 1, "core": ["VP", "NP"],                  "type": "SVO",  "roles": ["V", "O"],      "note": "命令文（主語省略）" },
+    { "id": "IMP_V",        "level": 1, "core": ["VP"],                        "type": "SV",   "roles": ["V"],           "note": "命令文（主語省略）" }
+  ],
+  "modifiers": ["PP", "ADVP", "RELCL", "SUBCL"],
+  "roleJa": { "S": "主語", "V": "動詞", "O": "目的語", "C": "補語", "M": "修飾語" }
+}

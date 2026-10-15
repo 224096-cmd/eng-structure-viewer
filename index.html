@@ -9,20 +9,51 @@
 <body>
   <header>
     <h1>English Structure Viewer</h1>
-    <p class="sub">英文の文構造・品詞・訳語をブラウザ内で可視化する（卒業研究 v0.1）</p>
+    <p class="sub">英文の文構造（SVOC）・品詞・原形をブラウザ内だけで解析して表示します。<span class="ver">v0.2</span></p>
+    <nav><a href="eval.html">評価モード</a> · <a href="https://github.com/224096-cmd/eng-structure-viewer">GitHub</a></nav>
   </header>
+
   <main>
     <section class="card">
-      <h2>動作確認</h2>
-      <p id="status">JavaScript が読み込まれていません。</p>
-      <textarea id="input" rows="3" placeholder="英文を入力（v0.1 では単語数を数えるだけです）">The cat sat on the mat.</textarea>
-      <button id="run">解析</button>
-      <p id="result"></p>
+      <label for="input" class="lab">英文を入力</label>
+      <textarea id="input" rows="4">The students were studying English in the library. She made him happy. I gave her a book. He looks tired.</textarea>
+      <div class="controls">
+        <label>対象レベル
+          <select id="level">
+            <option value="1">1：中学（単文）</option>
+            <option value="2" selected>2：高校（複文・受動態・SVOC）</option>
+            <option value="3">3：入試（未実装・2と同じ）</option>
+          </select>
+        </label>
+        <button id="run" class="primary">解析</button>
+        <button id="download" disabled>結果を JSON で保存</button>
+      </div>
+      <p id="status" class="muted">読み込み中…</p>
+    </section>
+
+    <section class="card">
+      <div class="legend">
+        <span class="role-S">○ S 主語</span><span class="role-V">□ V 動詞</span><span class="role-O">△ O 目的語</span><span class="role-C">◇ C 補語</span><span class="role-M">… M 修飾語</span>
+      </div>
+      <p class="muted small">単語にカーソルを合わせる／タップすると、品詞・原形・役割が表示されます。色が見分けにくい場合も記号（○□△◇…）とラベルで判別できます。</p>
+      <div id="output"></div>
+    </section>
+
+    <section class="card">
+      <details>
+        <summary>解析の仕組み（簡単な説明）</summary>
+        <ol>
+          <li><b>品詞タグ付け</b>：各単語に名詞・動詞などのラベルを付ける（辞書と規則による処理。AI モデルは使わない）。</li>
+          <li><b>チャンク化</b>：品詞の並びから名詞句・動詞句・前置詞句などの「かたまり」を作る。</li>
+          <li><b>文型判定</b>：修飾語を除いた主要なかたまりの並びを、<code>rules/patterns.json</code> の規則と照合して 5 文型に分類する。「対象レベル」以下の規則だけを使う。</li>
+        </ol>
+      </details>
     </section>
   </main>
-  <footer>
-    <small>三重大学 教育学部 技術・ものづくり教育コース 卒業研究 / GitHub Pages 上で動作</small>
-  </footer>
-  <script src="app.js"></script>
+
+  <footer><small>GitHub Pages 上で動作・サーバ通信なし</small></footer>
+
+  <script src="vendor/compromise.js"></script>
+  <script type="module" src="app.js"></script>
 </body>
 </html>
