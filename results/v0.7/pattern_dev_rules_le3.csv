@@ -1,0 +1,170 @@
+﻿id,level,sentence,gold,pred,correct,ruleId,core,transforms,grammar_tag,timeMs
+L1-001,1,"Birds fly.",SV,SV,1,SV,"NP VP","","自動詞",2.22
+L1-002,1,"The baby is sleeping.",SV,SV,1,SV,"NP VP","","現在進行形",1.55
+L1-003,1,"My father works in a hospital.",SV,SV,1,SV,"NP VP","","前置詞句の修飾",1.54
+L1-004,1,"She runs every morning.",SV,SV,1,SV,"NP VP","","副詞句の修飾",0.83
+L1-005,1,"We arrived at the station.",SV,SV,1,SV,"NP VP","","自動詞＋前置詞句",0.85
+L1-006,1,"I am a student.",SVC,SVC,1,SVC_be_np,"NP VP_be NP","","be＋名詞",0.71
+L1-007,1,"The flowers are beautiful.",SVC,SVC,1,SVC_be_adj,"NP VP_be ADJP","","be＋形容詞",0.9
+L1-008,1,"He looks tired.",SVC,SVC,1,SVC_link_adj,"NP VP ADJP","","連結動詞＋形容詞",0.57
+L1-009,1,"She became a teacher.",SVC,SVC,1,SVC_link_np,"NP VP NP","","連結動詞＋名詞",0.87
+L1-010,1,"This soup tastes good.",SVC,SVC,1,SVC_link_adj,"NP VP ADJP","","感覚動詞＋形容詞",0.85
+L1-011,1,"I like music.",SVO,SVO,1,SVO,"NP VP NP","","他動詞＋名詞",0.76
+L1-012,1,"She plays the piano.",SVO,SVO,1,SVO,"NP VP NP","","他動詞＋名詞句",0.6
+L1-013,1,"We watched a movie last night.",SVO,SVO,1,SVO,"NP VP NP","","副詞句の修飾",0.79
+L1-014,1,"They bought a new car.",SVO,SVO,1,SVO,"NP VP NP","","形容詞つき目的語",0.65
+L1-015,1,"Tom knows her well.",SVO,SVO,1,SVO,"NP VP NP","","副詞の修飾",0.7
+L1-016,1,"My mother gave me a present.",SVOO,SVOO,1,SVOO,"NP VP NP NP","","give A B",1.15
+L1-017,1,"He showed us the picture.",SVOO,SVOO,1,SVOO,"NP VP NP NP","","show A B",0.61
+L1-018,1,"I will send you an email.",SVOO,SVOO,1,SVOO,"NP VP NP NP","","助動詞＋SVOO",0.99
+L1-019,1,"She told him the truth.",SVOO,SVOO,1,SVOO,"NP VP NP NP","","tell A B",0.65
+L1-020,1,"The teacher asked me a question.",SVOO,SVOO,1,SVOO,"NP VP NP NP","","ask A B",0.85
+L1-021,1,"Open the window.",SVO,SVO,1,IMP_VO,"VP NP","","命令文",0.86
+L1-022,1,"Please sit down.",SV,SV,1,IMP_V,"VP","","命令文",0.54
+L1-023,1,"The cat is on the table.",SV,SV,1,SV_be,"NP VP_be","","be＋場所",0.8
+L1-024,1,"He can swim fast.",SV,SV,1,SV,"NP VP","","助動詞＋自動詞",1.28
+L1-025,1,"I have a dog.",SVO,SVO,1,SVO,"NP VP NP","","have 本動詞",0.73
+L1-026,1,"We are happy.",SVC,SVC,1,SVC_be_adj,"NP VP_be ADJP","","be＋形容詞",0.69
+L1-027,1,"The students study English.",SVO,SVO,1,SVO,"NP VP NP","","複数主語",0.87
+L1-028,1,"It rained yesterday.",SV,SV,1,SV,"NP VP","","天候の it",0.47
+L1-029,1,"She does not like coffee.",SVO,SVO,1,SVO,"NP VP NP","","否定文",0.91
+L1-030,1,"They were very kind.",SVC,SVC,1,SVC_be_adj,"NP VP_be ADJP","","副詞＋形容詞",0.77
+L2-001,2,"She made him happy.",SVOC,SVOC,1,SVOC_adj,"NP VP NP ADJP","","make O C",0.61
+L2-002,2,"We call him Ken.",SVOC,SVOC,1,SVOC_naming,"NP VP NP NP","","call O C",0.69
+L2-003,2,"The news made me sad.",SVOC,SVOC,1,SVOC_adj,"NP VP NP ADJP","","make O C",0.64
+L2-004,2,"I found the book interesting.",SVOC,SVOC,1,SVOC_adj,"NP VP NP ADJP","","find O C",0.75
+L2-005,2,"They keep the room clean.",SVOC,SVOC,1,SVOC_adj,"NP VP NP ADJP","","keep O C",0.69
+L2-006,2,"The window was broken.",SV,SVC,0,SVC_be_adj,"NP VP_be ADJP","","受動態",0.76
+L2-007,2,"This book was written by a famous author.",SV,SV,1,SV_passive,"NP VP","","受動態＋by",2.38
+L2-008,2,"I think that he is right.",SVO,SVO,1,SVO,"NP VP NP","that_clause","that 節の目的語",1.5
+L2-009,2,"She knows that we are busy.",SVO,SVO,1,SVO,"NP VP NP","that_clause","that 節の目的語",0.99
+L2-010,2,"I want to go home.",SVO,SVO,1,SVO,"NP VP NP","","不定詞の目的語",0.97
+L2-011,2,"He decided to study abroad.",SVO,SVO,1,SVO,"NP VP NP","","不定詞の目的語",0.85
+L2-012,2,"The man who lives next door is a doctor.",SVC,SVC,1,SVC_be_np,"NP VP_be NP","relative_clause","関係代名詞（主格）",1.75
+L2-013,2,"This is the book which I bought yesterday.",SVC,SVC,1,SVC_be_np,"NP VP_be NP","relative_clause","関係代名詞（目的格）",1.54
+L2-014,2,"Running is good for your health.",SVC,SVC,1,SVC_be_adj,"NP VP_be ADJP","","動名詞主語",1.04
+L2-015,2,"I have finished my homework.",SVO,SVO,1,SVO,"NP VP NP","","現在完了",0.92
+L2-016,2,"The children were playing in the park.",SV,SV,1,SV,"NP VP","","過去進行形",1.32
+L2-017,2,"She has been to London twice.",SV,SV,1,SV_be,"NP VP_be","","現在完了（経験）",1.54
+L2-018,2,"We should leave now.",SV,SV,1,SV,"NP VP","","助動詞",3.83
+L2-019,2,"He is studying hard because he has an exam.",SV,SV,1,SV,"NP VP","subordinate_clause","because 節",1.89
+L2-020,2,"If it rains tomorrow we will stay home.",SV,SV,1,SV,"NP VP","subordinate_clause","if 節",1.25
+D1-031,1,"Do you play soccer?",SVO,SVO,1,SVO,"NP VP NP","negative_inversion+question_inversion","疑問文",0.75
+D1-032,1,"Does she like dogs?",SVO,SVO,1,SVO,"NP VP NP","negative_inversion+question_inversion","疑問文",0.87
+D1-033,1,"Is he a teacher?",SVC,SVC,1,SVC_be_np,"NP VP_be NP","negative_inversion+question_inversion_be","be 疑問文",0.53
+D1-034,1,"Are you ready?",SVC,SVC,1,SVC_be_adj,"NP VP_be ADJP","negative_inversion+question_inversion_be","be 疑問文",0.56
+D1-035,1,"Can you help me?",SVO,SVO,1,SVO,"NP VP NP","negative_inversion+question_inversion","助動詞疑問文",0.62
+D1-036,1,"Will you give me a hand?",SVOO,SVOO,1,SVOO,"NP VP NP NP","negative_inversion+question_inversion","助動詞疑問文＋SVOO",0.77
+D1-037,1,"Where do you live?",SV,SV,1,SV,"NP VP","question_inversion+wh_adverb","wh 疑問文（副詞）",0.61
+D1-038,1,"What did you buy?",SVO,SVO,1,SVO,"NP VP NP","question_inversion+wh_object","wh 疑問文（目的語）",0.86
+D1-039,1,"There is a cat under the chair.",SV,SV,1,THERE_be,"NP VP_be NP","","There is 構文",1.22
+D1-040,1,"There are many books in the room.",SV,SV,1,THERE_be,"NP VP_be NP","","There are 構文",1.39
+D1-041,1,"Ken and Yumi are students.",SVC,SVC,1,SVC_be_np,"NP VP_be NP","","等位接続の主語",1.45
+D1-042,1,"My mother and father like tea.",SVO,SVO,1,SVO,"NP VP NP","","等位接続の主語",1.28
+D1-043,1,"Please give me some water.",SVOO,SVOO,1,IMP_VOO,"VP NP NP","","命令文＋SVOO",0.89
+D1-044,1,"Show us your photos.",SVOO,SVOO,1,IMP_VOO,"VP NP NP","","命令文＋SVOO",0.84
+D1-045,1,"We studied all day.",SV,SV,1,SV,"NP VP","","時の名詞句 all",0.51
+D1-046,1,"They sang together.",SV,SV,1,SV,"NP VP","","副詞 together",0.44
+D1-047,1,"She lives alone.",SV,SV,1,SV,"NP VP","","副詞 alone",0.37
+D1-048,1,"I have seen such a thing.",SVO,SVO,1,SVO,"NP VP NP","","such＋名詞句",1.03
+D1-049,1,"He is sleeping now.",SV,SV,1,SV,"NP VP","","進行形",0.73
+D1-050,1,"Japanese is spoken here.",SV,SV,1,SV_passive,"NP VP","","言語名の主語＋受動態",0.7
+D2-021,2,"She likes playing the piano.",SVO,SVO,1,SVO,"NP VP NP","","動名詞の目的語",0.68
+D2-022,2,"He stopped talking.",SVO,SVO,1,SVO,"NP VP NP","","動名詞の目的語",0.49
+D2-023,2,"Reading is fun.",SVC,SVC,1,SVC_be_adj,"NP VP_be ADJP","","動名詞主語",0.6
+D2-024,2,"Cooking is my hobby.",SVC,SVC,1,SVC_be_np,"NP VP_be NP","","動名詞主語",0.51
+D2-025,2,"My mother let me go out.",SVOC,SVOC,1,SVOC_causative,"NP VP NP VP","","使役 let",1.05
+D2-026,2,"The teacher made us clean the room.",SVOC,SVOC,1,SVOC_causative_o,"NP VP NP VP NP","","使役 make",0.93
+D2-027,2,"I heard her sing a song.",SVOC,SVOC,1,SVOC_causative_o,"NP VP NP VP NP","","知覚動詞",1.18
+D2-028,2,"We saw them play soccer.",SVOC,SVOC,1,SVOC_causative_o,"NP VP NP VP NP","","知覚動詞",0.87
+D2-029,2,"She told me to wait.",SVOC,SVOC,1,SVOC_control,"NP VP NP NP","","tell O to do",0.77
+D2-030,2,"He wants me to help him.",SVOC,SVOC,1,SVOC_control,"NP VP NP NP","","want O to do",0.82
+D2-031,2,"They named the baby Emma.",SVOC,SVOC,1,SVOC_naming,"NP VP NP NP","","name O C",0.72
+D2-032,2,"We elected him captain.",SVOC,SVOC,1,SVOC_naming,"NP VP NP NP","","elect O C",0.57
+D2-033,2,"I think she is kind.",SVO,SVO,1,SVO,"NP VP NP","that_omitted","that 省略",0.82
+D2-034,2,"I hope you can come.",SVO,SVO,1,SVO,"NP VP NP","that_omitted","that 省略",0.71
+D2-035,2,"The girl playing the piano is Mary.",SVC,SVC,1,SVC_be_np,"NP VP_be NP","participle_modifier","分詞の後置修飾",1.08
+D2-036,2,"I have a friend living in Canada.",SVO,SVO,1,SVO,"NP VP NP","participle_modifier","分詞の後置修飾",1.23
+D2-037,2,"This is a letter written by my aunt.",SVC,SVC,1,SVC_be_np,"NP VP_be NP","participle_modifier","分詞の後置修飾",1.27
+D2-038,2,"It is easy to make this dish.",SVC,SVC,1,SVC_it_adj_inf,"NP VP_be ADJP NP","","形式主語 it",1.06
+D2-039,2,"I found it difficult to solve the problem.",SVOC,SVOC,1,SVOC_it_adj_inf,"NP VP NP ADJP NP","","形式目的語 it",0.97
+D2-040,2,"She takes care of her brother.",SVO,SVO,1,SVO,"NP VP NP","","句動詞",0.86
+D2-041,2,"He looked for his key.",SVO,SVO,1,SVO,"NP VP NP","","句動詞",0.71
+D2-042,2,"We know that he is honest.",SVO,SVO,1,SVO,"NP VP NP","that_clause","that 節",0.98
+D2-043,2,"She said that the movie was good.",SVO,SVO,1,SVO,"NP VP NP","that_clause","that 節",0.92
+D2-044,2,"Though it was late we kept walking.",SVO,SVO,1,SVO,"NP VP NP","subordinate_clause","though 節＋動名詞",1.17
+D2-045,2,"He made me a sandwich.",SVOO,SVOO,1,SVOO,"NP VP NP NP","","make A B",0.69
+D2-046,2,"I was told the news.",SVO,SVO,1,SVO_passive_retained,"NP VP NP","","受動態（SVOO の受動）",0.77
+D2-047,2,"What do you think about it?",SVO,SVO,1,SVO,"NP VP NP","question_inversion+wh_object","wh 疑問文＋前置詞句",0.78
+D2-048,2,"Who wrote this song?",SVO,SVO,1,SVO,"NP VP NP","wh_subject","wh 主語疑問文",0.74
+D2-049,2,"The dog was called Pochi.",SV,SV,1,SV_passive_naming,"NP VP NP","","受動態",0.84
+D2-050,2,"Music makes people happy.",SVOC,SVOC,1,SVOC_adj,"NP VP NP ADJP","","make O C",5.57
+D3-001,3,"I like tea and she likes coffee.",SVO,SVO,1,SVO,"NP VP NP","compound_sentence","重文（and）",1.8
+D3-002,3,"He studied hard but he failed the exam.",SV,SV,1,SV,"NP VP","compound_sentence","重文（but）",2.58
+D3-003,3,"You can take a bus or you can walk there.",SVO,SVO,1,SVO,"NP VP NP","compound_sentence","重文（or）",2.07
+D3-004,3,"Walking along the river I found a small cafe.",SVO,SVO,1,SVO,"NP VP NP","participial_construction","分詞構文（文頭）",1.79
+D3-005,3,"Written in simple English this book is easy to read.",SVC,SVC,1,SVC_adj_inf,"NP VP_be ADJP NP","participial_construction","分詞構文（文頭・過去分詞）",1.94
+D3-006,3,"She sat by the window reading a magazine.",SV,SV,1,SV,"NP VP","participial_construction","分詞構文（文末）",1.31
+D3-007,3,"This is the town where I was born.",SVC,SVC,1,SVC_be_np,"NP VP_be NP","relative_clause","関係副詞 where",1.23
+D3-008,3,"I remember the day when we first met.",SVO,SVO,1,SVO,"NP VP NP","relative_clause","関係副詞 when",1.12
+D3-009,3,"Tell me the reason why you were late.",SVOO,SVOO,1,IMP_VOO,"VP NP NP","relative_clause","関係副詞 why",1.61
+D3-010,3,"What he said is true.",SVC,SVC,1,SVC_be_adj,"NP VP_be ADJP","wh_clause","what 節の主語",1.06
+D3-011,3,"What I need now is a long rest.",SVC,SVC,1,SVC_be_np,"NP VP_be NP","wh_clause","what 節の主語",1.26
+D3-012,3,"I do not know where he lives.",SVO,SVO,1,SVO,"NP VP NP","wh_clause","間接疑問",0.98
+D3-013,3,"She asked me what I wanted.",SVOO,SVOO,1,SVOO,"NP VP NP NP","wh_clause","間接疑問",0.83
+D3-014,3,"He was so tired that he fell asleep.",SVC,SVC,1,SVC_be_adj,"NP VP_be ADJP","subordinate_clause","so that 構文",1.77
+D3-015,3,"The box was so heavy that I could not lift it.",SVC,SVC,1,SVC_be_adj,"NP VP_be ADJP","subordinate_clause","so that 構文",1.61
+D3-016,3,"Never have I seen such a beautiful sunset.",SVO,SVO,1,SVO,"NP VP NP","negative_inversion+question_inversion","倒置",1.32
+D3-017,3,"Little did he know the truth.",SVO,SVO,1,SVO,"NP VP NP","negative_inversion+question_inversion","倒置",1.05
+D3-018,3,"The man standing at the gate is my uncle.",SVC,SVC,1,SVC_be_np,"NP VP_be NP","participle_modifier","分詞の後置修飾",6.21
+D3-019,3,"I have a lot of things to do today.",SVO,SVO,1,SVO,"NP VP NP","","不定詞の形容詞的用法",1.77
+D3-020,3,"It was in Kyoto that I met her.",SV,SV,1,SV_be,"NP VP_be","cleft_clause","強調構文（前置詞句を強調）",5.74
+D3-021,3,"The book which she wrote last year became a best seller.",SVC,SVC,1,SVC_link_np,"NP VP NP","relative_clause","関係詞節＋連結動詞",2.02
+D3-022,3,"Having finished his work he went home.",SV,SV,1,SV,"NP VP","participial_construction","完了分詞構文",1.72
+D3-023,3,"If I were you I would accept the offer.",SVO,SVO,1,SVO,"NP VP NP","subordinate_clause","仮定法",1.53
+D3-024,3,"I wish I could speak French.",SVO,SVO,1,SVO,"NP VP NP","that_omitted","仮定法 wish",1.1
+D3-025,3,"The older we get the wiser we become.",SVC,SVC,1,SVC_link_adj,"NP VP ADJP","the_comparative","the 比較級",1.36
+D3-026,3,"Not only did he sing but he also danced.",SV,SV,1,SV,"NP VP","negative_inversion+question_inversion+compound_sentence","not only 倒置",1.62
+D3-027,3,"The teacher told us that the test had been canceled.",SVOO,SVOO,1,SVOO,"NP VP NP NP","that_clause","tell O that 節",2.36
+D3-028,3,"It is said that he is a genius.",SV,SV,1,SV_passive,"NP VP","subordinate_clause","It is said that",1.3
+D3-029,3,"She made it clear that she would not come.",SVOC,SVOC,1,SVOC_adj,"NP VP NP ADJP","subordinate_clause","形式目的語＋that 節",1.47
+D3-030,3,"Whether he comes or not does not matter.",SV,SV,1,SV,"NP VP","whether_subject","whether 節の主語",1.35
+D2-051,2,"I was sleeping when he called me.",SV,SV,1,SV,"NP VP","subordinate_clause","when 節",1.24
+D2-052,2,"Call me when you arrive.",SVO,SVO,1,IMP_VO,"VP NP","subordinate_clause","when 節（命令文）",3.14
+D2-053,2,"She was reading a book when I came in.",SVO,SVO,1,SVO,"NP VP NP","subordinate_clause","when 節",2.16
+D2-054,2,"Because I was sick I stayed home.",SV,SV,1,SV,"NP VP","subordinate_clause","because 節（文頭）",1.56
+D2-055,2,"When I was a child I lived in Nara.",SV,SV,1,SV,"NP VP","subordinate_clause","when 節（文頭）",1.73
+D1-051,1,"She taught us English.",SVOO,SVOO,1,SVOO,"NP VP NP NP","","teach A B",0.6
+D1-052,1,"He taught the children music.",SVOO,SVOO,1,SVOO,"NP VP NP NP","","teach A B",1.19
+D1-053,1,"Is that your car?",SVC,SVC,1,SVC_be_np,"NP VP_be NP","negative_inversion+question_inversion_be","be 疑問文（指示代名詞）",0.51
+D1-054,1,"Are these your books?",SVC,SVC,1,SVC_be_np,"NP VP_be NP","negative_inversion+question_inversion_be","be 疑問文（指示代名詞）",0.99
+D1-055,1,"What can I do for you?",SVO,SVO,1,SVO,"NP VP NP","question_inversion+wh_object","wh 疑問文＋助動詞",1.95
+D1-056,1,"What will you make for dinner?",SVO,SVO,1,SVO,"NP VP NP","question_inversion+wh_object","wh 疑問文＋助動詞",1.88
+D2-056,2,"They elected him mayor.",SVOC,SVOC,1,SVOC_naming,"NP VP NP NP","","elect O C",1.17
+D2-057,2,"We appointed her leader.",SVOC,SVOC,1,SVOC_naming,"NP VP NP NP","","appoint O C",0.51
+D2-058,2,"I wonder if he will come.",SVO,SVO,1,SVO,"NP VP NP","if_clause_object","間接疑問（if）",0.83
+D2-059,2,"Nobody knows why she left.",SVO,SVO,1,SVO,"NP VP NP","wh_clause","間接疑問（why）",1.36
+D2-060,2,"I have no time to lose.",SVO,SVO,1,SVO,"NP VP NP","infinitive_modifier","不定詞の形容詞的用法",0.83
+D2-061,2,"She has many friends to help her.",SVO,SVO,1,SVO,"NP VP NP","infinitive_modifier","不定詞の形容詞的用法",1.05
+D3-031,3,"Tired from the long trip she went to bed early.",SV,SV,1,SV,"NP VP","participial_construction","分詞構文（文頭・過去分詞）",4.38
+D3-032,3,"Built in 1900 the bridge is still in use.",SV,SV,1,SV_be,"NP VP_be","participial_construction","分詞構文（文頭・過去分詞）",1.6
+D3-033,3,"The children ran away laughing loudly.",SV,SV,1,SV,"NP VP","participial_construction","分詞構文（文末）",1.02
+D3-034,3,"He stood there holding a letter in his hand.",SV,SV,1,SV,"NP VP","participial_construction","分詞構文（文末）",1.11
+D3-035,3,"The problem was so difficult that nobody could solve it.",SVC,SVC,1,SVC_be_adj,"NP VP_be ADJP","subordinate_clause","so that 構文",6.2
+D3-036,3,"She spoke so fast that I could not understand her.",SV,SV,1,SV,"NP VP","subordinate_clause","so that 構文（副詞）",1.73
+D3-037,3,"The more you practice the better you become.",SVC,SVC,1,SVC_link_adj,"NP VP ADJP","the_comparative","the 比較級",5.87
+D3-038,3,"The sooner we leave the earlier we arrive.",SV,SV,1,SV,"NP VP","the_comparative","the 比較級（副詞）",1.54
+D3-039,3,"Not only was she tired but she was also hungry.",SVC,SVC,1,SVC_be_adj,"NP VP_be ADJP","negative_inversion+question_inversion_be+compound_sentence","not only 倒置（be）",6.12
+D3-040,3,"Not only does he play tennis but he also swims.",SVO,SVO,1,SVO,"NP VP NP","negative_inversion+question_inversion+compound_sentence","not only 倒置",1.29
+D3-041,3,"Whether she will agree is another question.",SVC,SVC,1,SVC_be_np,"NP VP_be NP","whether_subject","whether 節の主語",1.39
+D3-042,3,"Whether it rains or not we will go.",SV,SV,1,SV,"NP VP","subordinate_clause","whether 節（文頭の譲歩）",6.06
+D3-043,3,"He thought it strange that she did not call.",SVOC,SVOC,1,SVOC_adj,"NP VP NP ADJP","subordinate_clause","形式目的語＋that 節",1.83
+D3-044,3,"I find it surprising that he passed the test.",SVOC,SVOC,1,SVOC_adj,"NP VP NP ADJP","subordinate_clause","形式目的語＋that 節",10.5
+D3-045,3,"""Where are you going?"" asked my mother.",SVO,SVO,1,SVO,"NP VP NP","quotation+reporting_inversion","引用（疑問文）＋伝達",1.5
+D3-046,3,"""Can I help you?"" said the clerk with a smile.",SVO,SVO,1,SVO,"NP VP NP","quotation+reporting_inversion","引用（疑問文）＋伝達",1.7
+D3-047,3,"He is interested in learning foreign languages.",SVC,SVC,1,SVC_link_adj,"NP VP ADJP","","前置詞＋動名詞",2.1
+D3-048,3,"She is good at making people laugh.",SVC,SVC,1,SVC_be_adj,"NP VP_be ADJP","","前置詞＋動名詞",6.85
+D3-049,3,"It was the teacher that helped me most.",SVC,SVC,1,SVC_be_np,"NP VP_be NP","relative_clause","強調構文（名詞）",5.98
+D3-050,3,"It was yesterday that I saw him.",SV,SV,1,SV_be,"NP VP_be","cleft_clause","強調構文（副詞）",1.35
+D3-051,3,"The woman standing by the door is my aunt and the man next to her is my uncle.",SVC,SVC,1,SVC_be_np,"NP VP_be NP","compound_sentence+participle_modifier","分詞修飾＋重文",8.16
+D3-052,3,"At night when the streets are quiet you can hear the river.",SVO,SVO,1,IMP_VO,"VP NP","cleft_clause","文頭の副詞句＋when 節",4.01

@@ -31,7 +31,7 @@ function parseCSV(text) {
   const head = lines[0].split(',').map(s => s.trim());
   return lines.slice(1).map(line => {
     const cells = []; let cur = '', q = false;
-    for (const ch of line) { if (ch === '"') q = !q; else if (ch === ',' && !q) { cells.push(cur); cur = ''; } else cur += ch; }
+    for (let i = 0; i < line.length; i++) { const ch = line[i]; if (ch === '"') { if (q && line[i + 1] === '"') { cur += '"'; i++; } else q = !q; } else if (ch === ',' && !q) { cells.push(cur); cur = ''; } else cur += ch; }
     cells.push(cur);
     const o = {}; head.forEach((h, i) => o[h] = (cells[i] || '').trim()); o.level = Number(o.level); return o;
   });

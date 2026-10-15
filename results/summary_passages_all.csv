@@ -2,3 +2,6 @@ version,dataset,passage,words,sentences,correct,accuracy,unknown,ms
 v0.6,dev,P-DEV-1,331,20,20,1.0000,0,43.2
 v0.6,eval,P-EVAL-1,260,18,13,0.7222,3,33.3
 v0.6,eval,P-EVAL-2,236,15,9,0.6000,5,33.1
+v0.7,dev,P-DEV-1,331,20,20,1.0000,0,81.2
+v0.7,eval,P-EVAL-1,260,18,15,0.8333,1,49.2
+v0.7,eval,P-EVAL-2,236,15,9,0.6000,5,54.0

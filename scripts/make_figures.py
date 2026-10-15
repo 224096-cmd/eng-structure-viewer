@@ -16,12 +16,12 @@ plt.rcParams['axes.unicode_minus'] = False
 
 rows = list(csv.DictReader(open(os.path.join(ROOT, 'results', 'summary_all.csv'), encoding='utf8')))
 pos = list(csv.DictReader(open(os.path.join(ROOT, 'results', 'summary_pos_all.csv'), encoding='utf8')))
-versions = [v for v in ['v0.3', 'v0.4', 'v0.5', 'v0.6'] if any(r['version'] == v for r in rows)]
+versions = [v for v in ['v0.3', 'v0.4', 'v0.5', 'v0.6', 'v0.7'] if any(r['version'] == v for r in rows)]
 def get(v, ds, rl, col):
     r = [x for x in rows if x['version'] == v and x['dataset'] == ds and int(x['rules_le']) == rl]
     return float(r[0][col]) * 100 if r and r[0][col] else None
 # 最大規則レベル（版ごと）
-maxrl = {'v0.3': 2, 'v0.4': 2, 'v0.5': 3, 'v0.6': 3}
+maxrl = {'v0.3': 2, 'v0.4': 2, 'v0.5': 3, 'v0.6': 3, 'v0.7': 3}
 
 # 図1: 学習曲線（評価用、L1 / L2 の文、品詞）
 fig, ax = plt.subplots(figsize=(6.4, 4), dpi=150)

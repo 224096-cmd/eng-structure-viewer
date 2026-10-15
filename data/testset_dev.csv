@@ -134,3 +134,37 @@ D2-052,2,Call me when you arrive.,SVO,when 節（命令文）
 D2-053,2,She was reading a book when I came in.,SVO,when 節
 D2-054,2,Because I was sick I stayed home.,SV,because 節（文頭）
 D2-055,2,When I was a child I lived in Nara.,SV,when 節（文頭）
+D1-051,1,She taught us English.,SVOO,teach A B
+D1-052,1,He taught the children music.,SVOO,teach A B
+D1-053,1,Is that your car?,SVC,be 疑問文（指示代名詞）
+D1-054,1,Are these your books?,SVC,be 疑問文（指示代名詞）
+D1-055,1,What can I do for you?,SVO,wh 疑問文＋助動詞
+D1-056,1,What will you make for dinner?,SVO,wh 疑問文＋助動詞
+D2-056,2,They elected him mayor.,SVOC,elect O C
+D2-057,2,We appointed her leader.,SVOC,appoint O C
+D2-058,2,I wonder if he will come.,SVO,間接疑問（if）
+D2-059,2,Nobody knows why she left.,SVO,間接疑問（why）
+D2-060,2,I have no time to lose.,SVO,不定詞の形容詞的用法
+D2-061,2,She has many friends to help her.,SVO,不定詞の形容詞的用法
+D3-031,3,Tired from the long trip she went to bed early.,SV,分詞構文（文頭・過去分詞）
+D3-032,3,Built in 1900 the bridge is still in use.,SV,分詞構文（文頭・過去分詞）
+D3-033,3,The children ran away laughing loudly.,SV,分詞構文（文末）
+D3-034,3,He stood there holding a letter in his hand.,SV,分詞構文（文末）
+D3-035,3,The problem was so difficult that nobody could solve it.,SVC,so that 構文
+D3-036,3,She spoke so fast that I could not understand her.,SV,so that 構文（副詞）
+D3-037,3,The more you practice the better you become.,SVC,the 比較級
+D3-038,3,The sooner we leave the earlier we arrive.,SV,the 比較級（副詞）
+D3-039,3,Not only was she tired but she was also hungry.,SVC,not only 倒置（be）
+D3-040,3,Not only does he play tennis but he also swims.,SVO,not only 倒置
+D3-041,3,Whether she will agree is another question.,SVC,whether 節の主語
+D3-042,3,Whether it rains or not we will go.,SV,whether 節（文頭の譲歩）
+D3-043,3,He thought it strange that she did not call.,SVOC,形式目的語＋that 節
+D3-044,3,I find it surprising that he passed the test.,SVOC,形式目的語＋that 節
+D3-045,3,"""Where are you going?"" asked my mother.",SVO,引用（疑問文）＋伝達
+D3-046,3,"""Can I help you?"" said the clerk with a smile.",SVO,引用（疑問文）＋伝達
+D3-047,3,He is interested in learning foreign languages.,SVC,前置詞＋動名詞
+D3-048,3,She is good at making people laugh.,SVC,前置詞＋動名詞
+D3-049,3,It was the teacher that helped me most.,SVC,強調構文（名詞）
+D3-050,3,It was yesterday that I saw him.,SV,強調構文（副詞）
+D3-051,3,The woman standing by the door is my aunt and the man next to her is my uncle.,SVC,分詞修飾＋重文
+D3-052,3,At night when the streets are quiet you can hear the river.,SVO,文頭の副詞句＋when 節

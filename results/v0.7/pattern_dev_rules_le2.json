@@ -1,0 +1,86 @@
+{
+  "version": "v0.7",
+  "dataset": "testset_dev.csv",
+  "ruleLevel": 2,
+  "n": 169,
+  "correct": 130,
+  "accuracy": 0.7692307692307693,
+  "perPattern": {
+    "SV": {
+      "n": 43,
+      "correct": 29
+    },
+    "SVC": {
+      "n": 37,
+      "correct": 26
+    },
+    "SVO": {
+      "n": 55,
+      "correct": 46
+    },
+    "SVOO": {
+      "n": 14,
+      "correct": 12
+    },
+    "SVOC": {
+      "n": 20,
+      "correct": 17
+    }
+  },
+  "perLevel": {
+    "1": {
+      "n": 56,
+      "correct": 56
+    },
+    "2": {
+      "n": 61,
+      "correct": 59
+    },
+    "3": {
+      "n": 52,
+      "correct": 15
+    }
+  },
+  "confusion": {
+    "SV": {
+      "SV": 29,
+      "SVC": 1,
+      "SVO": 0,
+      "SVOO": 0,
+      "SVOC": 0,
+      "UNKNOWN": 13
+    },
+    "SVC": {
+      "SV": 0,
+      "SVC": 26,
+      "SVO": 0,
+      "SVOO": 0,
+      "SVOC": 0,
+      "UNKNOWN": 11
+    },
+    "SVO": {
+      "SV": 0,
+      "SVC": 0,
+      "SVO": 46,
+      "SVOO": 0,
+      "SVOC": 0,
+      "UNKNOWN": 9
+    },
+    "SVOO": {
+      "SV": 0,
+      "SVC": 0,
+      "SVO": 0,
+      "SVOO": 12,
+      "SVOC": 0,
+      "UNKNOWN": 2
+    },
+    "SVOC": {
+      "SV": 0,
+      "SVC": 0,
+      "SVO": 0,
+      "SVOO": 0,
+      "SVOC": 17,
+      "UNKNOWN": 3
+    }
+  }
+}

@@ -1,7 +1,7 @@
-import { loadRules, analyzeSentence, splitSentencesWithMeta } from './src/analyzer.js?v=0.6';
-import { renderResult } from './src/render.js?v=0.6';
-import { renderTree } from './src/tree.js?v=0.6';
-import { prefetch } from './src/dict.js?v=0.6';
+import { loadRules, analyzeSentence, splitSentencesWithMeta } from './src/analyzer.js?v=0.7';
+import { renderResult } from './src/render.js?v=0.7';
+import { renderTree } from './src/tree.js?v=0.7';
+import { prefetch } from './src/dict.js?v=0.7';
 
 const $ = id => document.getElementById(id);
 const PATTERNS = ['SV', 'SVC', 'SVO', 'SVOO', 'SVOC', 'UNKNOWN'];
@@ -109,7 +109,7 @@ function download() {
 
 async function loadSample(name) {
   try {
-    const d = await (await fetch(`data/${name}?v=0.6`)).json();
+    const d = await (await fetch(`data/${name}?v=0.7`)).json();
     $('input').value = d.passages[0].text;
     $('level').value = '3';  // 長文は入試レベルの規則が必要
     run();

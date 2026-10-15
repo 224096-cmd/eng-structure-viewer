@@ -1,6 +1,6 @@
-import { loadRules, analyzeSentence } from './src/analyzer.js?v=0.6';
-import { escapeHtml } from './src/render.js?v=0.6';
-import { tagSentence } from './src/pos.js?v=0.6';
+import { loadRules, analyzeSentence } from './src/analyzer.js?v=0.7';
+import { escapeHtml } from './src/render.js?v=0.7';
+import { tagSentence } from './src/pos.js?v=0.7';
 
 const $ = id => document.getElementById(id);
 const PATTERNS = ['SV', 'SVC', 'SVO', 'SVOO', 'SVOC'];
@@ -14,8 +14,10 @@ function parseCSV(text) {
   return lines.slice(1).map(line => {
     // 単純な CSV（文中にカンマがある場合はダブルクォートで囲む）
     const cells = []; let cur = '', q = false;
-    for (const ch of line) {
-      if (ch === '"') q = !q; else if (ch === ',' && !q) { cells.push(cur); cur = ''; } else cur += ch;
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (ch === '"') { if (q && line[i + 1] === '"') { cur += '"'; i++; } else q = !q; }
+      else if (ch === ',' && !q) { cells.push(cur); cur = ''; } else cur += ch;
     }
     cells.push(cur);
     const o = {}; head.forEach((h, i) => o[h] = (cells[i] || '').trim());

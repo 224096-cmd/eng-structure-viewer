@@ -2,7 +2,7 @@
 // 依存: vendor/compromise.js（グローバル nlp）
 // 出力: tokens = [{ i, text, display, pre, post, pos, posJa, lemma, tags, commaAfter, quoteOpen, ... }]
 //   判定の優先順位: ①語彙で決まるもの → ②文脈で決まる機能語 → ③be/do/have → ④compromise のタグ
-import { punctFeatures } from './text.js?v=0.6';
+import { punctFeatures } from './text.js?v=0.7';
 
 const POS_JA = {
   NOUN: '名詞', PROPN: '固有名詞', PRON: '代名詞', VERB: '動詞', AUX: '助動詞',
@@ -23,7 +23,7 @@ const WH_ADV = new Set(['when', 'where', 'why', 'how']);
 const TIME_WORDS = new Set(['yesterday', 'today', 'tomorrow', 'tonight', 'now', 'then', 'later', 'ago']);
 const LOCATIVE_ADVS = new Set(['home', 'abroad', 'here', 'there', 'downtown', 'upstairs', 'downstairs', 'outside', 'inside']);
 const PLAIN_ADVS = new Set(['together', 'alone', 'aloud', 'well', 'soon', 'again', 'already', 'always', 'usually', 'often', 'sometimes', 'never', 'twice', 'once', 'still', 'even', 'also', 'just', 'only', 'almost', 'perhaps', 'maybe', 'however', 'therefore', 'instead', 'rather']);
-const MANNER_ADVS = new Set(['early', 'late', 'hard', 'fast']);
+const MANNER_ADVS = new Set(['early', 'late', 'hard', 'fast', 'loudly']);
 const CAUSATIVE_FOR_POS = new Set(['let', 'make', 'help', 'see', 'hear', 'watch', 'feel', 'notice']);
 const DEMONSTRATIVES = new Set(['this', 'that', 'these', 'those']);
 const POSS_DETS = new Set(['my', 'your', 'his', 'her', 'its', 'our', 'their']);
@@ -36,6 +36,11 @@ const PREPS = new Set(['over', 'in', 'on', 'at', 'by', 'for', 'with', 'during', 
 const NOUN_AFTER_PREP = new Set(['contrast', 'fact', 'addition', 'example', 'short', 'general', 'particular', 'turn', 'practice', 'theory', 'effect', 'part', 'order', 'response', 'spite', 'case', 'place', 'time', 'return', 'exchange', 'detail', 'advance', 'control', 'charge', 'need', 'use', 'demand', 'favor', 'favour', 'light', 'line', 'touch', 'balance', 'progress', 'process', 'question', 'doubt', 'danger', 'trouble', 'love', 'sight', 'mind', 'hand', 'work', 'school', 'home', 'bed', 'church', 'court', 'sea', 'war', 'peace', 'reach', 'risk', 'stock', 'print', 'sale', 'rest', 'shape', 'form', 'nature', 'name', 'point', 'view', 'terms', 'account', 'behalf', 'regard', 'respect', 'search', 'support', 'honor', 'honour', 'memory', 'pursuit']);
 const REPORTING_VERBS = new Set(['say', 'write', 'ask', 'add', 'explain', 'reply', 'answer', 'tell', 'insist', 'argue', 'note', 'claim', 'admit', 'continue', 'shout', 'whisper']);
 
+// -ing 形の語幹が動詞か（making → make, running → run, reading → read）
+function isVerbStem(word) {
+  const base = word.replace(/ing$/, '');
+  return nlp(base).has('#Verb') || nlp(base + 'e').has('#Verb') || (/(.)\1$/.test(base) && nlp(base.slice(0, -1)).has('#Verb')) || nlp(word).has('#Gerund');
+}
 function has(term, tag) { return term && (term.tags || []).includes(tag); }
 function w(term) { return term ? (term.implicit || term.normal || term.text.toLowerCase()).replace(/[^a-z'\-.]/g, '') : ''; }
 function nextContent(terms, k) {
@@ -54,8 +59,11 @@ function mapTag(terms, k, assigned) {
   const atStart = k === 0;
   const prevW = w(prev), nextW = w(next);
 
+  // the 比較級: 文頭または節頭の the + 比較級 → 形容詞
+  if (prevW === 'the' && (tags.has('Comparative') || /^(more|less|better|worse|sooner|earlier|later|harder|faster|longer|higher|lower|bigger|smaller|older|younger|wiser|richer|poorer)$/.test(word)) && next && (has(next, 'Pronoun') || has(next, 'Noun') || has(next, 'Determiner'))) return 'ADJ';
   // ① 語彙で決まるもの
   if (word === 'to' && next && has(next, 'Verb')) return 'PART';
+  if (word === 'no' && next && (has(next, 'Noun') || has(next, 'Adjective'))) return 'DET';
   if (tags.has('Negative') || word === 'not') return 'PART';
   if (tags.has('Particle') && has(prev, 'Verb')) return 'PART';
   if (COORDINATORS.has(word) && word !== 'so') return 'CCONJ';
@@ -67,8 +75,9 @@ function mapTag(terms, k, assigned) {
   // 限定詞・所有格の直後で動詞と誤られた名詞（their name / the experience）
   if (tags.has('Verb') && !tags.has('Gerund') && !tags.has('Auxiliary') && !tags.has('Copula') && !BE_FORMS.has(word) && !DO_FORMS.has(word) && !HAVE_FORMS.has(word) && !MODALS.has(word) && prev && (has(prev, 'Determiner') || has(prev, 'Possessive') || POSS_DETS.has(prevW)) && !INDEF_PRONS.has(prevW) && !DEMONSTRATIVES.has(prevW) && !/ing$/.test(word) && !(next && has(next, 'Determiner'))) return 'NOUN';
   // 形容詞の直後の -ing（busy doing something）
-  if (/ing$/.test(word) && tags.has('Noun') && !tags.has('Verb') && prev && has(prev, 'Adjective') && next && (has(next, 'Determiner') || has(next, 'Pronoun') || has(next, 'Noun')) && nlp(word.replace(/ing$/, '')).has('#Verb')) return 'VERB';
-  if (MANNER_ADVS.has(word) && prev && has(prev, 'Verb') && !BE_FORMS.has(prevW) && !has(next, 'Noun')) return 'ADV';
+  if (/ing$/.test(word) && tags.has('Noun') && !tags.has('Verb') && prev && has(prev, 'Adjective') && next && (has(next, 'Determiner') || has(next, 'Pronoun') || has(next, 'Noun')) && isVerbStem(word)) return 'VERB';
+  if (MANNER_ADVS.has(word) && !next && prev && !has(prev, 'Determiner') && !has(prev, 'Adjective') && k > 1 && terms.slice(0, k).some(t => has(t, 'Verb'))) return 'ADV';
+  if (MANNER_ADVS.has(word) && prev && ((has(prev, 'Verb') && !BE_FORMS.has(prevW)) || (prevW === 'so' && k >= 2 && has(terms[k - 2], 'Verb') && !BE_FORMS.has(w(terms[k - 2])))) && !has(next, 'Noun')) return 'ADV';
   if (tags.has('Date') && !has(prev, 'Determiner') && !has(prev, 'Adjective') && !has(prev, 'Possessive') && !has(prev, 'Value') && !has(prev, 'Noun')) return 'ADV';
   // 大文字始まりの前置詞（Over five years）や、動詞と誤られた前置詞
   if (/^(before|after|since|until)$/.test(word)) {
@@ -98,7 +107,7 @@ function mapTag(terms, k, assigned) {
     if ((word === 'where' && PLACE_NOUNS.has(pl)) || (word === 'when' && (has(prev, 'Date') || /^(day|time|year|moment|month|week|summer|winter|night|morning|age)$/.test(pl))) || (word === 'why' && pl === 'reason')) return 'REL';
   }
   // that: 動詞・形容詞・「動詞＋代名詞」の後で名詞句が続けば接続詞
-  if (word === 'that' && prev && (has(prev, 'Verb') || has(prev, 'Adjective') || (has(prev, 'Pronoun') && k >= 2 && has(terms[k - 2], 'Verb'))) && next && (isNounish(next) || DETS.has(nextW) || INDEF_PRONS.has(nextW))) return 'SCONJ';
+  if (word === 'that' && prev && !(k === 1 && BE_FORMS.has(prevW)) && (has(prev, 'Verb') || has(prev, 'Adjective') || (has(prev, 'Pronoun') && k >= 2 && has(terms[k - 2], 'Verb'))) && next && (isNounish(next) || DETS.has(nextW) || INDEF_PRONS.has(nextW))) return 'SCONJ';
   // 文頭の wh
   if (atStart && WH_PRON.has(word)) return 'PRON';
   if (atStart && WH_ADV.has(word)) {
@@ -114,16 +123,20 @@ function mapTag(terms, k, assigned) {
     if (indirect || word === 'how') return 'ADV';
     return 'SCONJ';
   }
+  if (word === 'that' && k >= 2 && BE_FORMS.has(w(terms[k - 2])) && w(terms[k - 3]) === 'it' && (has(prev, 'Adverb') || TIME_WORDS.has(prevW) || has(prev, 'Noun'))) return 'REL';
   if (word === 'there' && next && BE_FORMS.has(nextW)) return 'PRON';
   // 指示詞・不定代名詞: 後ろに名詞が続かなければ代名詞
-  if ((DEMONSTRATIVES.has(word) || (INDEF_PRONS.has(word) && !has(prev, 'Determiner'))) && !(next && (has(next, 'Noun') || has(next, 'Adjective') || has(next, 'Value')) && !has(next, 'Verb'))) {
+  const nextIsPossDet = next && POSS_DETS.has(nextW);
+  if ((DEMONSTRATIVES.has(word) || (INDEF_PRONS.has(word) && !has(prev, 'Determiner'))) && (nextIsPossDet || !(next && (has(next, 'Noun') || has(next, 'Adjective') || has(next, 'Value')) && !has(next, 'Verb')))) {
     if (!(word === 'one' && has(prev, 'Determiner'))) return 'PRON';
   }
   if (DETS.has(word) && !DEMONSTRATIVES.has(word) && !(word === 'all' && has(prev, 'Verb') && !has(next, 'Noun'))) return 'DET';
   // 使役・知覚動詞＋代名詞＋原形（heard her sing）
   if (tags.has('Noun') && !tags.has('Pronoun') && prev && has(prev, 'Pronoun') && k >= 2 && CAUSATIVE_FOR_POS.has(terms[k - 2].root || w(terms[k - 2])) && nlp(word).has('#Infinitive')) return 'VERB';
+  // 小辞・副詞の直後の -ing（ran away laughing / stood there holding）
+  if (/ing$/.test(word) && prev && (has(prev, 'Particle') || has(prev, 'Adverb') || LOCATIVE_ADVS.has(prevW)) && k >= 2 && has(terms[k - 2], 'Verb') && isVerbStem(word)) return 'VERB';
   // 名詞の直後の -ing を compromise が名詞と誤る（the window reading a magazine）
-  if (/ing$/.test(word) && tags.has('Noun') && !tags.has('Verb') && prev && has(prev, 'Noun') && !has(prev, 'Determiner') && next && (has(next, 'Determiner') || has(next, 'Pronoun') || has(next, 'Possessive')) && nlp(word.replace(/ing$/, '')).has('#Verb')) return 'VERB';
+  if (/ing$/.test(word) && tags.has('Noun') && !tags.has('Verb') && prev && has(prev, 'Noun') && !has(prev, 'Determiner') && next && (has(next, 'Determiner') || has(next, 'Pronoun') || has(next, 'Possessive') || has(next, 'Preposition') || PREPS.has(nextW)) && isVerbStem(word)) return 'VERB';
   // people who walk: 関係詞の直後の語を compromise が名詞と誤る
   if (tags.has('Noun') && !tags.has('Pronoun') && prev && REL_WORDS.has(prevW) && k >= 2 && has(terms[k - 2], 'Noun') && nlp(word).has('#Verb') && !has(next, 'Noun')) return 'VERB';
 
@@ -131,7 +144,16 @@ function mapTag(terms, k, assigned) {
   if (tags.has('Verb') && !tags.has('Noun') && /s$/.test(word) && prev && (has(prev, 'Adverb') || has(prev, 'Adjective') || has(prev, 'Determiner') || has(prev, 'Value')) && k >= 2 && (has(terms[k - 2], 'Determiner') || has(terms[k - 2], 'Adjective') || has(terms[k - 2], 'Value') || /^(few|many|more|several|some)$/.test(w(terms[k - 2]))) && !has(next, 'Determiner') && !has(next, 'Pronoun') && nlp(word.replace(/s$/, '')).has('#Noun')) return 'NOUN';
   // worth + -ing（be worth doing）: worth は形容詞、-ing は動名詞
   if (word === 'worth' && next && /ing$/.test(nextW)) return 'ADJ';
-  if (/ing$/.test(word) && prevW === 'worth' && nlp(word.replace(/ing$/, '')).has('#Verb')) return 'VERB';
+  if (/ing$/.test(word) && prevW === 'worth' && isVerbStem(word)) return 'VERB';
+  // 形式目的語 it の直後の形容詞（thought it strange / find it surprising）
+  if (prevW === 'it' && tags.has('Verb') && !tags.has('Noun') && next && nextW === 'that' && nlp(word).has('#Adjective')) return 'ADJ';
+  if (prevW === 'it' && /ing$/.test(word) && next && nextW === 'that') return 'ADJ';
+  // 前置詞の直後の -ing は動名詞（interested in learning / good at making）
+  if (/ing$/.test(word) && prev && (has(prev, 'Preposition') || PREPS.has(prevW)) && !has(prev, 'Verb') && (tags.has('Verb') || tags.has('Noun') || tags.has('Gerund')) && isVerbStem(word)) return 'VERB';
+  // 文頭の過去分詞（Tired from … / Built in …）: 直後が前置詞で、後に主語＋動詞が続く
+  if (atStart && /(ed|en)$/.test(word) && next && (has(next, 'Preposition') || PREPS.has(nextW)) && terms.slice(2).some(t => has(t, 'Verb')) && nlp(word).has('#PastTense')) return 'VERB';
+  // interested in: 受動態ではなく形容詞（be + 感情の過去分詞 + 前置詞）
+  if (/(ed|en)$/.test(word) && prev && BE_FORMS.has(prevW) && next && (has(next, 'Preposition') || PREPS.has(nextW)) && /^(interested|tired|bored|excited|surprised|worried|pleased|satisfied|disappointed|involved|concerned|scared|frightened|confused|married|known|covered|filled|made)$/.test(word)) return 'ADJ';
   // ③ be / do / have
   if (BE_FORMS.has(word) || DO_FORMS.has(word) || HAVE_FORMS.has(word)) {
     const nc = nextContent(terms, k);

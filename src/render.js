@@ -1,5 +1,5 @@
 // render.js — 解析結果の描画（色＋記号による役割表示、ホバー／タップのカード、長文向けの文カード）
-import { lookup } from './dict.js?v=0.6';
+import { lookup } from './dict.js?v=0.7';
 
 const ROLE_JA = { S: '主語', V: '動詞', O: '目的語', C: '補語', M: '修飾語' };
 const ROLE_MARK = { S: '○', V: '□', O: '△', C: '◇', M: '…' };

@@ -38,7 +38,9 @@ export function chunk(tokens, options = { level: 1 }) {
     if (p === 'DET' || p === 'ADJ' || p === 'NOUN' || p === 'PROPN' || p === 'PRON' || p === 'NUM' || moreThan) {
       start = k;
       if (moreThan) k += 2;
-      const possWithNoun = p === 'PRON' && tokens[k].tags.includes('Possessive') && ['ADJ', 'NOUN', 'PROPN', 'NUM'].includes(pos(k + 1));
+      const NAMING = new Set(['call', 'name', 'elect', 'appoint', 'consider', 'make', 'choose', 'declare', 'crown', 'nominate']);
+      const herAfterNaming = txt(k) === 'her' && k > 0 && pos(k - 1) === 'VERB' && NAMING.has(lem(k - 1)) && pos(k + 1) === 'NOUN' && (k + 2 >= n || pos(k + 2) !== 'NOUN');
+      const possWithNoun = p === 'PRON' && tokens[k].tags.includes('Possessive') && ['ADJ', 'NOUN', 'PROPN', 'NUM'].includes(pos(k + 1)) && !herAfterNaming;
       if (p === 'PRON' && !possWithNoun) {
         chunks.push({ type: 'NP', tokens: [k], head: k, pronoun: true, wh: tokens[k].tags.includes('QuestionWord'), existential: txt(k) === 'there', it: txt(k) === 'it' });
         k++; continue;
@@ -51,11 +53,12 @@ export function chunk(tokens, options = { level: 1 }) {
       const startedWithDet = pos(start) === 'DET';
       while (ext2(k) && (pos(k) === 'NOUN' || pos(k) === 'PROPN')) {
         if (startedWithDet && head !== -1 && pos(head) === 'NOUN' && pos(k) === 'PROPN') break; // the baby Emma → 2 つの NP
+        if (startedWithDet && head !== -1 && pos(head) === 'NOUN' && tokens[head].tags.includes('Plural') && pos(k) === 'NOUN' && !tokens[k].tags.includes('Plural') && k === n - 1) break; // the children music → 2 つの NP（文末）
         head = k; k++;
       }
       if (head === -1) {
         if (k > start && tokens.slice(start, k).some(t => t.pos === 'ADJ')) {
-          chunks.push({ type: 'ADJP', tokens: range(start, k), head: k - 1, theComparative: pos(start) === 'DET' && txt(start) === 'the' && /er$/.test(txt(k - 1)) });
+          chunks.push({ type: 'ADJP', tokens: range(start, k), head: k - 1, theComparative: pos(start) === 'DET' && txt(start) === 'the' && /(er|more|less|worse)$/.test(txt(k - 1)) });
         } else {
           chunks.push({ type: 'X', tokens: range(start, Math.max(k, start + 1)), head: start });
           if (k === start) k++;
@@ -86,9 +89,11 @@ export function chunk(tokens, options = { level: 1 }) {
       const isIng = /ing$/.test(headTok.text) && headTok.pos === 'VERB' && bare;
       const pc = prevChunk();
       const noVPYet = !chunks.some(c => c.type === 'VP' || c.type === 'VP_be');
-      if (level >= 2 && isIng && (prevType() === 'VP' || prevType() === null || prevType() === 'ADJP' || ((prevType() === 'PP' || prevType() === 'ADVP') && noVPYet && pc.commaAfter) || (pc && pc.auxOnly)) && !(pc && pc.type === 'VP' && !pc.auxOnly && pc.commaAfter)) {
+      const afterBareADP = k > 0 && pos(k - 1) === 'ADP';
+      const pcEndsParticle = pc && pc.type === 'VP' && tokens[pc.tokens[pc.tokens.length - 1]].pos === 'PART';
+      if (level >= 2 && isIng && !pcEndsParticle && (prevType() === 'VP' || prevType() === null || prevType() === 'ADJP' || afterBareADP || ((prevType() === 'PP' || prevType() === 'ADVP') && noVPYet && pc.commaAfter) || (pc && pc.auxOnly)) && !(pc && pc.type === 'VP' && !pc.auxOnly && pc.commaAfter)) {
         const sub = chunk(tokens.slice(k), options);
-        if (sub.length && sub[0].type === 'NP') k += sub[0].tokens.length;
+        if (sub.length && sub[0].type === 'NP') { k += sub[0].tokens.length; if (k < n && pos(k) === 'VERB' && !/(ing|ed|s)$/.test(tokens[k].text) && (k + 1 >= n || pos(k + 1) !== 'VERB')) k++; }
         chunks.push({ type: 'NP', tokens: range(start, k), head, gerund: true });
         continue;
       }
@@ -103,7 +108,7 @@ export function chunk(tokens, options = { level: 1 }) {
       const isBe = headTok.lemma === 'be' && !auxOnly;
       chunks.push({
         type: isBe ? 'VP_be' : 'VP', tokens: range(start, k), head,
-        linking: !phrasal && LINKING_VERBS.has(headTok.lemma), passive: isPassive(tokens, start, k),
+        linking: !phrasal && LINKING_VERBS.has(headTok.lemma), passive: isPassive(tokens, start, k), participle: bare && !auxOnly && (headTok.tags.includes('PastTense') || headTok.tags.includes('Participle') || /ing$/.test(headTok.text)) && start === 0,
         auxOnly, bare: bare && !auxOnly, existential: isBe && prevType() === 'NP' && chunks[chunks.length - 1].existential
       });
       continue;
@@ -113,7 +118,7 @@ export function chunk(tokens, options = { level: 1 }) {
     if (p === 'ADP') {
       start = k; k++;
       const sub = brk(start) ? [] : chunk(tokens.slice(k), options);
-      if (sub.length && sub[0].type === 'NP') {
+      if (sub.length && (sub[0].type === 'NP' || (level >= 2 && sub[0].gerund))) {
         const len = sub[0].tokens.length;
         chunks.push({ type: 'PP', tokens: range(start, k + len), head: start, inner: 'NP' });
         k += len; continue;
@@ -130,7 +135,7 @@ export function chunk(tokens, options = { level: 1 }) {
         let j = 0;
         // to be a pilot / to make this dish のように後続の NP / ADJP / PP を 1 つ吸収
         if (!brk(k - 1) && sub.length && ['NP', 'ADJP'].includes(sub[0].type)) { k += sub[0].tokens.length; j = 1; }
-        chunks.push({ type: 'NP', tokens: range(start, k), head: start + 1, infinitive: true });
+        chunks.push({ type: 'NP', tokens: range(start, k), head: start + 1, infinitive: true, afterNP: prevType() === 'NP' });
       } else {
         chunks.push({ type: 'X', tokens: range(start, k), head: start });
       }
@@ -162,7 +167,9 @@ function mergeCoordinatedNP(chunks, tokens) {
   for (let i = 0; i < chunks.length; i++) {
     const c = chunks[i];
     const vpBefore = out.some(x => x.type === 'VP' || x.type === 'VP_be');
-    const startsClause = chunks[i + 3] && (chunks[i + 3].type === 'VP' || chunks[i + 3].type === 'VP_be') && vpBefore;
+    const n3 = chunks[i + 3], n4 = chunks[i + 4];
+    let look = i + 3; while (look < chunks.length && look < i + 6 && ['ADVP', 'ADJP', 'PP'].includes(chunks[look].type)) look++;
+    const startsClause = vpBefore && chunks[look] && (chunks[look].type === 'VP' || chunks[look].type === 'VP_be');
     if (c.type === 'NP' && chunks[i + 1] && chunks[i + 1].type === 'CCONJ' && chunks[i + 2] && chunks[i + 2].type === 'NP' && !startsClause && !c.commaAfter) {
       const merged = { ...chunks[i + 2], type: 'NP', tokens: [...c.tokens, ...chunks[i + 1].tokens, ...chunks[i + 2].tokens], head: chunks[i + 2].head, coordinated: true, pronoun: false };
       out.push(merged); i += 2;
