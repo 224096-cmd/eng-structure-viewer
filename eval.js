@@ -1,6 +1,6 @@
-import { loadRules, analyzeSentence } from './src/analyzer.js?v=0.4';
-import { escapeHtml } from './src/render.js?v=0.4';
-import { tagSentence } from './src/pos.js?v=0.4';
+import { loadRules, analyzeSentence } from './src/analyzer.js?v=0.5';
+import { escapeHtml } from './src/render.js?v=0.5';
+import { tagSentence } from './src/pos.js?v=0.5';
 
 const $ = id => document.getElementById(id);
 const PATTERNS = ['SV', 'SVC', 'SVO', 'SVOO', 'SVOC'];

@@ -1,5 +1,7 @@
-import { loadRules, analyzeText } from './src/analyzer.js?v=0.4';
-import { renderResult } from './src/render.js?v=0.4';
+import { loadRules, analyzeText } from './src/analyzer.js?v=0.5';
+import { renderResult } from './src/render.js?v=0.5';
+import { renderTree } from './src/tree.js?v=0.5';
+import { prefetch } from './src/dict.js?v=0.5';
 
 const $ = id => document.getElementById(id);
 let lastResults = null;
@@ -24,7 +26,7 @@ function run() {
   const t0 = performance.now();
   lastResults = analyzeText(text, level);
   const total = Math.round((performance.now() - t0) * 100) / 100;
-  lastResults.forEach(r => renderResult(r, out));
+  lastResults.forEach(r => { renderResult(r, out); if ($('showTree').checked) renderTree(r, out); prefetch(r.tokens); });
   $('status').textContent = `${lastResults.length} 文を解析（合計 ${total} ms、レベル ${level}）`;
   $('download').disabled = false;
 }
@@ -45,5 +47,7 @@ function download() {
 $('run').addEventListener('click', run);
 $('download').addEventListener('click', download);
 $('level').addEventListener('change', run);
+$('showTree').addEventListener('change', run);
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(() => {});
 $('run').disabled = true;
 init();

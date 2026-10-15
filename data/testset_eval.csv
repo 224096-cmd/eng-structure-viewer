@@ -99,3 +99,33 @@ E2-047,2,She found it hard to say no.,SVOC,形式目的語 it
 E2-048,2,They have decided to move to Tokyo.,SVO,現在完了＋不定詞
 E2-049,2,There were many people in the hall.,SV,There were 構文
 E2-050,2,What do you want to eat?,SVO,wh 疑問文
+E3-001,3,I play the piano and my sister plays the violin.,SVO,重文（and）
+E3-002,3,He wanted to go but he had no money.,SVO,重文（but）
+E3-003,3,Hurry up or you will miss the train.,SV,重文（命令文＋or）
+E3-004,3,Looking out of the window she saw a rainbow.,SVO,分詞構文（文頭）
+E3-005,3,Seen from the sky the island looks like a bird.,SV,分詞構文（文頭・過去分詞）
+E3-006,3,He walked away leaving the door open.,SV,分詞構文（文末）
+E3-007,3,This is the house where my grandfather lived.,SVC,関係副詞 where
+E3-008,3,I will never forget the summer when I visited Hokkaido.,SVO,関係副詞 when
+E3-009,3,Do you know the reason why she cried?,SVO,関係副詞 why
+E3-010,3,What she wants is a new bicycle.,SVC,what 節の主語
+E3-011,3,What happened yesterday surprised everyone.,SVO,what 節の主語
+E3-012,3,Nobody knows why he left the town.,SVO,間接疑問
+E3-013,3,I wonder where she bought that bag.,SVO,間接疑問
+E3-014,3,The movie was so boring that I fell asleep.,SVC,so that 構文
+E3-015,3,It was so cold that the lake froze.,SVC,so that 構文
+E3-016,3,Never did I imagine such a result.,SVO,倒置
+E3-017,3,Rarely does she make a mistake.,SVO,倒置
+E3-018,3,The woman talking to the teacher is my mother.,SVC,分詞の後置修飾
+E3-019,3,We have many problems to solve.,SVO,不定詞の形容詞的用法
+E3-020,3,It was my brother that broke the vase.,SVC,強調構文
+E3-021,3,The letter which he sent me yesterday made me happy.,SVOC,関係詞節＋SVOC
+E3-022,3,Having lost the key she could not enter the room.,SVO,完了分詞構文
+E3-023,3,If I had more time I would travel around the world.,SV,仮定法
+E3-024,3,I wish I had a car.,SVO,仮定法 wish
+E3-025,3,The harder you work the more you earn.,SVO,the 比較級
+E3-026,3,Not only is he kind but he is also honest.,SVC,not only 倒置
+E3-027,3,She told me that she had seen the movie.,SVOO,tell O that 節
+E3-028,3,It is believed that the castle was built in 1600.,SV,It is believed that
+E3-029,3,He found it strange that nobody answered.,SVOC,形式目的語＋that 節
+E3-030,3,Whether we win or lose is not important.,SVC,whether 節の主語

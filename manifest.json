@@ -1,0 +1,10 @@
+{
+  "name": "English Structure Viewer",
+  "short_name": "EngStructure",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f6f9",
+  "theme_color": "#2f5cff",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}

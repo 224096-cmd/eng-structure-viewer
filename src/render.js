@@ -1,4 +1,6 @@
 // render.js — 解析結果の描画（色＋記号による役割表示、ホバー／タップのカード）
+import { lookup } from './dict.js?v=0.5';
+
 const ROLE_JA = { S: '主語', V: '動詞', O: '目的語', C: '補語', M: '修飾語' };
 const ROLE_MARK = { S: '○', V: '□', O: '△', C: '◇', M: '…' };
 const GRAMMAR_NOTE = {
@@ -65,7 +67,7 @@ function tokenEl(t) {
   return w;
 }
 
-let card = null;
+let card = null, cardSeq = 0;
 function showCard(t, anchor) {
   if (!card) { card = document.createElement('div'); card.className = 'card-pop'; document.body.appendChild(card); }
   card.innerHTML = `
@@ -73,8 +75,15 @@ function showCard(t, anchor) {
     <div class="cp-row"><b>品詞</b> ${t.posJa}（${t.pos}）</div>
     <div class="cp-row"><b>原形</b> ${escapeHtml(t.lemma)}</div>
     <div class="cp-row"><b>役割</b> ${t.role ? ROLE_JA[t.role] + '（' + t.role + '）' : '—'}</div>
-    <div class="cp-row"><b>訳語</b> <span class="muted">（v0.4 で辞書を導入）</span></div>
+    <div class="cp-row"><b>訳語</b> <span class="cp-gloss muted">…</span></div>
     <div class="cp-note">${GRAMMAR_NOTE[t.pos] || ''}</div>`;
+  const glossEl = card.querySelector('.cp-gloss');
+  const myCard = ++cardSeq;
+  lookup(t.text, t.lemma).then(g => {
+    if (myCard !== cardSeq || !glossEl) return;
+    glossEl.textContent = g ? g.gloss + (g.headword !== t.text.toLowerCase() ? `（${g.headword}）` : '') : '（辞書に無い語）';
+    glossEl.classList.remove('muted');
+  });
   const r = anchor.getBoundingClientRect();
   card.style.display = 'block';
   const top = r.bottom + window.scrollY + 6;

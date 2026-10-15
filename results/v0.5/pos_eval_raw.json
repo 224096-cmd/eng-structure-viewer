@@ -1,0 +1,171 @@
+{
+  "version": "v0.5",
+  "udCopulaAsAux": false,
+  "sentences": 300,
+  "aligned": 291,
+  "unaligned": 9,
+  "tokens": 3247,
+  "posAccuracy": 0.8472436094856791,
+  "lemmaAccuracy": 0.9402191962803056,
+  "perTag": {
+    "PRON": {
+      "n": 358,
+      "ok": 326
+    },
+    "AUX": {
+      "n": 237,
+      "ok": 137
+    },
+    "DET": {
+      "n": 318,
+      "ok": 307
+    },
+    "NOUN": {
+      "n": 626,
+      "ok": 541
+    },
+    "ADP": {
+      "n": 308,
+      "ok": 282
+    },
+    "PROPN": {
+      "n": 236,
+      "ok": 191
+    },
+    "INTJ": {
+      "n": 16,
+      "ok": 14
+    },
+    "ADJ": {
+      "n": 281,
+      "ok": 211
+    },
+    "ADV": {
+      "n": 167,
+      "ok": 108
+    },
+    "VERB": {
+      "n": 424,
+      "ok": 391
+    },
+    "SCONJ": {
+      "n": 59,
+      "ok": 33
+    },
+    "CCONJ": {
+      "n": 114,
+      "ok": 114
+    },
+    "NUM": {
+      "n": 36,
+      "ok": 29
+    },
+    "PART": {
+      "n": 67,
+      "ok": 67
+    }
+  },
+  "confusion": {
+    "PRON": {
+      "PRON": 326,
+      "DET": 1,
+      "ADV": 4,
+      "NOUN": 21,
+      "ADP": 2,
+      "X": 4
+    },
+    "AUX": {
+      "VERB": 99,
+      "AUX": 137,
+      "PRON": 1
+    },
+    "DET": {
+      "DET": 307,
+      "PRON": 6,
+      "PART": 4,
+      "ADJ": 1
+    },
+    "NOUN": {
+      "NOUN": 541,
+      "PROPN": 22,
+      "ADV": 17,
+      "VERB": 29,
+      "NUM": 3,
+      "ADJ": 8,
+      "ADP": 2,
+      "AUX": 1,
+      "X": 1,
+      "SCONJ": 1,
+      "PART": 1
+    },
+    "ADP": {
+      "ADP": 282,
+      "ADV": 3,
+      "PART": 15,
+      "NOUN": 3,
+      "VERB": 2,
+      "SCONJ": 2,
+      "ADJ": 1
+    },
+    "PROPN": {
+      "PROPN": 191,
+      "NOUN": 39,
+      "INTJ": 1,
+      "ADV": 5
+    },
+    "INTJ": {
+      "INTJ": 14,
+      "DET": 1,
+      "VERB": 1
+    },
+    "ADJ": {
+      "ADJ": 211,
+      "PROPN": 24,
+      "ADV": 5,
+      "DET": 9,
+      "NOUN": 19,
+      "VERB": 12,
+      "PART": 1
+    },
+    "ADV": {
+      "NOUN": 5,
+      "ADV": 108,
+      "PART": 8,
+      "DET": 5,
+      "NUM": 2,
+      "PROPN": 1,
+      "SCONJ": 15,
+      "ADJ": 11,
+      "ADP": 5,
+      "AUX": 2,
+      "INTJ": 2,
+      "CCONJ": 3
+    },
+    "VERB": {
+      "VERB": 391,
+      "NOUN": 14,
+      "PROPN": 2,
+      "AUX": 6,
+      "ADJ": 11
+    },
+    "SCONJ": {
+      "ADP": 19,
+      "SCONJ": 33,
+      "VERB": 1,
+      "PRON": 4,
+      "PART": 2
+    },
+    "CCONJ": {
+      "CCONJ": 114
+    },
+    "NUM": {
+      "NUM": 29,
+      "ADV": 5,
+      "PRON": 1,
+      "NOUN": 1
+    },
+    "PART": {
+      "PART": 67
+    }
+  }
+}

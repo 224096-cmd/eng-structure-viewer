@@ -29,7 +29,7 @@ export function chunk(tokens, options = { level: 1 }) {
       const start = k;
       const possWithNoun = p === 'PRON' && tokens[k].tags.includes('Possessive') && ['ADJ', 'NOUN', 'PROPN', 'NUM'].includes(pos(k + 1));
       if (p === 'PRON' && !possWithNoun) {
-        chunks.push({ type: 'NP', tokens: [k], head: k, wh: tokens[k].tags.includes('QuestionWord'), existential: txt(k) === 'there', it: txt(k) === 'it' });
+        chunks.push({ type: 'NP', tokens: [k], head: k, pronoun: true, wh: tokens[k].tags.includes('QuestionWord'), existential: txt(k) === 'there', it: txt(k) === 'it' });
         k++; continue;
       }
       if (p === 'DET' || possWithNoun) k++;
@@ -43,7 +43,7 @@ export function chunk(tokens, options = { level: 1 }) {
       }
       if (head === -1) {
         if (k > start && tokens.slice(start, k).some(t => t.pos === 'ADJ')) {
-          chunks.push({ type: 'ADJP', tokens: range(start, k), head: k - 1 });
+          chunks.push({ type: 'ADJP', tokens: range(start, k), head: k - 1, theComparative: pos(start) === 'DET' && txt(start) === 'the' && /er$/.test(txt(k - 1)) });
         } else {
           chunks.push({ type: 'X', tokens: range(start, Math.max(k, start + 1)), head: start });
           if (k === start) k++;
@@ -122,7 +122,7 @@ export function chunk(tokens, options = { level: 1 }) {
 
     if (p === 'REL') { chunks.push({ type: 'REL', tokens: [k], head: k }); k++; continue; }
     if (p === 'PART') { chunks.push({ type: 'ADVP', tokens: [k], head: k }); k++; continue; }
-    if (p === 'ADV') { chunks.push({ type: 'ADVP', tokens: [k], head: k, wh: k === 0 && /^(when|where|why|how)$/.test(txt(k)) }); k++; continue; }
+    if (p === 'ADV') { chunks.push({ type: 'ADVP', tokens: [k], head: k, wh: tokens[k].tags.includes('QuestionWord') }); k++; continue; }
     if (p === 'SCONJ') { chunks.push({ type: 'SCONJ', tokens: [k], head: k }); k++; continue; }
     if (p === 'CCONJ') { chunks.push({ type: 'CCONJ', tokens: [k], head: k }); k++; continue; }
     if (p === 'INTJ') { chunks.push({ type: 'ADVP', tokens: [k], head: k }); k++; continue; }
@@ -138,7 +138,9 @@ function mergeCoordinatedNP(chunks, tokens) {
   const out = [];
   for (let i = 0; i < chunks.length; i++) {
     const c = chunks[i];
-    if (c.type === 'NP' && chunks[i + 1] && chunks[i + 1].type === 'CCONJ' && chunks[i + 2] && chunks[i + 2].type === 'NP') {
+    const vpBefore = out.some(x => x.type === 'VP' || x.type === 'VP_be');
+    const startsClause = chunks[i + 3] && (chunks[i + 3].type === 'VP' || chunks[i + 3].type === 'VP_be') && vpBefore;
+    if (c.type === 'NP' && chunks[i + 1] && chunks[i + 1].type === 'CCONJ' && chunks[i + 2] && chunks[i + 2].type === 'NP' && !startsClause) {
       const merged = { type: 'NP', tokens: [...c.tokens, ...chunks[i + 1].tokens, ...chunks[i + 2].tokens], head: chunks[i + 2].head, coordinated: true };
       out.push(merged); i += 2;
       continue;

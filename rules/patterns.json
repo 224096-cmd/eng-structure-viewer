@@ -1,6 +1,6 @@
 {
   "_comment": "文型規則。core は修飾語（PP, ADVP, RELCL, SUBCL）を除いた主要チャンク列。'TYPE:feature' で特徴を要求する。level 以下の規則のみ有効。上から順に照合し最初に一致した規則を採用する。",
-  "version": "0.4",
+  "version": "0.5",
   "rules": [
     {
       "id": "THERE_be",
@@ -67,6 +67,24 @@
         "S"
       ],
       "note": "形式主語 it（真の主語は不定詞句）"
+    },
+    {
+      "id": "SVC_adj_inf",
+      "level": 3,
+      "core": [
+        "NP",
+        "VP_be",
+        "ADJP",
+        "NP:inf"
+      ],
+      "type": "SVC",
+      "roles": [
+        "S",
+        "V",
+        "C",
+        "M"
+      ],
+      "note": "形容詞＋不定詞（easy to read）: 不定詞は形容詞を修飾"
     },
     {
       "id": "SV_be",
@@ -151,6 +169,26 @@
         "O"
       ],
       "note": "形式目的語 it（真の目的語は不定詞句）"
+    },
+    {
+      "id": "SVOC_it_adj_clause",
+      "level": 3,
+      "core": [
+        "NP",
+        "VP",
+        "NP:it",
+        "ADJP",
+        "NP:clause"
+      ],
+      "type": "SVOC",
+      "roles": [
+        "S",
+        "V",
+        "O",
+        "C",
+        "O"
+      ],
+      "note": "形式目的語 it ＋ that 節（made it clear that …）"
     },
     {
       "id": "SVOC_naming",

@@ -29,5 +29,8 @@ every morning / last night / yesterday などは **M** として扱う（目的�
 判定が分かれる文は grammar_tag に「曖昧」を含め、どちらの解釈を採ったかを本ファイル末尾に記録する。
 
 ### 記録
+- D3-020 It was in Kyoto that I met her. → 強調構文は It was ＋強調部分の形で判定し、前置詞句を強調する場合は SV、名詞句を強調する場合は SVC とする。
+- 重文（I like tea and she likes coffee.）は前の節の文型を採用し、後の節は並列節（M 扱い）とする。
+- 分詞構文・関係副詞節・間接疑問節・so … that の that 節は主節の文型に数えない（M）。what 節は名詞節として S または O に数える。
 - D2-047 What do you think about it? → what は think の目的語とみなし SVO（当初 SV としていたが修正）。
 - L2-006 The window was broken. → 受動態として SV を採用（形容詞化すれば SVC）。

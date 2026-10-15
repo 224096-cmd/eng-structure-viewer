@@ -99,3 +99,38 @@ D2-047,2,What do you think about it?,SVO,wh 疑問文＋前置詞句
 D2-048,2,Who wrote this song?,SVO,wh 主語疑問文
 D2-049,2,The dog was called Pochi.,SV,受動態
 D2-050,2,Music makes people happy.,SVOC,make O C
+D3-001,3,I like tea and she likes coffee.,SVO,重文（and）
+D3-002,3,He studied hard but he failed the exam.,SV,重文（but）
+D3-003,3,You can take a bus or you can walk there.,SVO,重文（or）
+D3-004,3,Walking along the river I found a small cafe.,SVO,分詞構文（文頭）
+D3-005,3,Written in simple English this book is easy to read.,SVC,分詞構文（文頭・過去分詞）
+D3-006,3,She sat by the window reading a magazine.,SV,分詞構文（文末）
+D3-007,3,This is the town where I was born.,SVC,関係副詞 where
+D3-008,3,I remember the day when we first met.,SVO,関係副詞 when
+D3-009,3,Tell me the reason why you were late.,SVOO,関係副詞 why
+D3-010,3,What he said is true.,SVC,what 節の主語
+D3-011,3,What I need now is a long rest.,SVC,what 節の主語
+D3-012,3,I do not know where he lives.,SVO,間接疑問
+D3-013,3,She asked me what I wanted.,SVOO,間接疑問
+D3-014,3,He was so tired that he fell asleep.,SVC,so that 構文
+D3-015,3,The box was so heavy that I could not lift it.,SVC,so that 構文
+D3-016,3,Never have I seen such a beautiful sunset.,SVO,倒置
+D3-017,3,Little did he know the truth.,SVO,倒置
+D3-018,3,The man standing at the gate is my uncle.,SVC,分詞の後置修飾
+D3-019,3,I have a lot of things to do today.,SVO,不定詞の形容詞的用法
+D3-020,3,It was in Kyoto that I met her.,SV,強調構文（前置詞句を強調）
+D3-021,3,The book which she wrote last year became a best seller.,SVC,関係詞節＋連結動詞
+D3-022,3,Having finished his work he went home.,SV,完了分詞構文
+D3-023,3,If I were you I would accept the offer.,SVO,仮定法
+D3-024,3,I wish I could speak French.,SVO,仮定法 wish
+D3-025,3,The older we get the wiser we become.,SVC,the 比較級
+D3-026,3,Not only did he sing but he also danced.,SV,not only 倒置
+D3-027,3,The teacher told us that the test had been canceled.,SVOO,tell O that 節
+D3-028,3,It is said that he is a genius.,SV,It is said that
+D3-029,3,She made it clear that she would not come.,SVOC,形式目的語＋that 節
+D3-030,3,Whether he comes or not does not matter.,SV,whether 節の主語
+D2-051,2,I was sleeping when he called me.,SV,when 節
+D2-052,2,Call me when you arrive.,SVO,when 節（命令文）
+D2-053,2,She was reading a book when I came in.,SVO,when 節
+D2-054,2,Because I was sick I stayed home.,SV,because 節（文頭）
+D2-055,2,When I was a child I lived in Nara.,SV,when 節（文頭）

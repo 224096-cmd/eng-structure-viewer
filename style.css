@@ -63,3 +63,6 @@ td.ok { color: var(--O); } td.ng { color: var(--V); font-weight: 600; }
 .metric { display: inline-block; background: #f0f2f5; padding: 6px 12px; border-radius: 8px; margin: 4px 6px 4px 0; }
 .metric b { font-size: 1.2rem; }
 @media (max-width: 480px) { .tokens { font-size: 1.05rem; } h1 { font-size: 1.2rem; } }
+
+.tree { overflow-x: auto; margin: 6px 0 2px; padding: 4px 0; }
+.tree svg { display: block; min-width: 320px; }
