@@ -1,0 +1,79 @@
+{
+  "ruleLevel": 2,
+  "n": 50,
+  "correct": 49,
+  "accuracy": 0.98,
+  "perPattern": {
+    "SV": {
+      "n": 16,
+      "correct": 15,
+      "acc": 0.9375
+    },
+    "SVC": {
+      "n": 10,
+      "correct": 10,
+      "acc": 1
+    },
+    "SVO": {
+      "n": 14,
+      "correct": 14,
+      "acc": 1
+    },
+    "SVOO": {
+      "n": 5,
+      "correct": 5,
+      "acc": 1
+    },
+    "SVOC": {
+      "n": 5,
+      "correct": 5,
+      "acc": 1
+    }
+  },
+  "confusion": {
+    "SV": {
+      "SV": 15,
+      "SVC": 1,
+      "SVO": 0,
+      "SVOO": 0,
+      "SVOC": 0,
+      "UNKNOWN": 0
+    },
+    "SVC": {
+      "SV": 0,
+      "SVC": 10,
+      "SVO": 0,
+      "SVOO": 0,
+      "SVOC": 0,
+      "UNKNOWN": 0
+    },
+    "SVO": {
+      "SV": 0,
+      "SVC": 0,
+      "SVO": 14,
+      "SVOO": 0,
+      "SVOC": 0,
+      "UNKNOWN": 0
+    },
+    "SVOO": {
+      "SV": 0,
+      "SVC": 0,
+      "SVO": 0,
+      "SVOO": 5,
+      "SVOC": 0,
+      "UNKNOWN": 0
+    },
+    "SVOC": {
+      "SV": 0,
+      "SVC": 0,
+      "SVO": 0,
+      "SVOO": 0,
+      "SVOC": 5,
+      "UNKNOWN": 0
+    }
+  },
+  "avgMs": 1.1660000000000001,
+  "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+  "evaluatedAt": "2026-10-15T11:43:45.379Z",
+  "testsetSize": 50
+}

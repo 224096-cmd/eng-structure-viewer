@@ -1,0 +1,183 @@
+{
+  "source": "Universal Dependencies English-EWT v2 (en_ewt-ud-test.conllu)",
+  "license": "CC BY-SA 4.0",
+  "udCopulaAsAux": true,
+  "sentences": 300,
+  "aligned": 291,
+  "unaligned": 9,
+  "tokens": 3247,
+  "posAccuracy": 0.8438558669541115,
+  "lemmaAccuracy": 0.9402191962803056,
+  "perTag": {
+    "PRON": {
+      "n": 358,
+      "ok": 278
+    },
+    "AUX": {
+      "n": 237,
+      "ok": 221
+    },
+    "DET": {
+      "n": 318,
+      "ok": 287
+    },
+    "NOUN": {
+      "n": 626,
+      "ok": 533
+    },
+    "ADP": {
+      "n": 308,
+      "ok": 282
+    },
+    "PROPN": {
+      "n": 236,
+      "ok": 191
+    },
+    "INTJ": {
+      "n": 16,
+      "ok": 15
+    },
+    "ADJ": {
+      "n": 281,
+      "ok": 214
+    },
+    "ADV": {
+      "n": 167,
+      "ok": 99
+    },
+    "VERB": {
+      "n": 424,
+      "ok": 383
+    },
+    "SCONJ": {
+      "n": 59,
+      "ok": 27
+    },
+    "CCONJ": {
+      "n": 114,
+      "ok": 114
+    },
+    "NUM": {
+      "n": 36,
+      "ok": 29
+    },
+    "PART": {
+      "n": 67,
+      "ok": 67
+    }
+  },
+  "confusion": {
+    "PRON": {
+      "PRON": 278,
+      "X": 12,
+      "DET": 6,
+      "ADV": 4,
+      "NOUN": 55,
+      "ADP": 3
+    },
+    "AUX": {
+      "AUX": 221,
+      "VERB": 13,
+      "PROPN": 2,
+      "NOUN": 1
+    },
+    "DET": {
+      "DET": 287,
+      "NOUN": 2,
+      "ADV": 6,
+      "ADJ": 7,
+      "X": 3,
+      "INTJ": 2,
+      "PRON": 2,
+      "ADP": 2,
+      "PART": 4,
+      "NUM": 3
+    },
+    "NOUN": {
+      "NOUN": 533,
+      "PROPN": 22,
+      "ADV": 26,
+      "VERB": 29,
+      "NUM": 3,
+      "ADJ": 8,
+      "ADP": 2,
+      "AUX": 1,
+      "SCONJ": 1,
+      "PART": 1
+    },
+    "ADP": {
+      "ADP": 282,
+      "ADV": 3,
+      "PART": 15,
+      "NOUN": 3,
+      "VERB": 2,
+      "SCONJ": 2,
+      "ADJ": 1
+    },
+    "PROPN": {
+      "PROPN": 191,
+      "NOUN": 38,
+      "INTJ": 1,
+      "ADV": 6
+    },
+    "INTJ": {
+      "INTJ": 15,
+      "VERB": 1
+    },
+    "ADJ": {
+      "ADJ": 214,
+      "PROPN": 24,
+      "ADV": 6,
+      "DET": 2,
+      "NOUN": 19,
+      "VERB": 12,
+      "NUM": 3,
+      "PART": 1
+    },
+    "ADV": {
+      "NOUN": 5,
+      "ADV": 99,
+      "PART": 8,
+      "DET": 4,
+      "NUM": 2,
+      "PROPN": 1,
+      "X": 8,
+      "SCONJ": 13,
+      "ADJ": 13,
+      "ADP": 6,
+      "AUX": 2,
+      "INTJ": 3,
+      "CCONJ": 3
+    },
+    "VERB": {
+      "VERB": 383,
+      "AUX": 14,
+      "NOUN": 14,
+      "PROPN": 2,
+      "ADJ": 11
+    },
+    "SCONJ": {
+      "ADP": 21,
+      "SCONJ": 27,
+      "DET": 6,
+      "VERB": 1,
+      "PRON": 2,
+      "PART": 2
+    },
+    "CCONJ": {
+      "CCONJ": 114
+    },
+    "NUM": {
+      "NUM": 29,
+      "ADV": 5,
+      "PRON": 1,
+      "NOUN": 1
+    },
+    "PART": {
+      "PART": 67
+    }
+  },
+  "totalMs": 129.89999999990687,
+  "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+  "evaluatedAt": "2026-10-15T11:45:01.793Z"
+}
