@@ -21,6 +21,7 @@ async function load(rel) { return import('file://' + path.join(ROOT, rel)); }
 const { tagSentence } = await load('src/pos.js');
 const { chunk } = await load('src/chunker.js');
 const { detectPattern } = await load('src/patterns.js');
+const { splitSentences } = await load('src/text.js');
 const rules = JSON.parse(fs.readFileSync(path.join(ROOT, 'rules/patterns.json'), 'utf8'));
 
 const PATTERNS = ['SV', 'SVC', 'SVO', 'SVOO', 'SVOC'];
@@ -95,6 +96,31 @@ for (const ds of ['testset_dev.csv', 'testset_eval.csv']) {
   fs.writeFileSync(path.join(OUT, `pattern_${name}_cross.csv`), 'sentence_level,n,rules_le1,rules_le2,rules_le3\n' + cross.map(r => r.join(',')).join('\n'));
   report.push('');
 }
+
+// ---------- 長文（段落単位） ----------
+report.push('## 長文（入試長文レベル、規則≤3）', '', '| データ | 文章 | 語数 | 文数 | 正解 | 正解率 | 判定不能 | 処理時間 |', '|---|---|---|---|---|---|---|---|');
+const passRows = [];
+for (const ds of ['passages_dev.json', 'passages_eval.json']) {
+  const file = path.join(ROOT, 'data', ds);
+  if (!fs.existsSync(file)) continue;
+  const data = JSON.parse(fs.readFileSync(file, 'utf8'));
+  const name = ds.replace('passages_', '').replace('.json', '');
+  for (const p of data.passages) {
+    const sents = splitSentences(p.text); const t0 = performance.now();
+    const det = sents.map((s, i) => { const r = analyze(s.text, 3); return { i: i + 1, sentence: s.text, gold: p.gold[i] || '', pred: r.pattern.type, core: r.pattern.core.join(' '), transforms: (r.pattern.transforms || []).join('+'), ok: r.pattern.type === (p.gold[i] || '') }; });
+    const ms = performance.now() - t0; const ok = det.filter(d => d.ok).length, unk = det.filter(d => d.pred === 'UNKNOWN').length, words = p.text.split(/\s+/).length;
+    fs.writeFileSync(path.join(OUT, `passage_${name}_${p.id}.csv`), '\uFEFF' + ['i,sentence,gold,pred,correct,core,transforms', ...det.map(d => [d.i, csvq(d.sentence), d.gold, d.pred, d.ok ? 1 : 0, csvq(d.core), csvq(d.transforms)].join(','))].join('\n'));
+    report.push(`| ${name} | ${p.id} ${p.title} | ${words} | ${sents.length} | ${ok} | ${pct(ok, sents.length)} | ${unk} | ${ms.toFixed(0)} ms |`);
+    passRows.push([version, name, p.id, words, sents.length, ok, (ok / sents.length).toFixed(4), unk, ms.toFixed(1)]);
+  }
+}
+report.push('');
+const passFile = path.join(ROOT, 'results', 'summary_passages_all.csv');
+const pshead = 'version,dataset,passage,words,sentences,correct,accuracy,unknown,ms';
+let pslines = fs.existsSync(passFile) ? fs.readFileSync(passFile, 'utf8').split('\n').filter(l => l && !l.startsWith(version + ',')) : [pshead];
+if (pslines[0] !== pshead) pslines.unshift(pshead);
+pslines.push(...passRows.map(r => r.join(',')));
+fs.writeFileSync(passFile, pslines.join('\n') + '\n');
 
 // ---------- 品詞（UD English-EWT） ----------
 const ud = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/ud_ewt_sample.json'), 'utf8'));

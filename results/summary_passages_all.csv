@@ -1,0 +1,4 @@
+version,dataset,passage,words,sentences,correct,accuracy,unknown,ms
+v0.6,dev,P-DEV-1,331,20,20,1.0000,0,47.7
+v0.6,eval,P-EVAL-1,260,18,13,0.7222,3,48.0
+v0.6,eval,P-EVAL-2,236,15,9,0.6000,5,39.5

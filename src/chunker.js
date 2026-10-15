@@ -20,24 +20,36 @@ export function chunk(tokens, options = { level: 1 }) {
   const lem = i => (i < n ? tokens[i].lemma : '');
   const txt = i => (i < n ? tokens[i].text.toLowerCase() : '');
   const prevType = () => (chunks.length ? chunks[chunks.length - 1].type : null);
+  const prevChunk = () => (chunks.length ? chunks[chunks.length - 1] : null);
+  // 記号による区切り: コンマ・コロン・セミコロン・ダッシュ・閉じ引用符・閉じ括弧の直後では句を伸ばさない
+  const brk = i => i >= 0 && i < n && !!(tokens[i].commaAfter || tokens[i].colonAfter || tokens[i].semiAfter || tokens[i].dashAfter || tokens[i].quoteClose || tokens[i].parenClose);
+  const ext = i => i < n && !brk(i - 1); // i 番目へ伸ばしてよいか
+  let start = 0;
+  const ext2 = i => i < n && (i === start || !brk(i - 1));
 
+  let guardLast = -1;
   while (k < n) {
+    if (k === guardLast) { chunks.push({ type: 'X', tokens: [k], head: k }); k++; continue; } // 進まない場合の安全弁
+    guardLast = k;
     const p = pos(k);
 
     // ---- 名詞句 ----
-    if (p === 'DET' || p === 'ADJ' || p === 'NOUN' || p === 'PROPN' || p === 'PRON' || p === 'NUM') {
-      const start = k;
+    const moreThan = p === 'ADV' && /^(more|less|fewer)$/.test(txt(k)) && txt(k + 1) === 'than' && (pos(k + 2) === 'NUM' || pos(k + 2) === 'NOUN' || pos(k + 2) === 'DET');
+    if (p === 'DET' || p === 'ADJ' || p === 'NOUN' || p === 'PROPN' || p === 'PRON' || p === 'NUM' || moreThan) {
+      start = k;
+      if (moreThan) k += 2;
       const possWithNoun = p === 'PRON' && tokens[k].tags.includes('Possessive') && ['ADJ', 'NOUN', 'PROPN', 'NUM'].includes(pos(k + 1));
       if (p === 'PRON' && !possWithNoun) {
         chunks.push({ type: 'NP', tokens: [k], head: k, pronoun: true, wh: tokens[k].tags.includes('QuestionWord'), existential: txt(k) === 'there', it: txt(k) === 'it' });
         k++; continue;
       }
-      if (p === 'DET' || possWithNoun) k++;
-      while (k < n && (pos(k) === 'ADJ' || pos(k) === 'NUM' || (pos(k) === 'ADV' && pos(k + 1) === 'ADJ'))) k++;
-      if (level >= 2) while (k < n && pos(k) === 'VERB' && (pos(k + 1) === 'NOUN' || pos(k + 1) === 'PROPN') && /(ing|ed)$/.test(tokens[k].text)) k++;
+      if ((p === 'DET' || possWithNoun) && !brk(k)) { k++; while (ext2(k) && pos(k) === 'DET') k++; }
+      else if (p === 'DET' || possWithNoun) { chunks.push({ type: 'NP', tokens: [k], head: k }); k++; continue; }
+      while (ext2(k) && (pos(k) === 'ADJ' || pos(k) === 'NUM' || (pos(k) === 'ADV' && pos(k + 1) === 'ADJ') || (pos(k) === 'CCONJ' && pos(k - 1) === 'ADJ' && pos(k + 1) === 'ADJ'))) k++;
+      if (level >= 2) while (ext(k) && pos(k) === 'VERB' && (pos(k + 1) === 'NOUN' || pos(k + 1) === 'PROPN') && /(ing|ed)$/.test(tokens[k].text)) k++;
       let head = -1;
       const startedWithDet = pos(start) === 'DET';
-      while (k < n && (pos(k) === 'NOUN' || pos(k) === 'PROPN')) {
+      while (ext2(k) && (pos(k) === 'NOUN' || pos(k) === 'PROPN')) {
         if (startedWithDet && head !== -1 && pos(head) === 'NOUN' && pos(k) === 'PROPN') break; // the baby Emma → 2 つの NP
         head = k; k++;
       }
@@ -58,18 +70,23 @@ export function chunk(tokens, options = { level: 1 }) {
 
     // ---- 動詞句 ----
     if (p === 'AUX' || p === 'VERB') {
-      const start = k;
+      start = k;
       const bare = p === 'VERB';
-      while (k < n && pos(k) === 'AUX') k++;
-      while (k < n && (pos(k) === 'ADV' || (pos(k) === 'PART' && tokens[k].tags.includes('Negative'))) && (pos(k + 1) === 'VERB' || pos(k + 1) === 'AUX')) k++;
-      while (k < n && pos(k) === 'AUX') k++;
+      while (ext2(k) && pos(k) === 'AUX') k++;
+      while (ext2(k) && (pos(k) === 'ADV' || (pos(k) === 'PART' && tokens[k].tags.includes('Negative'))) && (pos(k + 1) === 'VERB' || pos(k + 1) === 'AUX')) k++;
+      while (ext2(k) && pos(k) === 'AUX') k++;
       let head = -1, auxOnly = false;
-      if (k < n && pos(k) === 'VERB') { head = k; k++; }
+      // 法助動詞・do の直後の -ing は動名詞（should walking → should | walking）なので動詞句に含めない
+      const lastAux = k > start ? tokens[k - 1] : null;
+      const modalBeforeIng = lastAux && lastAux.pos === 'AUX' && lastAux.lemma !== 'be' && lastAux.lemma !== 'have' && k < n && pos(k) === 'VERB' && /ing$/.test(tokens[k].text);
+      if (k < n && pos(k) === 'VERB' && (k === start || ext(k)) && !modalBeforeIng) { head = k; k++; }
       else { head = k - 1; auxOnly = true; }
       const headTok = tokens[head];
       // 動名詞句（レベル2）: 助動詞なしの -ing が VP の直後（enjoy playing）または文頭（Swimming is）
       const isIng = /ing$/.test(headTok.text) && headTok.pos === 'VERB' && bare;
-      if (level >= 2 && isIng && (prevType() === 'VP' || prevType() === null)) {
+      const pc = prevChunk();
+      const noVPYet = !chunks.some(c => c.type === 'VP' || c.type === 'VP_be');
+      if (level >= 2 && isIng && (prevType() === 'VP' || prevType() === null || prevType() === 'ADJP' || ((prevType() === 'PP' || prevType() === 'ADVP') && noVPYet && pc.commaAfter) || (pc && pc.auxOnly)) && !(pc && pc.type === 'VP' && !pc.auxOnly && pc.commaAfter)) {
         const sub = chunk(tokens.slice(k), options);
         if (sub.length && sub[0].type === 'NP') k += sub[0].tokens.length;
         chunks.push({ type: 'NP', tokens: range(start, k), head, gerund: true });
@@ -77,8 +94,8 @@ export function chunk(tokens, options = { level: 1 }) {
       }
       // 句動詞: 小辞 / 前置詞を吸収
       let phrasal = false;
-      if (k < n && (pos(k) === 'PART' && tokens[k].tags.includes('Particle'))) { k++; phrasal = true; }
-      else if (k < n && (pos(k) === 'ADP' || pos(k) === 'PART')) {
+      if (ext(k) && (pos(k) === 'PART' && tokens[k].tags.includes('Particle'))) { k++; phrasal = true; }
+      else if (ext(k) && (pos(k) === 'ADP' || pos(k) === 'PART')) {
         const two = headTok.lemma + ' ' + txt(k), three = two + ' ' + txt(k + 1);
         if (PHRASAL.has(three)) { k += 2; phrasal = true; }
         else if (PHRASAL.has(two)) { k += 1; phrasal = true; }
@@ -94,8 +111,8 @@ export function chunk(tokens, options = { level: 1 }) {
 
     // ---- 前置詞句 ----
     if (p === 'ADP') {
-      const start = k; k++;
-      const sub = chunk(tokens.slice(k), options);
+      start = k; k++;
+      const sub = brk(start) ? [] : chunk(tokens.slice(k), options);
       if (sub.length && sub[0].type === 'NP') {
         const len = sub[0].tokens.length;
         chunks.push({ type: 'PP', tokens: range(start, k + len), head: start, inner: 'NP' });
@@ -106,13 +123,13 @@ export function chunk(tokens, options = { level: 1 }) {
     }
 
     // ---- 不定詞 to + VERB (+ NP) → 名詞的用法として NP（レベル2以上） ----
-    if (p === 'PART' && pos(k + 1) === 'VERB') {
-      const start = k; k += 2;
+    if (p === 'PART' && pos(k + 1) === 'VERB' && !brk(k)) {
+      start = k; k += 2;
       if (level >= 2) {
         const sub = chunk(tokens.slice(k), options);
         let j = 0;
         // to be a pilot / to make this dish のように後続の NP / ADJP / PP を 1 つ吸収
-        if (sub.length && ['NP', 'ADJP'].includes(sub[0].type)) { k += sub[0].tokens.length; j = 1; }
+        if (!brk(k - 1) && sub.length && ['NP', 'ADJP'].includes(sub[0].type)) { k += sub[0].tokens.length; j = 1; }
         chunks.push({ type: 'NP', tokens: range(start, k), head: start + 1, infinitive: true });
       } else {
         chunks.push({ type: 'X', tokens: range(start, k), head: start });
@@ -129,6 +146,12 @@ export function chunk(tokens, options = { level: 1 }) {
     chunks.push({ type: 'X', tokens: [k], head: k }); k++;
   }
 
+  // 句読点の特徴をチャンクに写す
+  chunks.forEach(c => {
+    const first = tokens[c.tokens[0]], last = tokens[c.tokens[c.tokens.length - 1]];
+    c.commaAfter = !!last.commaAfter; c.colonAfter = !!last.colonAfter; c.dashAfter = !!last.dashAfter; c.quoteClose = !!last.quoteClose; c.parenClose = !!last.parenClose;
+    c.quoteOpen = !!first.quoteOpen; c.parenOpen = !!first.parenOpen; c.dashBefore = c.tokens[0] > 0 && !!tokens[c.tokens[0] - 1].dashAfter;
+  });
   // 等位接続の名詞句をまとめる: NP CCONJ NP → NP（レベル1）
   return mergeCoordinatedNP(chunks, tokens);
 }
@@ -140,8 +163,8 @@ function mergeCoordinatedNP(chunks, tokens) {
     const c = chunks[i];
     const vpBefore = out.some(x => x.type === 'VP' || x.type === 'VP_be');
     const startsClause = chunks[i + 3] && (chunks[i + 3].type === 'VP' || chunks[i + 3].type === 'VP_be') && vpBefore;
-    if (c.type === 'NP' && chunks[i + 1] && chunks[i + 1].type === 'CCONJ' && chunks[i + 2] && chunks[i + 2].type === 'NP' && !startsClause) {
-      const merged = { type: 'NP', tokens: [...c.tokens, ...chunks[i + 1].tokens, ...chunks[i + 2].tokens], head: chunks[i + 2].head, coordinated: true };
+    if (c.type === 'NP' && chunks[i + 1] && chunks[i + 1].type === 'CCONJ' && chunks[i + 2] && chunks[i + 2].type === 'NP' && !startsClause && !c.commaAfter) {
+      const merged = { ...chunks[i + 2], type: 'NP', tokens: [...c.tokens, ...chunks[i + 1].tokens, ...chunks[i + 2].tokens], head: chunks[i + 2].head, coordinated: true, pronoun: false };
       out.push(merged); i += 2;
       continue;
     }

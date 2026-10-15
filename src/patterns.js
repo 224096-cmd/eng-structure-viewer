@@ -12,21 +12,30 @@ const CONTROL_VERBS = new Set(['ask', 'tell', 'want', 'allow', 'order', 'advise'
 const THAT_VERBS = new Set(['think', 'know', 'believe', 'hope', 'say', 'guess', 'feel', 'suppose', 'hear', 'wish', 'see', 'mean', 'find']);
 
 export function detectPattern(chunks, rulesJson, level = 1) {
-  const mods = new Set([...(rulesJson.modifiers || []), 'RELCL', 'SUBCL', 'COORDCL']);
+  const mods = new Set([...(rulesJson.modifiers || []), 'RELCL', 'SUBCL', 'COORDCL', 'PAREN', 'EXPL', 'LEADM', 'APPOS']);
   const rules = rulesJson.rules.filter(r => r.level <= level);
   const transforms = [];
 
   let work = chunks.map((c, i) => ({ ...c, idx: i, folded: [] }));
   work = work.filter(c => c.type !== 'PUNCT');
+  work = groupSpans(work, tokensOf(chunks), transforms);   // 引用符・括弧・ダッシュで囲まれた部分
+  work = foldColon(work, transforms);                       // コロン以降は補足
+  work = foldLeadingAdverbials(work, transforms);           // 文頭の「〜, 」
+  if (level >= 2) work = undoReporting(work, transforms);   // "…," said X
   if (level >= 3) work = foldWhClauses(work, transforms);
   work = undoInversion(work, transforms, level);
   if (level >= 3) {
     work = foldLeadingParticipial(work, transforms);
     work = foldTheComparative(work, transforms);
+  }
+  if (level >= 2) work = foldRelativeClauses(work, transforms, level);
+  if (level >= 3) {
+    work = foldAppositives(work, transforms);
+    work = foldContactClauses(work, transforms);
+    work = foldGerundAfterAdj(work, transforms);
     work = splitCompound(work, transforms);
   }
   if (level >= 2) {
-    work = foldRelativeClauses(work, transforms, level);
     work = foldParticiples(work, transforms, level);
     work = foldSubordinateClauses(work, transforms, level);
     work = foldThatClause(work, transforms, level);
@@ -66,6 +75,7 @@ function matchCore(core, spec) {
       case 'existential': return !!c.existential;
       case 'it': return !!c.it;
       case 'clause': return !!c.clause;
+      case 'quote': return !!c.quote;
       default: return false;
     }
   });
@@ -114,6 +124,167 @@ function undoInversion(work, transforms, level = 1) {
   return w;
 }
 
+function tokensOf(chunks) { return chunks; }
+
+// 引用符 / 括弧 / ダッシュで囲まれた範囲を 1 つのチャンクにまとめる
+//   引用 → QUOTE（名詞節として扱う）、括弧・ダッシュ → PAREN（修飾語）
+function groupSpans(work, _chunks, transforms) {
+  let out = work;
+  for (const [openKey, closeKey, type] of [['parenOpen', 'parenClose', 'PAREN'], ['quoteOpen', 'quoteClose', 'QUOTE']]) {
+    const res = [];
+    for (let i = 0; i < out.length; i++) {
+      const c = out[i];
+      if (c[openKey]) {
+        let j = i; const members = [];
+        while (j < out.length) { members.push(out[j]); if (out[j][closeKey]) break; j++; }
+        if (members.length > 1 || type === 'QUOTE') {
+          const last = members[members.length - 1];
+          res.push({ type: type === 'QUOTE' ? 'NP' : 'PAREN', quote: type === 'QUOTE', clause: type === 'QUOTE', idx: c.idx, tokens: members.flatMap(m => m.tokens), head: c.head, folded: members.slice(1).map(m => m.idx), commaAfter: last.commaAfter, colonAfter: last.colonAfter, dashAfter: last.dashAfter });
+          transforms.push(type === 'QUOTE' ? 'quotation' : 'parenthesis');
+          i = j; continue;
+        }
+      }
+      res.push(c);
+    }
+    out = res;
+  }
+  // ダッシュ: 「— … —」は挿入、「— …」（文末まで）は補足
+  const res = [];
+  for (let i = 0; i < out.length; i++) {
+    const c = out[i];
+    if (c.dashBefore && i > 0) {
+      let j = i; const members = [];
+      while (j < out.length) { members.push(out[j]); if (out[j].dashAfter) break; j++; }
+      res.push({ type: 'PAREN', idx: c.idx, tokens: members.flatMap(m => m.tokens), head: c.head, folded: members.slice(1).map(m => m.idx), commaAfter: members[members.length - 1].commaAfter });
+      transforms.push('dash_insert');
+      i = j; continue;
+    }
+    res.push(c);
+  }
+  return res;
+}
+
+// コロンのあとは説明・列挙（EXPL、修飾語扱い）。ただしコロンの前に動詞句がある場合のみ
+function foldColon(work, transforms) {
+  const i = work.findIndex(c => c.colonAfter);
+  if (i < 0 || i === work.length - 1) return work;
+  if (!work.slice(0, i + 1).some(c => c.type === 'VP' || c.type === 'VP_be')) return work;
+  const rest = work.slice(i + 1);
+  transforms.push('colon_explanation');
+  return [...work.slice(0, i + 1), { type: 'EXPL', idx: rest[0].idx, tokens: rest.flatMap(x => x.tokens), head: rest[0].head, folded: rest.slice(1).map(x => x.idx) }];
+}
+
+// 文頭の副詞句（In 1998, / Today, more than twenty years later, / Interestingly,）: 最初の動詞句より前で、
+// コンマで終わる区間に動詞句が無く、かつ区間が主語になりうる単独の名詞句でなければ LEADM（修飾語）にする
+function foldLeadingAdverbials(work, transforms) {
+  let w = work;
+  for (let guard = 0; guard < 3; guard++) {
+    const firstVP = w.findIndex(c => c.type === 'VP' || c.type === 'VP_be');
+    if (firstVP <= 0) return w;
+    let commaAt = w.findIndex((c, i) => i < firstVP && c.commaAfter);
+    if (commaAt < 0 && (w[0].type === 'PP' || w[0].type === 'ADVP')) {
+      // 文頭が前置詞句で、コンマまでに動詞句を 1 つ含む節（At the moment we hear a name, we …）
+      const c2 = w.findIndex((c, i) => i > firstVP && c.commaAfter && w[i + 1] && w[i + 1].type === 'NP' && w[i + 2] && ['VP', 'VP_be'].includes(w[i + 2].type));
+      if (c2 > 0 && w.slice(0, c2 + 1).filter(c => c.type === 'VP' || c.type === 'VP_be').length === 1) commaAt = c2;
+    }
+    if (commaAt < 0) return w;
+    const run = w.slice(0, commaAt + 1);
+    const onlyNP = run.length === 1 && run[0].type === 'NP' && !run[0].clause;
+    const nextIsSubject = w[commaAt + 1] && w[commaAt + 1].type === 'NP';
+    if (onlyNP || !nextIsSubject) return w;
+    if (run.some(c => ['SCONJ', 'REL', 'CCONJ'].includes(c.type))) return w; // 従属節は別の処理に任せる
+    const vpsInRun = run.filter(c => c.type === 'VP' || c.type === 'VP_be').length;
+    if (vpsInRun > 1) return w;
+    if (vpsInRun === 1 && !(run[0].type === 'PP' || run[0].type === 'ADVP')) return w; // 「At the moment we hear a name,」のみ節として扱う
+    transforms.push(vpsInRun ? 'leading_clause' : 'leading_adverbial');
+    w = [{ type: vpsInRun ? 'SUBCL' : 'LEADM', idx: run[0].idx, tokens: run.flatMap(x => x.tokens), head: run[0].head, folded: run.slice(1).map(x => x.idx) }, ...w.slice(commaAt + 1)];
+  }
+  return w;
+}
+
+// 伝達の倒置（レベル2）: QUOTE VP(said) NP … → NP VP QUOTE、QUOTE NP VP → NP VP QUOTE。
+// 残りの QUOTE（"…," she said, "…"）は最初の QUOTE に併合する
+function undoReporting(work, transforms) {
+  const qi = work.findIndex(c => c.quote);
+  if (qi < 0) return work;
+  let w = work.slice();
+  const others = w.filter((c, i) => c.quote && i !== qi);
+  if (others.length) {
+    const main = w[qi];
+    main.tokens = [...main.tokens, ...others.flatMap(o => o.tokens)];
+    main.folded = [...(main.folded || []), ...others.flatMap(o => [o.idx, ...(o.folded || [])])];
+    w = w.filter((c, i) => !(c.quote && i !== qi));
+    transforms.push('quote_merge');
+  }
+  const q = w.findIndex(c => c.quote);
+  const a = w[q + 1], b = w[q + 2];
+  if (q === 0 && a && a.type === 'VP' && b && b.type === 'NP') {
+    const rest = w.slice(q + 3);
+    transforms.push('reporting_inversion');
+    return [b, a, w[q], ...rest];
+  }
+  if (q === 0 && a && a.type === 'NP' && b && b.type === 'VP') {
+    transforms.push('reporting_order');
+    return [a, b, w[q], ...w.slice(q + 3)];
+  }
+  return w;
+}
+
+// 同格（レベル3）: NP, NP （文末またはコンマ＋動詞句が続く）→ 2 つ目を APPOS（修飾語）。
+// 「Attention, not memory, is」の「, not memory,」も同様
+function foldAppositives(work, transforms) {
+  const out = [];
+  for (let i = 0; i < work.length; i++) {
+    const c = work[i];
+    const n1 = work[i + 1], n2 = work[i + 2];
+    if (c.type === 'NP' && c.commaAfter && n1) {
+      // , not memory,
+      if (n1.type === 'ADVP' && /^not$/i.test(n1.headText || '') && n2 && n2.type === 'NP' && n2.commaAfter) {
+        out.push(c, { type: 'APPOS', idx: n1.idx, tokens: [...n1.tokens, ...n2.tokens], head: n2.head, folded: [n2.idx], commaAfter: true });
+        transforms.push('appositive'); i += 2; continue;
+      }
+      const endsHere = i + 2 >= work.length;
+      const beforeVP = n1.commaAfter && n2 && ['VP', 'VP_be'].includes(n2.type);
+      if (n1.type === 'NP' && !n1.clause && !n1.pronoun && !n1.wh && (endsHere || beforeVP)) {
+        out.push({ ...c, commaAfter: false }, { ...n1, type: 'APPOS' });
+        transforms.push('appositive'); i += 1; continue;
+      }
+    }
+    out.push(c);
+  }
+  return out;
+}
+
+// 接触節（レベル3）: VP の後の NP NP VP … で関係詞が省略されたもの（the people the planners had expected）
+function foldContactClauses(work, transforms) {
+  const out = [];
+  for (let i = 0; i < work.length; i++) {
+    const c = work[i];
+    const prev = out[out.length - 1];
+    const n1 = work[i + 1], n2 = work[i + 2];
+    const vpsBefore = out.filter(x => x.type === 'VP' || x.type === 'VP_be').length;
+    const inLeadingSub = work[0].type === 'SCONJ' && vpsBefore < 2;
+    if (!inLeadingSub && c.type === 'NP' && !c.clause && !c.quote && prev && ['VP', 'VP_be', 'ADVP'].includes(prev.type) && n1 && n1.type === 'NP' && !n1.clause && !n1.wh && !c.commaAfter && n2 && ['VP', 'VP_be'].includes(n2.type) && !isParticipleVP(n2)) {
+      let j = i + 1, vpSeen = 0; const members = [];
+      while (j < work.length) {
+        const t = work[j].type;
+        if (t === 'VP' || t === 'VP_be') { if (vpSeen >= 1) break; vpSeen++; }
+        if (t === 'CCONJ' || t === 'SCONJ') break;
+        members.push(work[j]); j++;
+      }
+      out.push(c, { type: 'RELCL', idx: members[0].idx, tokens: members.flatMap(m => m.tokens), head: members[0].head, folded: members.slice(1).map(m => m.idx) });
+      transforms.push('contact_clause'); i = j - 1; continue;
+    }
+    out.push(c);
+  }
+  return out;
+}
+
+// 形容詞の直後の動名詞句（busy doing something）は形容詞の修飾語
+function foldGerundAfterAdj(work, transforms) {
+  return work.map((c, i) => (c.type === 'NP' && c.gerund && work[i - 1] && work[i - 1].type === 'ADJP') ? (transforms.push('gerund_after_adjective'), { ...c, type: 'ADVP' }) : c);
+}
+
 // wh 節（レベル3）: what/where/when… + NP + VP … を名詞節にまとめる（主語の what 節、間接疑問）
 function foldWhClauses(work, transforms) {
   const out = [];
@@ -122,7 +293,7 @@ function foldWhClauses(work, transforms) {
     const isWh = (c.type === 'NP' || c.type === 'ADVP') && c.wh;
     const next = work[i + 1], next2 = work[i + 2];
     const prev = out[out.length - 1];
-    const prevOk = !prev || prev.type === 'VP' || (prev.type === 'NP' && out[out.length - 2] && out[out.length - 2].type === 'VP');
+    const prevOk = !prev || prev.type === 'VP' || (prev.type === 'PP' && !prev.inner) || (prev.type === 'NP' && out[out.length - 2] && out[out.length - 2].type === 'VP');
     // 疑問文の倒置（What did you buy）は対象外: 直後が助動詞のみの VP なら飛ばす
     const subjectClause = isWh && next && next.type === 'NP' && next2 && (next2.type === 'VP' || next2.type === 'VP_be') && !next2.auxOnly && prevOk;
     const whSubject = isWh && c.type === 'NP' && next && next.type === 'VP' && !next.auxOnly && prevOk && i === 0 && work.slice(i + 2).some(x => x.type === 'VP' || x.type === 'VP_be'); // What happened yesterday surprised everyone
@@ -137,7 +308,13 @@ function foldWhClauses(work, transforms) {
         members.push(work[j]); j++;
       }
       if (vpSeen >= 1 && (j < work.length || prev)) { // 主語節なら後ろに主節の動詞が必要、目的語節なら文末まででよい
-        out.push({ type: 'NP', idx: c.idx, tokens: members.flatMap(m => m.tokens), head: c.head, folded: members.slice(1).map(m => m.idx), clause: true });
+        const clauseChunk = { type: 'NP', idx: c.idx, tokens: members.flatMap(m => m.tokens), head: c.head, folded: members.slice(1).map(m => m.idx), clause: true };
+        if (prev && prev.type === 'PP' && !prev.inner) {
+          // about how we should live → 前置詞句の中身として併合
+          out[out.length - 1] = { ...prev, tokens: [...prev.tokens, ...clauseChunk.tokens], inner: 'CLAUSE', folded: [...(prev.folded || []), c.idx, ...clauseChunk.folded] };
+          transforms.push('wh_clause_in_pp'); i = j - 1; continue;
+        }
+        out.push(clauseChunk);
         transforms.push('wh_clause');
         i = j - 1;
         continue;
@@ -183,18 +360,27 @@ function splitCompound(work, transforms) {
   if (firstVP < 0) return work;
   for (let i = firstVP + 1; i < work.length; i++) {
     const c = work[i];
+    const vpsBefore = work.slice(0, i).filter(x => x.type === 'VP' || x.type === 'VP_be').length;
+    if (work[0].type === 'SCONJ' && vpsBefore < 2) continue; // 文頭の従属節の中の or/and
     if (c.type === 'CCONJ') {
       const n1 = work[i + 1], n2 = work[i + 2], n3 = work[i + 3];
-      const clause = n1 && ((n1.type === 'NP' && n2 && (['VP', 'VP_be'].includes(n2.type) || (n2.type === 'ADVP' && n3 && ['VP', 'VP_be'].includes(n3.type)))) || (n1.type === 'VP' && !n1.bare) || (n1.type === 'ADVP' && n2 && n2.type === 'NP'));
+      const clause = n1 && ((n1.type === 'NP' && n2 && (['VP', 'VP_be'].includes(n2.type) || (n2.type === 'ADVP' && n3 && ['VP', 'VP_be'].includes(n3.type)))) || (['VP', 'VP_be'].includes(n1.type) && !isParticipleVP(n1)) || (n1.type === 'ADVP' && n2 && (n2.type === 'NP' || n2.type === 'VP')));
       if (clause) {
         const rest = work.slice(i + 1);
         transforms.push('compound_sentence');
         return [...work.slice(0, i), { type: 'COORDCL', idx: c.idx, tokens: [...c.tokens, ...rest.flatMap(x => x.tokens)], head: c.head, folded: rest.map(x => x.idx) }];
       }
     }
+    // コンマ区切りの並列述語（meet their neighbors, notice changes …, and feel …）
+    if (work[i - 1] && work[i - 1].commaAfter && ['VP', 'VP_be'].includes(c.type) && !isParticipleVP(c) && !c.auxOnly) {
+      const rest = work.slice(i);
+      transforms.push('coordinated_predicate');
+      return [...work.slice(0, i), { type: 'COORDCL', idx: c.idx, tokens: rest.flatMap(x => x.tokens), head: c.head, folded: rest.slice(1).map(x => x.idx) }];
+    }
   }
   return work;
 }
+function isParticipleVP(c) { return c.bare && !c.auxOnly && /(ing|ed|en)$/.test(c.headText || ''); }
 
 // 関係詞節: NP REL ... → RELCL（修飾語）。節の終わり = 節内で動詞句を見たあと、次の動詞句の直前または文末
 function foldRelativeClauses(work, transforms, level = 2) {
@@ -208,6 +394,8 @@ function foldRelativeClauses(work, transforms, level = 2) {
       while (j < work.length) {
         const t = work[j].type;
         if (t === 'VP' || t === 'VP_be') { if (vpSeen >= 1) break; vpSeen++; }
+        if (t === 'CCONJ' && work[j + 1] && ['VP', 'VP_be'].includes(work[j + 1].type) && vpSeen >= 1) { members.push(work[j], work[j + 1]); j += 2; continue; }
+        if (t === 'CCONJ' && work[j + 1] && work[j + 1].type === 'REL') { members.push(work[j], work[j + 1]); j += 2; vpSeen = 0; continue; }
         if (t === 'SCONJ' || t === 'CCONJ') break;
         members.push(work[j]); j++;
       }
@@ -230,11 +418,12 @@ function foldParticiples(work, transforms, level = 2) {
     const prevVP = [...out].reverse().find(x => x.type === 'VP' || x.type === 'VP_be');
     const isParticiple = c.type === 'VP' && c.bare && !c.auxOnly && /(ing|ed|en)$/.test(c.headText || '');
     const otherVP = work.some((x, k) => k !== i && (x.type === 'VP' || x.type === 'VP_be'));
-    const afterMod = level >= 3 && prev && (prev.type === 'PP' || prev.type === 'ADVP' || prev.type === 'VP') && prevVP;
+    const afterMod = level >= 3 && prev && (prev.type === 'PP' || prev.type === 'ADVP' || prev.type === 'VP') && prevVP && /ing$/.test(c.headText || '');
     // 主語の直後の過去形動詞（I stayed / The cat chased）を分詞と誤らないための制約
     const prevIsPron = prev && prev.type === 'NP' && prev.pronoun;
     const edForm = /(ed|en)$/.test(c.headText || '') && !/ing$/.test(c.headText || '');
-    const okNP = prev && prev.type === 'NP' && !prevIsPron && !(edForm && out.length === 1);
+    const afterConj = out.length >= 2 && out[out.length - 2].type === 'CCONJ';
+    const okNP = prev && prev.type === 'NP' && !prevIsPron && !(edForm && (out.length === 1 || afterConj));
     if (isParticiple && prev && (okNP || afterMod) && (otherVP || afterMod) && !(prevVP && CAUSATIVE_VERBS.has(prevVP.headLemma))) {
       const asSub = prev.type !== 'NP';
       let j = i + 1;

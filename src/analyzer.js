@@ -1,9 +1,9 @@
 // analyzer.js — 解析の入口。1文ごとに 品詞 → チャンク → 文型 を実行し、JSON で返す
-import { tagSentence } from './pos.js?v=0.5';
-import { chunk } from './chunker.js?v=0.5';
-import { detectPattern } from './patterns.js?v=0.5';
+import { tagSentence } from './pos.js?v=0.6';
+import { chunk } from './chunker.js?v=0.6';
+import { detectPattern } from './patterns.js?v=0.6';
 
-const RULES_VERSION = '0.5';
+const RULES_VERSION = '0.6';
 let RULES = null;
 export async function loadRules(url = 'rules/patterns.json') {
   if (!RULES) RULES = await (await fetch(url + '?v=' + RULES_VERSION)).json();
@@ -11,9 +11,9 @@ export async function loadRules(url = 'rules/patterns.json') {
 }
 export function getRules() { return RULES; }
 
-export function splitSentences(text) {
-  return nlp(text).json().map(s => s.text.trim()).filter(Boolean);
-}
+import { splitSentences as splitText } from './text.js?v=0.6';
+export function splitSentences(text) { return splitText(text).map(s => s.text); }
+export function splitSentencesWithMeta(text) { return splitText(text); }
 
 export function analyzeSentence(sentence, level = 1) {
   const t0 = performance.now();
@@ -34,5 +34,5 @@ export function analyzeSentence(sentence, level = 1) {
 }
 
 export function analyzeText(text, level = 1) {
-  return splitSentences(text).map(s => analyzeSentence(s, level));
+  return splitText(text).map(s => ({ ...analyzeSentence(s.text, level), paragraph: s.paragraph, index: s.index, fragment: s.fragment }));
 }

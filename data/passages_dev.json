@@ -1,0 +1,33 @@
+{
+ "_note": "長文テストセット。gold は各文（text.js の文分割の順）の主節の文型。評価用は規則の改良に使わない。",
+ "passages": [
+  {
+   "id": "P-DEV-1",
+   "title": "Walking and happiness（開発用）",
+   "level": 3,
+   "text": "In 1998, a small group of researchers at a university in northern Europe began a project that, at first, attracted little attention. Their goal was simple: to find out whether people who walk to work are happier than those who drive. \"We expected a small difference,\" said Dr. Anna Lindqvist, who led the study, \"but the results surprised everyone.\" Over five years, the team followed more than 2,000 adults (aged 25 to 60) in three cities. Participants who walked or cycled reported higher levels of satisfaction, and they were less likely to suffer from stress-related illness. Interestingly, the effect did not depend on income; wealthy and poor participants benefited equally.\n\nWhy should walking make such a difference? One explanation is physical: exercise releases chemicals in the brain that improve mood. Another is social. People on foot meet their neighbors, notice changes in their town, and feel that they belong to a community. Drivers, by contrast, spend their journeys alone, often in traffic jams that make them angry before the working day has even started. The researchers didn't claim that cars are bad — many participants had no choice but to drive — but they argued that cities should be designed so that walking is a realistic option.\n\nNot everyone agreed with the conclusions. Some critics pointed out that people who choose to walk may already be healthier and happier than those who don't. In other words, walking might be a result of happiness rather than its cause. Lindqvist accepted this criticism, yet she insisted that the overall pattern was too strong to ignore. \"If even half of the effect is real,\" she wrote in 2004, \"it is worth building a few more sidewalks.\"\n\nToday, more than twenty years later, the study is still quoted by city planners around the world. What began as a modest experiment has become part of a larger debate about how we should live, and it reminds us that the simplest habits are sometimes the most important.",
+   "gold": [
+    "SVO",
+    "SVC",
+    "SVO",
+    "SVO",
+    "SVO",
+    "SV",
+    "SV",
+    "SVO",
+    "SVC",
+    "SVC",
+    "SVO",
+    "SVO",
+    "SVO",
+    "SV",
+    "SVO",
+    "SVC",
+    "SVO",
+    "SVO",
+    "SV",
+    "SVC"
+   ]
+  }
+ ]
+}

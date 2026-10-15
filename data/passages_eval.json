@@ -1,0 +1,54 @@
+{
+ "_note": "長文評価用（未知）。",
+ "passages": [
+  {
+   "id": "P-EVAL-1",
+   "title": "The library that never closes",
+   "level": 3,
+   "text": "When the city of Milford opened its first twenty-four-hour library in 2015, many residents thought the idea was foolish. \"Who reads at three in the morning?\" asked one newspaper, and the question seemed reasonable. The library, however, was not designed only for readers. It offered quiet rooms, free internet, and a warm place to sit, and within a year it had become one of the busiest public buildings in the town.\n\nThe people who used the library at night were not the people the planners had expected. Nurses and factory workers came after their shifts; students who shared small apartments came to study; a few elderly men came simply because they could not sleep. \"I don't borrow books,\" said Mr. Harris, a retired bus driver. \"I come here to be with other people.\" The staff soon noticed that the night visitors talked to one another more than daytime visitors did.\n\nNot all of the effects were positive. Some neighbors complained about noise, and the cost of keeping the building open was higher than the council had promised. In 2019, the city considered closing the library at midnight to save money. The plan was abandoned after more than 3,000 people signed a petition (the largest in the town's history), and the council agreed to keep the doors open.\n\nToday the Milford library is often described as a model for other cities. Whether it can be copied elsewhere is unclear, because every town is different. What the experiment shows, however, is that a public building can serve needs its designers never imagined.",
+   "gold": [
+    "SVO",
+    "SVO",
+    "SV",
+    "SVO",
+    "SVC",
+    "SV",
+    "SV",
+    "SV",
+    "SVO",
+    "SV",
+    "SVO",
+    "SVC",
+    "SV",
+    "SVO",
+    "SV",
+    "SV",
+    "SVC",
+    "SVC"
+   ]
+  },
+  {
+   "id": "P-EVAL-2",
+   "title": "Why we forget names",
+   "level": 3,
+   "text": "Most people have had the embarrassing experience of meeting someone, hearing their name, and forgetting it almost immediately. Why does this happen so often? Psychologists have studied the problem for decades, and their answer is surprisingly simple: names are hard to remember because they mean nothing.\n\nWhen you learn that a stranger is a doctor, the word connects to many things you already know — hospitals, white coats, long years of study. A name such as \"Baker\" or \"Carter,\" by contrast, is just a sound. Interestingly, the same word is much easier to remember as a job than as a name. In one famous experiment, participants who were told that a man in a photograph was a baker remembered the word far better than those who were told his name was Baker.\n\nThere is also a social reason. At the moment we hear a name, we are usually busy doing something else: shaking hands, smiling, or thinking about what to say next. Attention, not memory, is the real problem. People who repeat the name aloud, or who use it in the conversation that follows, forget it far less often.\n\nDoes any of this matter? Forgetting a name is rarely serious, but it can make others feel unimportant. The good news is that the skill can be learned. If you treat a name as information rather than as noise, you will find that it stays with you.",
+   "gold": [
+    "SVO",
+    "SV",
+    "SVO",
+    "SV",
+    "SVC",
+    "SVC",
+    "SVO",
+    "SV",
+    "SVC",
+    "SVC",
+    "SVO",
+    "SV",
+    "SVC",
+    "SVC",
+    "SVO"
+   ]
+  }
+ ]
+}

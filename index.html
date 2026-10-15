@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>English Structure Viewer</title>
-  <link rel="stylesheet" href="style.css?v=0.5">
+  <link rel="stylesheet" href="style.css?v=0.6">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#2f5cff">
   <link rel="icon" href="icon.svg">
@@ -12,14 +12,14 @@
 <body>
   <header>
     <h1>English Structure Viewer</h1>
-    <p class="sub">英文の文構造（SVOC）・品詞・原形をブラウザ内だけで解析して表示します。<span class="ver">v0.5</span></p>
+    <p class="sub">英文の文構造（SVOC）・品詞・原形をブラウザ内だけで解析して表示します。<span class="ver">v0.6</span></p>
     <nav><a href="eval.html">評価モード</a> · <a href="https://github.com/224096-cmd/eng-structure-viewer">GitHub</a></nav>
   </header>
 
   <main>
     <section class="card">
       <label for="input" class="lab">英文を入力</label>
-      <textarea id="input" rows="4">The students were studying English in the library. She made him happy. I gave her a book. He looks tired.</textarea>
+      <textarea id="input" rows="5">The students were studying English in the library. She made him happy. I gave her a book. He looks tired.</textarea>
       <div class="controls">
         <label>対象レベル
           <select id="level">
@@ -29,10 +29,18 @@
           </select>
         </label>
         <button id="run" class="primary">解析</button>
-        <label><input type="checkbox" id="showTree" checked> 構造図を表示</label>
+        <label>構造図
+          <select id="treeMode">
+            <option value="fold" selected>短文は表示・長文は折りたたみ</option>
+            <option value="always">常に表示</option>
+            <option value="never">表示しない</option>
+          </select>
+        </label>
+        <button id="sample">長文サンプルを読み込む</button>
         <button id="download" disabled>結果を JSON で保存</button>
       </div>
       <p id="status" class="muted">読み込み中…</p>
+      <p class="small muted">段落は空行で区切ります。目安として 2,000 語（約 100 文）程度まで実用的な速さで動きます。引用符・括弧・ダッシュ・短縮形（don't）・略語（Dr.）に対応しています。</p>
     </section>
 
     <section class="card">
@@ -40,6 +48,7 @@
         <span class="role-S">○ S 主語</span><span class="role-V">□ V 動詞</span><span class="role-O">△ O 目的語</span><span class="role-C">◇ C 補語</span><span class="role-M">… M 修飾語</span>
       </div>
       <p class="muted small">単語にカーソルを合わせる／タップすると、品詞・原形・役割・訳語（EJDict-hand 英和辞書）が表示されます。色が見分けにくい場合も記号（○□△◇…）とラベルで判別できます。</p>
+      <div id="summary" style="display:none"></div>
       <div id="output"></div>
     </section>
 
@@ -57,7 +66,7 @@
 
   <footer><small>GitHub Pages 上で動作・サーバ通信なし・一度開けばオフラインでも使えます（辞書は参照した分だけ保存）</small></footer>
 
-  <script src="vendor/compromise.js?v=0.5"></script>
-  <script type="module" src="app.js?v=0.5"></script>
+  <script src="vendor/compromise.js?v=0.6"></script>
+  <script type="module" src="app.js?v=0.6"></script>
 </body>
 </html>

@@ -66,3 +66,20 @@ td.ok { color: var(--O); } td.ng { color: var(--V); font-weight: 600; }
 
 .tree { overflow-x: auto; margin: 6px 0 2px; padding: 4px 0; }
 .tree svg { display: block; min-width: 320px; }
+
+/* 長文向け */
+.para-head { font-weight: 700; color: var(--muted); margin: 14px 0 2px; font-size: .85rem; border-left: 3px solid var(--accent); padding-left: 8px; }
+.snum { display: inline-block; min-width: 2.6em; text-align: center; font-size: .75rem; font-weight: 700; color: #fff; background: var(--accent); border-radius: 6px; padding: 1px 6px; }
+.pattern-badge.unk { background: #9ca3af; }
+.sentence.unknown { background: #fafafa; }
+.chip { font-size: .72rem; background: #eef0f3; color: #374151; border-radius: 10px; padding: 1px 7px; }
+.chip.muted { color: var(--muted); }
+.tree-slot { margin-top: 4px; }
+.tree-btn { font-size: .8rem; padding: 3px 10px; }
+.metrics { display: flex; flex-wrap: wrap; gap: 4px; }
+.pattern-counts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.pc { font-size: .85rem; padding: 4px 10px; }
+.pc.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.pc.unk b { color: var(--V); }
+.chunk { word-break: normal; }
+.tokens { line-height: 2.5; }
