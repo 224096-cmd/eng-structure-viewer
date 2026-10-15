@@ -1,4 +1,4 @@
-# v0.6 評価結果（Node 実行、2026-10-15T12:43:34.096Z）
+# v0.6 評価結果（Node 実行、2026-10-15T14:46:31.581Z）
 
 規則数: 25（level1: 13, level2: 10, level3: 2）
 
@@ -62,9 +62,9 @@
 
 | データ | 文章 | 語数 | 文数 | 正解 | 正解率 | 判定不能 | 処理時間 |
 |---|---|---|---|---|---|---|---|
-| dev | P-DEV-1 Walking and happiness（開発用） | 331 | 20 | 20 | 100.0% | 0 | 48 ms |
-| eval | P-EVAL-1 The library that never closes | 260 | 18 | 13 | 72.2% | 3 | 48 ms |
-| eval | P-EVAL-2 Why we forget names | 236 | 15 | 9 | 60.0% | 5 | 39 ms |
+| dev | P-DEV-1 Walking and happiness（開発用） | 331 | 20 | 20 | 100.0% | 0 | 43 ms |
+| eval | P-EVAL-1 The library that never closes | 260 | 18 | 13 | 72.2% | 3 | 33 ms |
+| eval | P-EVAL-2 Why we forget names | 236 | 15 | 9 | 60.0% | 5 | 33 ms |
 
 ## 品詞・原形（UD English-EWT 300 文）
 
@@ -82,7 +82,7 @@
 | DET | 318 | 93.7% |
 | ADP | 308 | 92.5% |
 | ADJ | 281 | 73.0% |
-| AUX | 237 | 97.5% |
+| AUX | 237 | 97.0% |
 | PROPN | 236 | 80.5% |
 | ADV | 167 | 66.5% |
 | CCONJ | 114 | 100.0% |

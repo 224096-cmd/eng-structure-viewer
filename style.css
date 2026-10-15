@@ -83,3 +83,4 @@ td.ok { color: var(--O); } td.ng { color: var(--V); font-weight: 600; }
 .pc.unk b { color: var(--V); }
 .chunk { word-break: normal; }
 .tokens { line-height: 2.5; }
+.hint { font-size: .85rem; color: #92400e; background: #fef3c7; border-radius: 8px; padding: 6px 10px; margin-top: 4px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }

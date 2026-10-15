@@ -127,6 +127,11 @@ function mapTag(terms, k, assigned) {
   // people who walk: 関係詞の直後の語を compromise が名詞と誤る
   if (tags.has('Noun') && !tags.has('Pronoun') && prev && REL_WORDS.has(prevW) && k >= 2 && has(terms[k - 2], 'Noun') && nlp(word).has('#Verb') && !has(next, 'Noun')) return 'VERB';
 
+  // 「a few more sidewalks」: 数量表現の直後で動詞と誤られた複数名詞
+  if (tags.has('Verb') && !tags.has('Noun') && /s$/.test(word) && prev && (has(prev, 'Adverb') || has(prev, 'Adjective') || has(prev, 'Determiner') || has(prev, 'Value')) && k >= 2 && (has(terms[k - 2], 'Determiner') || has(terms[k - 2], 'Adjective') || has(terms[k - 2], 'Value') || /^(few|many|more|several|some)$/.test(w(terms[k - 2]))) && !has(next, 'Determiner') && !has(next, 'Pronoun') && nlp(word.replace(/s$/, '')).has('#Noun')) return 'NOUN';
+  // worth + -ing（be worth doing）: worth は形容詞、-ing は動名詞
+  if (word === 'worth' && next && /ing$/.test(nextW)) return 'ADJ';
+  if (/ing$/.test(word) && prevW === 'worth' && nlp(word.replace(/ing$/, '')).has('#Verb')) return 'VERB';
   // ③ be / do / have
   if (BE_FORMS.has(word) || DO_FORMS.has(word) || HAVE_FORMS.has(word)) {
     const nc = nextContent(terms, k);

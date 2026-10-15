@@ -42,8 +42,19 @@ async function run() {
       if (sents[sents.length - 1].paragraph > 1) { const h = document.createElement('div'); h.className = 'para-head'; h.textContent = `段落 ${curPara}`; out.appendChild(h); }
     }
     const r = { ...analyzeSentence(s.text, level), paragraph: s.paragraph, index: s.index, fragment: s.fragment };
+    // 判定不能のとき、上のレベルなら判定できるかを裏で試す
+    if (r.pattern.type === 'UNKNOWN' && level < 3) {
+      for (let lv = level + 1; lv <= 3; lv++) { const alt = analyzeSentence(s.text, lv); if (alt.pattern.type !== 'UNKNOWN') { r.altLevel = lv; r.altPattern = alt.pattern.type; break; } }
+    }
     lastResults.push(r);
     const el = renderResult(r, out, { treeSlot: true });
+    if (r.altLevel) {
+      const hint = document.createElement('div'); hint.className = 'hint';
+      hint.innerHTML = `対象レベルを <b>${r.altLevel}</b> にすると <b>${r.altPattern}</b> と判定されます。`;
+      const b = document.createElement('button'); b.textContent = `レベル ${r.altLevel} で解析し直す`; b.className = 'tree-btn';
+      b.onclick = () => { $('level').value = String(r.altLevel); run(); };
+      hint.appendChild(b); el.appendChild(hint);
+    }
     const slot = el.querySelector('.tree-slot');
     if (showTreeInline) renderTree(r, slot);
     else if (treeMode !== 'never') {
@@ -100,6 +111,7 @@ async function loadSample(name) {
   try {
     const d = await (await fetch(`data/${name}?v=0.6`)).json();
     $('input').value = d.passages[0].text;
+    $('level').value = '3';  // 長文は入試レベルの規則が必要
     run();
   } catch (e) { $('status').textContent = 'サンプルの読み込みに失敗: ' + e.message; }
 }

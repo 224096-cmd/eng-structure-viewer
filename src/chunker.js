@@ -43,7 +43,7 @@ export function chunk(tokens, options = { level: 1 }) {
         chunks.push({ type: 'NP', tokens: [k], head: k, pronoun: true, wh: tokens[k].tags.includes('QuestionWord'), existential: txt(k) === 'there', it: txt(k) === 'it' });
         k++; continue;
       }
-      if ((p === 'DET' || possWithNoun) && !brk(k)) { k++; while (ext2(k) && pos(k) === 'DET') k++; }
+      if ((p === 'DET' || possWithNoun) && !brk(k)) { k++; while (ext2(k) && (pos(k) === 'DET' || (pos(k) === 'PRON' && /^(few|many|little|several|lot|couple)$/.test(txt(k))))) k++; while (ext2(k) && pos(k) === 'ADV' && /^(more|less|fewer)$/.test(txt(k)) && (pos(k + 1) === 'NOUN' || pos(k + 1) === 'ADJ')) k++; }
       else if (p === 'DET' || possWithNoun) { chunks.push({ type: 'NP', tokens: [k], head: k }); k++; continue; }
       while (ext2(k) && (pos(k) === 'ADJ' || pos(k) === 'NUM' || (pos(k) === 'ADV' && pos(k + 1) === 'ADJ') || (pos(k) === 'CCONJ' && pos(k - 1) === 'ADJ' && pos(k + 1) === 'ADJ'))) k++;
       if (level >= 2) while (ext(k) && pos(k) === 'VERB' && (pos(k + 1) === 'NOUN' || pos(k + 1) === 'PROPN') && /(ing|ed)$/.test(tokens[k].text)) k++;

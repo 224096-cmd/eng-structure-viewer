@@ -5,7 +5,7 @@
   "aligned": 291,
   "unaligned": 9,
   "tokens": 3247,
-  "posAccuracy": 0.8761934093008932,
+  "posAccuracy": 0.8758854327071143,
   "lemmaAccuracy": 0.9335768847558951,
   "perTag": {
     "PRON": {
@@ -14,7 +14,7 @@
     },
     "AUX": {
       "n": 237,
-      "ok": 231
+      "ok": 230
     },
     "DET": {
       "n": 318,
@@ -74,8 +74,9 @@
       "X": 3
     },
     "AUX": {
-      "AUX": 231,
+      "AUX": 230,
       "VERB": 5,
+      "NOUN": 1,
       "PRON": 1
     },
     "DET": {
