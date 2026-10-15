@@ -8,7 +8,7 @@
 
 const NAMING_VERBS = new Set(['call', 'name', 'elect', 'appoint', 'consider', 'choose', 'declare', 'crown', 'nominate']);
 const CAUSATIVE_VERBS = new Set(['let', 'make', 'help', 'see', 'hear', 'watch', 'feel', 'notice']);
-const CONTROL_VERBS = new Set(['ask', 'tell', 'want', 'allow', 'order', 'advise', 'expect', 'get', 'teach', 'help', 'would like']);
+const CONTROL_VERBS = new Set(['ask', 'tell', 'want', 'allow', 'order', 'advise', 'expect', 'get', 'teach', 'help', 'encourage', 'enable', 'force', 'persuade', 'remind', 'require', 'invite', 'cause', 'permit', 'urge', 'warn', 'would like']);
 const THAT_VERBS = new Set(['think', 'know', 'believe', 'hope', 'say', 'guess', 'feel', 'suppose', 'hear', 'wish', 'see', 'mean', 'find']);
 
 export function detectPattern(chunks, rulesJson, level = 1) {
@@ -20,6 +20,7 @@ export function detectPattern(chunks, rulesJson, level = 1) {
   work = work.filter(c => c.type !== 'PUNCT');
   work = groupSpans(work, tokensOf(chunks), transforms);   // 引用符・括弧・ダッシュで囲まれた部分
   work = foldColon(work, transforms);                       // コロン以降は補足
+  work = foldLeadingInfinitive(work, transforms);          // 文頭の不定詞（副詞的用法）
   work = foldLeadingAdverbials(work, transforms);           // 文頭の「〜, 」
   if (level >= 2) work = undoReporting(work, transforms);   // "…," said X
   if (level >= 3) work = foldWhClauses(work, transforms);
@@ -36,6 +37,7 @@ export function detectPattern(chunks, rulesJson, level = 1) {
     work = foldAppositives(work, transforms);
     work = foldContactClauses(work, transforms);
     work = foldGerundAfterAdj(work, transforms);
+    work = foldCoordinatedGerunds(work, transforms);
     work = splitCompound(work, transforms);
   }
   if (level >= 2) {
@@ -157,15 +159,18 @@ function groupSpans(work, _chunks, transforms) {
   }
   // ダッシュ: 「— … —」は挿入、「— …」（文末まで）は補足
   const res = [];
+  let justClosed = false;
   for (let i = 0; i < out.length; i++) {
     const c = out[i];
-    if (c.dashBefore && i > 0) {
+    if (c.dashBefore && i > 0 && !justClosed) {
       let j = i; const members = [];
       while (j < out.length) { members.push(out[j]); if (out[j].dashAfter) break; j++; }
-      res.push({ type: 'PAREN', idx: c.idx, tokens: members.flatMap(m => m.tokens), head: c.head, folded: members.slice(1).map(m => m.idx), commaAfter: members[members.length - 1].commaAfter });
-      transforms.push('dash_insert');
-      i = j; continue;
+      const closed = j < out.length; // 閉じのダッシュがある（挿入）。無ければ文末までの補足
+      res.push({ type: 'PAREN', idx: c.idx, tokens: members.flatMap(m => m.tokens), head: c.head, folded: members.slice(1).map(m => m.idx), commaAfter: members[members.length - 1].commaAfter, dashAfter: false });
+      transforms.push(closed ? 'dash_insert' : 'dash_tail');
+      i = j; justClosed = closed; continue;
     }
+    justClosed = false;
     res.push(c);
   }
   return res;
@@ -179,6 +184,17 @@ function foldColon(work, transforms) {
   const rest = work.slice(i + 1);
   transforms.push('colon_explanation');
   return [...work.slice(0, i + 1), { type: 'EXPL', idx: rest[0].idx, tokens: rest.flatMap(x => x.tokens), head: rest[0].head, folded: rest.slice(1).map(x => x.idx) }];
+}
+
+// 文頭の不定詞（To stay healthy, she …）: 不定詞句とそれに続く補語・目的語をまとめて修飾語にする
+function foldLeadingInfinitive(work, transforms) {
+  if (!work.length || !(work[0].type === 'NP' && work[0].infinitive)) return work;
+  let j = 1;
+  while (j < work.length && ['ADJP', 'NP', 'PP', 'ADVP'].includes(work[j].type) && !(work[j].type === 'NP' && work[j + 1] && ['VP', 'VP_be'].includes(work[j + 1].type))) j++;
+  if (!(j < work.length && work[j].type === 'NP' && work[j + 1] && ['VP', 'VP_be'].includes(work[j + 1].type))) return work;
+  const members = work.slice(0, j);
+  transforms.push('leading_infinitive');
+  return [{ type: 'LEADM', idx: members[0].idx, tokens: members.flatMap(m => m.tokens), head: members[0].head, folded: members.slice(1).map(m => m.idx), commaAfter: members[members.length - 1].commaAfter }, ...work.slice(j)];
 }
 
 // 文頭の副詞句（In 1998, / Today, more than twenty years later, / Interestingly,）: 最初の動詞句より前で、
@@ -396,6 +412,24 @@ function foldTheComparative(work, transforms) {
   }
   return work;
 }
+
+// 並列する動名詞句（such as creating … or replacing …）: PP/動名詞のあとの CCONJ + 分詞 VP (+NP/PP…) を直前の修飾語に併合（レベル3）
+function foldCoordinatedGerunds(work, transforms) {
+  const out = [];
+  for (let i = 0; i < work.length; i++) {
+    const c = work[i];
+    const prev = out[out.length - 1];
+    if (c.type === 'CCONJ' && prev && (prev.type === 'PP' || (prev.type === 'NP' && prev.gerund) || prev.type === 'RELCL' || prev.type === 'SUBCL') && work[i + 1] && isParticleIng(work[i + 1]) && out.some(x => x.type === 'VP' || x.type === 'VP_be')) {
+      let j = i + 1; const members = [c];
+      while (j < work.length && (j === i + 1 || ['NP', 'PP', 'ADVP', 'ADJP'].includes(work[j].type))) { members.push(work[j]); j++; }
+      out[out.length - 1] = { ...prev, tokens: [...prev.tokens, ...members.flatMap(m => m.tokens)], folded: [...(prev.folded || []), ...members.map(m => m.idx)] };
+      transforms.push('coordinated_gerund'); i = j - 1; continue;
+    }
+    out.push(c);
+  }
+  return out;
+}
+function isParticleIng(c) { return c.type === 'VP' && c.bare && !c.auxOnly && /ing$/.test(c.headText || ''); }
 
 // 重文（レベル3）: 動詞句のあとに CCONJ + (NP) VP が続けば、それ以降を並列節 COORDCL（修飾語扱い）にする
 function splitCompound(work, transforms) {

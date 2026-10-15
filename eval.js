@@ -1,6 +1,6 @@
-import { loadRules, analyzeSentence } from './src/analyzer.js?v=0.8';
-import { escapeHtml } from './src/render.js?v=0.8';
-import { tagSentence } from './src/pos.js?v=0.8';
+import { loadRules, analyzeSentence } from './src/analyzer.js?v=0.9';
+import { escapeHtml } from './src/render.js?v=0.9';
+import { tagSentence } from './src/pos.js?v=0.9';
 
 const $ = id => document.getElementById(id);
 const PATTERNS = ['SV', 'SVC', 'SVO', 'SVOO', 'SVOC'];
@@ -120,7 +120,7 @@ function mapForCompare(t, udMode) {
 
 async function runPos() {
   const udMode = $('udMode').checked;
-  const data = await (await fetch('data/ud_ewt_sample.json?v=0.8')).json();
+  const data = await (await fetch('data/ud_ewt_sample.json?v=0.9')).json();
   const t0 = performance.now();
   let aligned = 0, unaligned = 0, nTok = 0, nOk = 0, lemmaN = 0, lemmaOk = 0;
   const perTag = {}; const conf = {}; const errors = [];

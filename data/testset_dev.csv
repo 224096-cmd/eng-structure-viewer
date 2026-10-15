@@ -181,3 +181,18 @@ D3-062,3,Animals like dogs and cats need daily care.,SVO,like（前置詞）
 D3-063,3,The company is making its products more affordable.,SVOC,make O C（進行形）
 D3-064,3,Chapter One: The Beginning,HEADING,見出し
 D3-065,3,Lowering building temperatures saves energy.,SVO,動名詞主語＋複合名詞
+D3-066,3,The well-known writer lives in a hyper-connected city.,SV,ハイフン語
+D3-067,3,Face-to-face communication is important.,SVC,ハイフン語（名詞）
+D3-068,3,Today's students use smartphones every day.,SVO,所有格 's
+D3-069,3,The idea of a "digital detox" has become popular.,SVC,引用符つき名詞句
+D3-070,3,To stay healthy she walks every morning.,SV,文頭の不定詞（副詞的用法）
+D3-071,3,Practicing the piano every day can be difficult.,SVC,動名詞主語（長い）
+D3-072,3,Taking short breaks from work can improve concentration.,SVO,動名詞主語＋前置詞句
+D3-073,3,The game was canceled due to heavy rain.,SV,due to
+D3-074,3,"We bought apples, oranges, and a bag of rice.",SVO,コンマ列挙の目的語
+D3-075,3,Research shows that exercise improves memory.,SVO,文頭の名詞＋三単現
+D3-076,3,Smartphones and tablets have changed our lives.,SVO,複数名詞の等位主語
+D3-077,3,She set aside some money for the trip.,SVO,句動詞 set aside
+D3-078,3,It encourages students to read more books.,SVOC,encourage O to do
+D3-079,3,Some people choose to walk while others take the bus.,SVO,while 節（対比）
+D3-080,3,"Experts suggest starting small, such as walking to school.",SVO,such as

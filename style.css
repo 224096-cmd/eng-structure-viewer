@@ -88,3 +88,5 @@ td.ok { color: var(--O); } td.ng { color: var(--V); font-weight: 600; }
 .gl-label { font-size: .7rem; font-weight: 700; color: #475569; background: #e2e8f0; border-radius: 6px; padding: 1px 6px; margin-right: 8px; vertical-align: middle; }
 .sentence.heading .tokens { font-weight: 700; }
 @media print { header nav, .controls, #status, .tree-btn, footer, details { display: none !important; } body { background: #fff; } .card { box-shadow: none; border: 1px solid #ddd; } }
+.gloss.mt { border-left-color: #2563eb; background: #eff6ff; }
+.gl-label.mt { background: #dbeafe; color: #1e40af; }

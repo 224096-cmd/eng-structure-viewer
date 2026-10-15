@@ -2,7 +2,7 @@
 // 依存: vendor/compromise.js（グローバル nlp）
 // 出力: tokens = [{ i, text, display, pre, post, pos, posJa, lemma, tags, commaAfter, quoteOpen, ... }]
 //   判定の優先順位: ①語彙で決まるもの → ②文脈で決まる機能語 → ③be/do/have → ④compromise のタグ
-import { punctFeatures } from './text.js?v=0.8';
+import { punctFeatures } from './text.js?v=0.9';
 
 const POS_JA = {
   NOUN: '名詞', PROPN: '固有名詞', PRON: '代名詞', VERB: '動詞', AUX: '助動詞',
@@ -51,7 +51,7 @@ function nextContent(terms, k) {
 }
 function isNounish(t) { return t && (has(t, 'Noun') || has(t, 'Pronoun') || has(t, 'Determiner') || has(t, 'Adjective') || has(t, 'Possessive') || has(t, 'Value')); }
 
-function mapTag(terms, k, assigned) {
+function mapTag(terms, k, assigned, ctx = {}) {
   const term = terms[k], prev = terms[k - 1] || null, next = terms[k + 1] || null;
   const prevPos = assigned[k - 1] || null;
   const prevNoun = prev && ((prevPos ? (prevPos === 'NOUN' || prevPos === 'PROPN') : has(prev, 'Noun')) && !has(prev, 'Pronoun'));
@@ -62,9 +62,43 @@ function mapTag(terms, k, assigned) {
 
   // the 比較級: 文頭または節頭の the + 比較級 → 形容詞
   if (prevW === 'the' && (tags.has('Comparative') || /^(more|less|better|worse|sooner|earlier|later|harder|faster|longer|higher|lower|bigger|smaller|older|younger|wiser|richer|poorer)$/.test(word)) && next && (has(next, 'Pronoun') || has(next, 'Noun') || has(next, 'Determiner'))) return 'ADJ';
+  if (ctx.titleCase && (tags.has('Verb') || /ing$/.test(word)) && !tags.has('Auxiliary') && !tags.has('Copula') && !MODALS.has(word) && !BE_FORMS.has(word)) return tags.has('Gerund') || /ing$/.test(word) ? 'NOUN' : (isNounWord(word) ? 'NOUN' : 'VERB');
+  if (ctx.titleCase && tags.has('ProperNoun') && !tags.has('Person') && !tags.has('Place') && isNounWord(word)) return 'NOUN';
+  // ハイフン語（hyper-connected, non-stop, face-to-face, well-being）: 後ろに名詞が続けば形容詞、続かなければ名詞
+  if (tags.has('Hyphenated')) {
+    let e = k; while (e + 1 < terms.length && has(terms[e + 1], 'Hyphenated') && (terms[e].post || '').includes('-')) e++;
+    const last = terms[e];
+    const after = terms[e + 1];
+    if (k < e) return 'ADJ';                       // 連結の途中
+    if (after && (has(after, 'Noun') || has(after, 'Adjective')) && !has(after, 'Pronoun')) return 'ADJ';
+    if (/ing$/.test(w(last)) || tags.has('Noun')) return 'NOUN';
+    return has(prev, 'Determiner') || has(prev, 'Adjective') || has(prev, 'Possessive') ? 'NOUN' : 'ADJ';
+  }
+  // 所有格の名詞（today's, one's, Tom's）→ 限定詞扱い
+  if (/'s$/.test(term.text || '') && (tags.has('Possessive') || tags.has('Noun') || tags.has('Date')) && next && (has(next, 'Noun') || has(next, 'Adjective') || has(next, 'Hyphenated'))) return 'DET';
+  if (word === 'example' && prevW === 'for') return 'NOUN';
+  // 'due to' → 前置詞、'such as' → 前置詞
+  if (word === 'due' && nextW === 'to') return 'ADP';
+  if (word === 'to' && prevW === 'due') return 'PART';
+  if (word === 'such' && nextW === 'as') return 'ADP';
+  if (word === 'as' && prevW === 'such') return 'PART';
+  // 文頭の名詞＋三単現（Research shows that …）: 1 語目が命令形と誤られ 2 語目が複数名詞と誤られる
+  if (atStart && tags.has('Verb') && !tags.has('Noun') && next && has(next, 'Noun') && /s$/.test(nextW) && !has(next, 'Determiner') && isNounWord(word) && nlp(nextW.replace(/s$/, '')).has('#Verb') && (terms[k + 2] ? (SUBORDINATORS.has(w(terms[k + 2])) || has(terms[k + 2], 'Determiner') || has(terms[k + 2], 'Pronoun') || has(terms[k + 2], 'Noun') || has(terms[k + 2], 'Adjective') || has(terms[k + 2], 'Gerund')) : true)) return 'NOUN';
+  if (k === 1 && prevPos === 'NOUN' && has(prev, 'Verb') && tags.has('Noun') && !tags.has('Verb') && /s$/.test(word) && nlp(word.replace(/s$/, '')).has('#Verb')) return 'VERB';
+  // 'set aside' など 名詞＋小辞 で名詞と誤られた動詞（others set aside）
+  if (tags.has('Noun') && !tags.has('Verb') && !tags.has('Plural') && next && (has(next, 'Adverb') || has(next, 'Particle')) && /^(aside|away|up|down|off|out|back|over)$/.test(nextW) && prev && (has(prev, 'Noun') || has(prev, 'Pronoun')) && nlp(word).has('#Infinitive')) return 'VERB';
   // ①' 文頭付近の複合名詞・名詞/動詞の曖昧性（compromise の誤りを先に直す）
+  // 文頭の「名詞＋三単現」（Research shows / Smartphones and tablets have）: 文頭の語を compromise が命令形と誤る
+  if (atStart && tags.has('Verb') && !tags.has('Noun') && isNounWord(word.replace(/s$/, '')) && next && ((has(next, 'Noun') && /s$/.test(nextW) && nlp(nextW.replace(/s$/, '')).has('#Verb')) || COORDINATORS.has(nextW) || MODALS.has(nextW) || BE_FORMS.has(nextW) || HAVE_FORMS.has(nextW) || DO_FORMS.has(nextW))) return 'NOUN';
+  if (k === 1 && prevPos === 'NOUN' && tags.has('Noun') && !tags.has('Verb') && /s$/.test(word) && nlp(word.replace(/s$/, '')).has('#Verb') && next && !has(next, 'Verb')) return 'VERB';
   // 接続詞の直後で動詞と誤られた複数名詞（As prices rise）: 次の語が動詞になりうる
   if (tags.has('Verb') && !tags.has('Noun') && !tags.has('Auxiliary') && /s$/.test(word) && prev && (SUBORDINATORS.has(prevW) || prevW === 'as' || atStart) && next && !has(next, 'Determiner') && isNounWord(word.replace(/s$/, '')) && (has(next, 'Verb') || nlp(nextW).has('#Infinitive'))) return 'NOUN';
+  // 動詞の直後で動詞と誤られた複数名詞（use smartphones）
+  if (tags.has('Verb') && !tags.has('Noun') && !tags.has('Auxiliary') && !tags.has('Copula') && !BE_FORMS.has(word) && !DO_FORMS.has(word) && !HAVE_FORMS.has(word) && !MODALS.has(word) && word.length >= 5 && /s$/.test(word) && prev && prevPos === 'VERB' && !has(prev, 'Auxiliary') && !has(prev, 'Modal') && !BE_FORMS.has(prevW) && isNounWord(word.replace(/s$/, ''))) return 'NOUN';
+  // コンマや接続詞の直後で動詞と誤られた複数名詞（…, smartphones and …）
+  if (tags.has('Verb') && !tags.has('Noun') && !tags.has('Auxiliary') && /s$/.test(word) && prev && ((prev.post || '').includes(',') || COORDINATORS.has(prevW)) && isNounWord(word.replace(/s$/, '')) && next && (COORDINATORS.has(nextW) || has(next, 'Verb') || MODALS.has(nextW) || has(next, 'Preposition'))) return 'NOUN';
+  // 接続詞の直後の 名詞＋三単現（that exercise improves）
+  if (tags.has('Verb') && !tags.has('Noun') && !tags.has('Auxiliary') && prev && (SUBORDINATORS.has(prevW) || prevW === 'that') && next && has(next, 'Verb') && /s$/.test(nextW) && isNounWord(word)) return 'NOUN';
   // 複合名詞の主語（Rooftop gardens can … / Community gardens bring … / prices rise）: 文頭近くの 名詞＋動詞と誤られた複数形 の直後に動詞・助動詞が続く
   if (tags.has('Verb') && !tags.has('Noun') && !tags.has('Auxiliary') && !tags.has('Copula') && !BE_FORMS.has(word) && !DO_FORMS.has(word) && !HAVE_FORMS.has(word) && /s$/.test(word) && prev && (has(prev, 'Noun') || prevPos === 'NOUN' || (has(prev, 'Adjective') && isNounWord(prevW))) && !has(prev, 'Pronoun') && !has(prev, 'Verb') && k <= 3 && next && (has(next, 'Verb') || MODALS.has(nextW) || BE_FORMS.has(nextW) || DO_FORMS.has(nextW) || HAVE_FORMS.has(nextW)) && isNounWord(word.replace(/s$/, ''))) return 'NOUN';
   // 動詞の直後で名詞と誤られた動詞（prices rise and …）: 文頭 名詞 + 名詞? → 2 語目が動詞になりうるなら動詞
@@ -73,11 +107,18 @@ function mapTag(terms, k, assigned) {
   if (tags.has('Noun') && !tags.has('Verb') && !tags.has('Plural') && !tags.has('ProperNoun') && prev && prevPos === 'NOUN' && has(prev, 'Plural') === false && prevW.endsWith('s') && k >= 2 && next && (has(next, 'Noun') || has(next, 'Pronoun')) && nlp(word).has('#Infinitive') && !terms.slice(k + 1).some(t => has(t, 'Verb') && !has(t, 'Gerund') && !has(t, 'Modal'))) return 'VERB';
   // 複合名詞の 1 語目の -ing（building temperatures / air conditioning）
   if (/ing$/.test(word) && tags.has('Gerund') && !tags.has('Noun') && next && has(next, 'Noun') && !has(next, 'Pronoun') && has(next, 'Plural') && prev && (has(prev, 'Verb') || has(prev, 'Adjective')) && !has(prev, 'Auxiliary') && !BE_FORMS.has(prevW)) return 'NOUN';
+  // 所有格 's（today's students / Tom's car）→ 限定詞扱い
+  if (/'s$/.test(word) && tags.has('Possessive') && next && (has(next, 'Noun') || has(next, 'Adjective'))) return 'DET';
   // ① 語彙で決まるもの
+  if (word === 'due' && nextW === 'to') return 'ADP';
+  if (word === 'to' && prevW === 'due') return 'ADP';
+  if (word === 'such' && nextW === 'as') return 'ADP';
+  if (word === 'as' && prevW === 'such') return 'ADP';
   if (word === 'to' && next && has(next, 'Verb')) return 'PART';
   if (word === 'no' && next && (has(next, 'Noun') || has(next, 'Adjective'))) return 'DET';
   if (tags.has('Negative') || word === 'not') return 'PART';
   if (tags.has('Particle') && has(prev, 'Verb')) return 'PART';
+  if (/^(off|on|up|down|out|away|back|over|aside)$/.test(word) && prev && (has(prev, 'Verb') || prevPos === 'VERB') && !has(prev, 'Auxiliary') && (!next || !(has(next, 'Determiner') || has(next, 'Possessive') || has(next, 'Noun') || has(next, 'Pronoun') || has(next, 'Adjective') || has(next, 'Value')) || /^(off|away|aside|back|out)$/.test(word) && !/^(depend|rely|insist|focus|count|base)$/.test(prev.root || prevW))) return 'PART';
   if (COORDINATORS.has(word) && word !== 'so') return 'CCONJ';
   if (word === 'so' && prev && (prev.post || '').includes(',')) return 'CCONJ';
   if (TIME_WORDS.has(word)) return 'ADV';
@@ -90,7 +131,8 @@ function mapTag(terms, k, assigned) {
   if (/ing$/.test(word) && tags.has('Noun') && !tags.has('Verb') && prev && has(prev, 'Adjective') && next && (has(next, 'Determiner') || has(next, 'Pronoun') || has(next, 'Noun')) && isVerbStem(word)) return 'VERB';
   if (MANNER_ADVS.has(word) && !next && prev && !has(prev, 'Determiner') && !has(prev, 'Adjective') && k > 1 && terms.slice(0, k).some(t => has(t, 'Verb'))) return 'ADV';
   if (MANNER_ADVS.has(word) && prev && ((has(prev, 'Verb') && !BE_FORMS.has(prevW)) || (prevW === 'so' && k >= 2 && has(terms[k - 2], 'Verb') && !BE_FORMS.has(w(terms[k - 2])))) && !has(next, 'Noun')) return 'ADV';
-  if (tags.has('Date') && !has(prev, 'Determiner') && !has(prev, 'Adjective') && !has(prev, 'Possessive') && !has(prev, 'Value') && !has(prev, 'Noun')) return 'ADV';
+  if (tags.has('Date') && !has(prev, 'Determiner') && !has(prev, 'Adjective') && !has(prev, 'Possessive') && !has(prev, 'Value') && !has(prev, 'Noun') && !/s$/.test(word)) return 'ADV';
+  if (tags.has('Date') && (has(prev, 'Determiner') || has(prev, 'Adjective') || /s$/.test(word))) return 'NOUN';
   // 大文字始まりの前置詞（Over five years）や、動詞と誤られた前置詞
   if (/^(before|after|since|until)$/.test(word)) {
     // 前置詞か接続詞か: 直後の名詞句のあとに動詞が続けば接続詞（before the day has started）
@@ -132,7 +174,7 @@ function mapTag(terms, k, assigned) {
     if ((word === 'where' && PLACE_NOUNS.has(pl)) || (word === 'when' && (has(prev, 'Date') || /^(day|time|year|moment|month|week|summer|winter|night|morning|age)$/.test(pl))) || (word === 'why' && pl === 'reason')) return 'REL';
   }
   // that: 動詞・形容詞・「動詞＋代名詞」の後で名詞句が続けば接続詞
-  if (word === 'that' && prev && !(k === 1 && BE_FORMS.has(prevW)) && (has(prev, 'Verb') || has(prev, 'Adjective') || (has(prev, 'Pronoun') && k >= 2 && has(terms[k - 2], 'Verb'))) && next && (isNounish(next) || DETS.has(nextW) || INDEF_PRONS.has(nextW))) return 'SCONJ';
+  if (word === 'that' && prev && !(k === 1 && BE_FORMS.has(prevW)) && (has(prev, 'Verb') || prevPos === 'VERB' || has(prev, 'Adjective') || (has(prev, 'Pronoun') && k >= 2 && has(terms[k - 2], 'Verb'))) && next && (isNounish(next) || DETS.has(nextW) || INDEF_PRONS.has(nextW))) return 'SCONJ';
   // 文頭の wh
   if (atStart && WH_PRON.has(word)) return 'PRON';
   if (atStart && WH_ADV.has(word)) {
@@ -158,6 +200,10 @@ function mapTag(terms, k, assigned) {
   if (DETS.has(word) && !DEMONSTRATIVES.has(word) && !(word === 'all' && has(prev, 'Verb') && !has(next, 'Noun'))) return 'DET';
   // 使役・知覚動詞＋代名詞＋原形（heard her sing）
   if (tags.has('Noun') && !tags.has('Pronoun') && prev && has(prev, 'Pronoun') && k >= 2 && CAUSATIVE_FOR_POS.has(terms[k - 2].root || w(terms[k - 2])) && nlp(word).has('#Infinitive')) return 'VERB';
+  // that/文頭の直後の -ing 形容詞タグ（that taking brief breaks …）→ 動名詞
+  if (/ing$/.test(word) && tags.has('Adjective') && !tags.has('Verb') && (atStart || SUBORDINATORS.has(prevW) || (prev.post || '').includes(',')) && next && (has(next, 'Adjective') || has(next, 'Determiner') || has(next, 'Noun')) && isVerbStem(word)) return 'VERB';
+  if (prev && /ing$/.test(prevW) && tags.has('Noun') && !tags.has('Plural') && next && has(next, 'Verb') && /s$/.test(nextW) && nlp(word).has('#Adjective')) return 'ADJ'; // taking brief breaks: brief
+  if (tags.has('Verb') && !tags.has('Noun') && /s$/.test(word) && prev && (has(prev, 'Adjective') || prevPos === 'ADJ') && k >= 2 && /ing$/.test(w(terms[k - 2])) && isNounWord(word.replace(/s$/, ''))) return 'NOUN'; // taking brief breaks: breaks
   // 小辞・副詞の直後の -ing（ran away laughing / stood there holding）
   if (/ing$/.test(word) && prev && (has(prev, 'Particle') || has(prev, 'Adverb') || LOCATIVE_ADVS.has(prevW)) && k >= 2 && has(terms[k - 2], 'Verb') && isVerbStem(word)) return 'VERB';
   // 名詞の直後の -ing を compromise が名詞と誤る（the window reading a magazine）
@@ -221,6 +267,29 @@ function lemmaOf(term) {
   return word;
 }
 
+// ハイフンでつながった語（hyper-connected, face-to-face, well-being）を 1 つの語にまとめる
+function mergeHyphenated(terms) {
+  const out = [];
+  for (let i = 0; i < terms.length; i++) {
+    const t = terms[i];
+    if (has(t, 'Hyphenated') && !(t.post || '').includes(' ') && terms[i + 1] && has(terms[i + 1], 'Hyphenated')) {
+      let j = i; const parts = [];
+      while (j < terms.length && has(terms[j], 'Hyphenated')) { parts.push(terms[j]); if ((terms[j].post || '').includes(' ') || j + 1 >= terms.length || !has(terms[j + 1], 'Hyphenated')) break; j++; }
+      const last = parts[parts.length - 1];
+      const text = parts.map(x => x.text).join('-');
+      const nextT = terms[j + 1];
+      const nounNext = nextT && (has(nextT, 'Noun') || has(nextT, 'Adjective')) && !has(nextT, 'Verb') && !has(nextT, 'Pronoun');
+      // 名詞が続けば形容詞、そうでなければ名詞（well-being）。ただし -ing/-ed で終わる語は形容詞寄り
+      const tags = nounNext ? ['Adjective', 'Hyphenated'] : (/^(well-being|face-to-face|day-to-day)$/i.test(text) ? ['Noun', 'Singular', 'Hyphenated'] : ['Noun', 'Singular', 'Hyphenated']);
+      if (!nounNext && /(ing|ed|free|proof|like|wide|based)$/i.test(text) && nextT && has(nextT, 'Noun')) tags[0] = 'Adjective';
+      out.push({ text, normal: text.toLowerCase(), pre: parts[0].pre, post: last.post, tags, root: text.toLowerCase(), merged: true });
+      i = j; continue;
+    }
+    out.push(t);
+  }
+  return out;
+}
+
 export function tagSentence(text) {
   const doc = nlp(text);
   doc.compute('root');
@@ -228,11 +297,13 @@ export function tagSentence(text) {
   const tokens = [];
   let i = 0;
   for (const s of sents) {
-    const terms = s.terms;
+    const terms = mergeHyphenated(s.terms);
     const assigned = [];
+    const alpha = terms.filter(t => /^[A-Za-z]/.test(t.text || ''));
+    const titleCase = alpha.length >= 3 && alpha.every(t => /^[A-Z]/.test(t.text) || /^(a|an|the|of|in|on|at|to|for|with|and|or|by|from|our|your|my|his|her|its|their)$/i.test(t.text));
     for (let k = 0; k < terms.length; k++) {
       const t = terms[k];
-      const pos = mapTag(terms, k, assigned);
+      const pos = mapTag(terms, k, assigned, { titleCase });
       assigned.push(pos);
       const tags = (t.tags || []).slice();
       const word = w(t);

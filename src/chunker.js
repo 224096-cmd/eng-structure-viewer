@@ -94,11 +94,13 @@ export function chunk(tokens, options = { level: 1 }) {
       const isIng = /ing$/.test(headTok.text) && headTok.pos === 'VERB' && bare;
       const pc = prevChunk();
       const noVPYet = !chunks.some(c => c.type === 'VP' || c.type === 'VP_be');
-      const afterBareADP = k > 0 && pos(k - 1) === 'ADP';
+      const afterBareADP = start > 0 && pos(start - 1) === 'ADP';
+      const prevCommaTok = start > 0 && !!tokens[start - 1].commaAfter;
       const pcEndsParticle = pc && pc.type === 'VP' && tokens[pc.tokens[pc.tokens.length - 1]].pos === 'PART';
-      if (level >= 2 && isIng && !pcEndsParticle && (prevType() === 'VP' || prevType() === null || prevType() === 'ADJP' || afterBareADP || ((prevType() === 'PP' || prevType() === 'ADVP') && noVPYet && (pc.commaAfter || (prevType() === 'ADVP' && pc.tokens.length === 1))) || (pc && pc.auxOnly)) && !(pc && pc.type === 'VP' && !pc.auxOnly && pc.commaAfter)) {
+      if (level >= 2 && isIng && !pcEndsParticle && (prevType() === 'VP' || prevType() === null || prevType() === 'ADJP' || afterBareADP || ((prevType() === 'PP' || prevType() === 'ADVP') && noVPYet && (prevCommaTok || (prevType() === 'ADVP' && pc.tokens.length === 1))) || (pc && pc.auxOnly)) && !(pc && pc.type === 'VP' && !pc.auxOnly && prevCommaTok)) {
         const sub = chunk(tokens.slice(k), options);
         if (sub.length && sub[0].type === 'NP') { k += sub[0].tokens.length; if (k < n && pos(k) === 'VERB' && !/(ing|ed|s)$/.test(tokens[k].text) && (k + 1 >= n || pos(k + 1) !== 'VERB')) k++; }
+        else if (sub.length && sub[0].type === 'ADJP' && sub[0].tokens.length === 1 && (k + 1 >= n || brk(k) || pos(k + 1) === 'ADP')) k += 1; // starting small
         chunks.push({ type: 'NP', tokens: range(start, k), head, gerund: true });
         continue;
       }
@@ -122,6 +124,7 @@ export function chunk(tokens, options = { level: 1 }) {
     // ---- 前置詞句 ----
     if (p === 'ADP') {
       start = k; k++;
+      if ((txt(start) === 'due' || txt(start) === 'such') && pos(k) === 'PART') k++; // due to / such as
       const sub = brk(start) ? [] : chunk(tokens.slice(k), options);
       if (sub.length && (sub[0].type === 'NP' || (level >= 2 && sub[0].gerund))) {
         const len = sub[0].tokens.length;
@@ -136,10 +139,12 @@ export function chunk(tokens, options = { level: 1 }) {
     if (p === 'PART' && pos(k + 1) === 'VERB' && !brk(k)) {
       start = k; k += 2;
       if (level >= 2) {
-        const sub = chunk(tokens.slice(k), options);
         let j = 0;
         // to be a pilot / to make this dish のように後続の NP / ADJP / PP を 1 つ吸収
-        if (!brk(k - 1) && sub.length && ['NP', 'ADJP'].includes(sub[0].type)) { k += sub[0].tokens.length; j = 1; }
+        if (k < n && pos(k) === 'PART' && tokens[k].tags.includes('Particle') === false && /^(off|on|up|down|out|away|back|over|aside)$/.test(txt(k))) k++;
+        else if (k < n && pos(k) === 'PART' && tokens[k].tags.includes('Particle')) k++;
+        const sub2 = chunk(tokens.slice(k), options);
+        if (!brk(k - 1) && sub2.length && ['NP', 'ADJP'].includes(sub2[0].type)) { k += sub2[0].tokens.length; j = 1; }
         chunks.push({ type: 'NP', tokens: range(start, k), head: start + 1, infinitive: true, afterNP: prevType() === 'NP' });
       } else {
         chunks.push({ type: 'X', tokens: range(start, k), head: start });
@@ -175,6 +180,22 @@ function mergeCoordinatedNP(chunks, tokens) {
     const n3 = chunks[i + 3], n4 = chunks[i + 4];
     let look = i + 3; while (look < chunks.length && look < i + 6 && ['ADVP', 'ADJP', 'PP'].includes(chunks[look].type)) look++;
     const startsClause = vpBefore && chunks[look] && (chunks[look].type === 'VP' || chunks[look].type === 'VP_be');
+    // コンマ列挙: NP, NP, and NP（最後の NP のあとに動詞句が続かない＝節の始まりではない）
+    if (c.type === 'NP' && c.commaAfter && chunks[i + 1] && chunks[i + 1].type === 'NP' && !c.clause) {
+      let j = i + 1; const members = [c];
+      while (j < chunks.length && chunks[j].type === 'NP' && chunks[j].commaAfter) { members.push(chunks[j]); j++; }
+      if (j < chunks.length && chunks[j].type === 'CCONJ' && chunks[j + 1] && chunks[j + 1].type === 'NP') {
+        const after = chunks[j + 2];
+        let look = j + 2; while (look < chunks.length && ['PP', 'ADVP', 'ADJP'].includes(chunks[look].type)) look++;
+        const clauseStarts = chunks[look] && (chunks[look].type === 'VP' || chunks[look].type === 'VP_be') && !vpBefore;
+        if (!clauseStarts || vpBefore) {
+          members.push(chunks[j], chunks[j + 1]);
+          const last = chunks[j + 1];
+          out.push({ ...last, type: 'NP', tokens: members.flatMap(m => m.tokens), head: last.head, coordinated: true, pronoun: false, commaAfter: last.commaAfter });
+          i = j + 1; continue;
+        }
+      }
+    }
     if (c.type === 'NP' && chunks[i + 1] && chunks[i + 1].type === 'CCONJ' && chunks[i + 2] && chunks[i + 2].type === 'NP' && !startsClause && !c.commaAfter) {
       const merged = { ...chunks[i + 2], type: 'NP', tokens: [...c.tokens, ...chunks[i + 1].tokens, ...chunks[i + 2].tokens], head: chunks[i + 2].head, coordinated: true, pronoun: false };
       out.push(merged); i += 2;

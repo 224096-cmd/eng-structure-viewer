@@ -1,0 +1,164 @@
+﻿id,sentence,structure_gloss,gloss_ms,fugumt,fugumt_ms
+E1-001,"Dogs bark.","犬は 吠える",7,"犬がbarえます。",177
+E1-002,"My brother lives in Osaka.","私の兄弟は Osakaで 住む",3,"私の兄は大阪に住んでいる。",153
+E1-003,"The sun rises in the east.","太陽は 東で 昇る",10,"東では太陽が昇る。",212
+E1-004,"We walked to school together.","私たちは 学校へ 一緒に 歩く〔過去〕",0,"私たちは一緒に学校へ行った。",164
+E1-005,"The train stopped suddenly.","列車は 突然に 止まる〔過去〕",5,"列車は突然止まった。",193
+E1-006,"Her eyes are blue.","彼女の目は 青い である",0,"眼は青。",133
+E1-007,"Mr. Brown is our English teacher.","MrBrownは 私たちのEnglish先生 である",1,"ブラウンさんは私たちの英語の先生です。",210
+E1-008,"The soup smells delicious.","スープは おいしくのにおいがする",1,"スープは美味しい匂いがします。",277
+E1-009,"It is getting dark.","それは 暗くなる",0,"暗くなってきた。",153
+E1-010,"The room was very quiet.","部屋は 非常に 静かな である",6,"部屋はとても静かでした。",155
+E1-011,"I love my family.","私は 私の家族を 愛する",1,"私は家族を愛している。",161
+E1-012,"She reads books every day.","彼女は 本を すべての日 読む",0,"彼女は毎日本を読みます。",167
+E1-013,"We cleaned the classroom after school.","私たちは クラスルームを 学校の後 汚れのない〔過去〕",6,"放課後、私たちは教室を掃除した。",271
+E1-014,"He speaks three languages.","彼は three言語を 話す",9,"彼は三つの言語を話す。",191
+E1-015,"The boy broke the window.","少年は 窓を 壊す〔過去〕",2,"少年は窓を壊した。",151
+E1-016,"My aunt sent me a letter.","私のおばは 私に 手紙を 送る〔過去〕",3,"叔母から手紙が来た。",225
+E1-017,"I will give you some advice.","私は あなたに いくつかの忠告を 与えるだろう",0,"あなたにいくつかアドバイスします。",163
+E1-018,"She taught us math.","（文型が判定できないため語の訳のみ）彼女 教える 私たち =mathematics1",4,"彼女は私たちに数学を教えた。",168
+E1-019,"He bought his son a bike.","彼は 彼の息子・子孫・子に =bicycleを 買う〔過去〕",1,"彼は息子に自転車を買ってあげた。",171
+E1-020,"Could you lend me your pen?","あなたは 私に あなたのペンを 貸す",6,"ペン貸していただけますか。",195
+E1-021,"Close the door.","扉を 閉じる",0,"ドアを閉めなさい。",195
+E1-022,"Look at the sky.","空で 見る",0,"空を見よ。",157
+E1-023,"There is a book on the desk.","机で 本が ある",1,"机の上に本があります。",164
+E1-024,"The kids are in the garden.","子ヤギは 庭で",4,"子供たちは庭にいます。",130
+E1-025,"I do not know his name.","私は 彼の名を 知っている〔ない〕",2,"彼の名前は知らない。",138
+E1-026,"She can play the guitar well.","彼女は ギターを うまく 遊ぶできる",0,"彼女はギターを上手に弾くことができる。",215
+E1-027,"They did not come yesterday.","彼らは 昨日 来る〔ない〕〔過去〕",0,"彼らは昨日来なかった。",125
+E1-028,"We had lunch at noon.","私たちは 昼食を 正午で 持っている〔過去〕",2,"私たちは正午に昼食をとった。",239
+E1-029,"My grandmother is eighty years old.","私の祖母は eighty年年とった である",2,"私の祖母は80歳です。",185
+E1-030,"The baby cried all night.","赤ん坊は すべての夜 泣く〔過去〕",0,"赤ちゃんは一晩中泣きました。",178
+E1-031,"Do you like tennis?","あなたは テニスを 好む",0,"テニスは好きですか。",160
+E1-032,"Is this your bag?","これは あなたの袋 である",0,"これはあなたのバッグですか。",170
+E1-033,"The students listened to the teacher carefully.","学生は 先生へ 注意深い 聞く〔過去〕",1,"学生たちは先生を注意深く聞きました。",256
+E1-034,"She looked at me.","彼女は 私で 見る〔過去〕",0,"彼女は私を見ていた。",129
+E1-035,"He became famous.","彼は 有名になる〔過去〕",3,"彼は有名になった。",114
+E1-036,"We enjoyed the party.","私たちは 社交的な集まりを 楽しむ〔過去〕",1,"私たちはそのパーティーを楽しんだ。",250
+E1-037,"The weather turned cold.","天気は 寒くなる〔過去〕",0,"天気が寒くなった。",159
+E1-038,"Tom and I are good friends.","Tomと私は よい友達 である",1,"トムと私は仲良しです。",234
+E1-039,"I usually get up at six.","私は いつもに で six 得る",2,"私は普通6時に起きます。",195
+E1-040,"She wrote her mother a long letter.","彼女は 彼女の母に 長い手紙を 書く〔過去〕",0,"彼女は母に長い手紙を書いた。",165
+E1-041,"The movie starts at seven.","映画は で seven 始める",0,"その映画は7時に始まる。",182
+E1-042,"You look happy today.","あなたは 今日 幸せに見える",0,"今日は幸せそうね。",138
+E1-043,"We must finish this work.","私たちは この仕事を 終えるしなければならない",0,"この仕事は終わらなければならない。",189
+E1-044,"Birds sing in the morning.","鳥は 朝で 歌う",0,"鳥は朝歌います。",230
+E1-045,"My father is a doctor.","私の父は 医者 である",0,"父は医者です。",145
+E1-046,"I found my keys.","私は 私のかぎを 見つける〔過去〕",0,"鍵を見つけました。",140
+E1-047,"Please show me your ticket.","喜ばせる 私に あなたの切符を 見せる",0,"チケットを私に見せてください。",172
+E1-048,"The children are playing outside.","子供は 外側 遊ぶ（している）",0,"子供たちは外で遊んでいます。",176
+E1-049,"This cake tastes sweet.","このケーキは 甘いの味がする",0,"このケーキは甘い味がする。",193
+E1-050,"She has two cats.","彼女は two猫を 持っている",0,"彼女は猫を二匹飼っている。",196
+E2-001,"The teacher made the students quiet.","先生は 学生を 静かに 作る〔過去〕",1,"先生は学生を静かにさせた。",241
+E2-002,"We named the dog Max.","私たちは 犬を Maxに 名〔過去〕",0,"私たちはその犬をマックスと名付けた。",237
+E2-003,"I believe him honest.","私は 彼を 正直に 信じる",1,"私は彼を正直だと思っている。",146
+E2-004,"They elected her president.","彼らは 彼女のを 米国大統領に 選ぶ〔過去〕",0,"彼らは彼女の社長を選出した。",251
+E2-005,"The music kept me awake.","音楽は 私を 目をさまさせるに 保つ〔過去〕",0,"その音楽で私は目を覚まされた。",197
+E2-006,"She left the door open.","彼女は 扉を 開くに 去る〔過去〕",0,"彼女はドアを開けたままにしておいた。",264
+E2-007,"You should keep your room clean.","あなたは あなたの部屋を 汚れのなく 保つすべきだ",0,"部屋はきれいにしておいた方がいいよ。",206
+E2-008,"The letter was sent yesterday.","手紙は 昨日 送る（される）〔過去〕",0,"その手紙は昨日送られた。",181
+E2-009,"English is spoken in many countries.","Englishは 多くの国で 口で言う（される）〔過去〕",0,"英語は多くの国で話されている。",239
+E2-010,"The cake was eaten by the children.","ケーキは 子供によって eatの過去分詞（される）〔過去〕",1,"そのケーキは子供たちに食べられた。",234
+E2-011,"I hope that you will come.","私は あなたは来るだろうということを 望む",1,"ぜひお越しください。",145
+E2-012,"She said that she was tired.","彼女は 彼女は疲れたである〔過去〕ということを 言う〔過去〕",0,"彼女は疲れていると言った。",139
+E2-013,"We know that the earth is round.","私たちは 地球は回ってであるということを 知っている",1,"地球は丸いことを私たちは知っています。",250
+E2-014,"He wants to be a pilot.","彼は 水先案内人であることを 欲する",0,"彼はパイロットになりたい。",117
+E2-015,"I like to read books.","私は 本を読むことを 好む",0,"私は本を読むのが好きです。",239
+E2-016,"They began to run.","彼らは 走ることを 始まる〔過去〕",0,"彼らは走り始めた。",111
+E2-017,"She enjoys playing tennis.","彼女は テニスを遊ぶことを 楽しむ",1,"彼女はテニスを楽しんでいます。",109
+E2-018,"I finished reading the book.","私は 本を読むことを 終える〔過去〕",0,"私はその本を読み終えた。",170
+E2-019,"The girl who is singing is my sister.","女の子は （歌であるという） 私の~ である",1,"歌っている女の子は私の妹です。",245
+E2-020,"The book that I read was interesting.","本は （私は読むという） 興味を起こさせる である",2,"私が読んだ本は面白かった。",197
+E2-021,"I know the man who wrote this letter.","私は 男を （この手紙を書く〔過去〕という） 知っている",0,"私はこの手紙を書いた人を知っています。",178
+E2-022,"This is the house which my uncle built.","これは （私のおじは組み立てる〔過去〕という） 家 である",0,"これは叔父が建てた家です。",290
+E2-023,"Swimming is my favorite sport.","水泳は 私のfavoriteスポーツ である",0,"水泳は私の好きなスポーツです。",198
+E2-024,"To learn English is important.","Englishを学ぶことは 重要な である",0,"英語を学ぶことは重要です。",211
+E2-025,"I have never seen such a beautiful picture.","私は そのような美しい絵を seeの過去分詞（してきた）",0,"私はそのような美しい絵を見たことがない。",196
+E2-026,"She has lived here for ten years.","彼女は ここに ten年のために 住む（してきた）",0,"彼女は10年間ここに住んでいます。",178
+E2-027,"We were watching TV when he came.","私たちは televisionを 彼は来る〔過去〕とき、じっと見つめる（している）〔過去〕",0,"彼が来たとき私たちはテレビを見ていた。",200
+E2-028,"Because it was cold we stayed inside.","私たちは それは寒い〔過去〕ので、内部 どまる〔過去〕",0,"寒かったので、私たちは中にとどまった。",261
+E2-029,"I will call you when I get home.","私は あなたを 私は家に得るとき、呼ぶだろう",0,"家に帰ったら電話します。",152
+E2-030,"If you study hard you will pass the exam.","あなたは あなたは一生懸命に勉強するならば、試験を 通り過ぎるだろう",1,"一生懸命勉強すれば試験に合格するだろう。",214
+E2-031,"Although he was tired he kept working.","彼は 彼は疲れた（される）〔過去〕けれども、働くことを 保つ〔過去〕",1,"彼は疲れていたが働き続けた。",202
+E2-032,"She was happy because she won the game.","彼女は 彼女は遊びを勝つ〔過去〕ので、幸せな である",0,"彼女は試合に勝ったので幸せだった。",223
+E2-033,"I think he is a good player.","私は 彼はよい競技者であるということを 思う",0,"彼はいい選手だと思います。",141
+E2-034,"The boy running over there is my cousin.","少年は （そこに走るという） 私のいとこ である",0,"あそこを走っている少年は私のいとこです。",362
+E2-035,"He gave me a book written in English.","彼は 私に 本を （Englishで書かれた〔過去〕という） 与える〔過去〕",0,"彼は私に英語で書かれた本をくれた。",191
+E2-036,"It is important to help each other.","それは 助けることは それぞれの他の 重要な である",1,"お互いに助け合うことは大切だ。",262
+E2-037,"She asked me to open the window.","彼女は 私を 窓を開けることに 尋ねる〔過去〕",0,"彼女は私に窓を開けるように頼んだ。",199
+E2-038,"My parents let me go abroad.","私の親は 私を 行くに 広く させる",1,"両親は私を海外に行かせてくれた。",245
+E2-039,"I saw him cross the street.","私は 彼を 十字架に 街路に 見る〔過去〕",0,"彼が通りを横切るのを見た。",160
+E2-040,"He has been studying since morning.","彼は 朝以来 勉強する（している）（してきた）",0,"彼は朝からずっと勉強している。",191
+E2-041,"The news that he told me was surprising.","報道は （彼は私を伝える〔過去〕という） 驚くべき である",0,"彼が私に言った知らせは驚きだった。",273
+E2-042,"We can see many stars at night.","私たちは 多くの星を 夜で 見るできる",0,"夜には多くの星が見える。",201
+E2-043,"She looked after the children.","彼女は 子供を 見る〔過去〕",0,"彼女は子供達を世話した。",155
+E2-044,"I was given a chance.","私は 偶然を する癖がある（される）〔過去〕",0,"チャンスをもらいました。",236
+E2-045,"He made me a cup of tea.","彼は 私に 茶わんを 茶の 作る〔過去〕",0,"彼は私にお茶を飲ませてくれた。",186
+E2-046,"The question seemed difficult to me.","質問は 私へ 難しく思える〔過去〕",1,"その問題は私には難しいように見えた。",180
+E2-047,"She found it hard to say no.","彼女は それを 言うことを 難しく 見つける〔過去〕",0,"彼女はノーとは言い難いと思った。",157
+E2-048,"They have decided to move to Tokyo.","彼らは 動くことを Tokyoへ 解決する（してきた）",0,"彼らは東京へ移ることにした。",172
+E2-049,"There were many people in the hall.","会館で 多くの人々が ある",0,"ホールには多くの人がいました。",269
+E2-050,"What do you want to eat?","あなたは 食べることに 何を 欲する",0,"何を食べたいですか。",153
+E3-001,"I play the piano and my sister plays the violin.","私は ピアノを 、そしてと私の~はバイオリンを遊ぶ 遊ぶ",0,"私はピアノを弾き、姉はバイオリンを弾きます。",328
+E3-002,"He wanted to go but he had no money.","彼は 行くことを 、そしてしかし彼は〜ないお金を持っている〔過去〕 欲する〔過去〕",0,"彼は行きたいと思ったが、お金がなかった。",287
+E3-003,"Hurry up or you will miss the train.","、そしてまたはあなたは列車を未婚婦人だろう 急ぐ",0,"急がないと電車に乗り遅れるよ。",254
+E3-004,"Looking out of the window she saw a rainbow.","彼女は 窓の見るながら、じを 見る〔過去〕",1,"窓の外を見ると彼女は虹を見た。",203
+E3-005,"Seen from the sky the island looks like a bird.","島目を向けるは 空からseeの過去分詞〔過去〕、鳥を 好む",1,"空から見れば、この島は鳥のように見える。",363
+E3-006,"He walked away leaving the door open.","（文型が判定できないため語の訳のみ）彼 歩く 去る 扉 開く",0,"彼はドアを開けたままに歩いていった。",174
+E3-007,"This is the house where my grandfather lived.","これは （私の祖父は住む〔過去〕という） 家 である",0,"これは私の祖父が住んでいた家です。",202
+E3-008,"I will never forget the summer when I visited Hokkaido.","私は 夏を （私はHokkaidoを訪問する〔過去〕という） 忘れるだろう",0,"北海道に行ったとき、私はその夏を忘れません。",255
+E3-009,"Do you know the reason why she cried?","あなたは 理由を （彼女は泣く〔過去〕という） 知っている",0,"彼女が泣いた理由を知っていますか。",249
+E3-010,"What she wants is a new bicycle.","何彼女は欲することは 新しい自転車 である",1,"彼女の望みは新しい自転車です。",147
+E3-011,"What happened yesterday surprised everyone.","何は昨日起こる〔過去〕ことは みんなを 驚かす〔過去〕",0,"昨日起こったことは皆を驚かせた。",203
+E3-012,"Nobody knows why he left the town.","誰もは なぜ彼は町を去る〔過去〕ことを 知っている",1,"彼がなぜその町を離れたのかだれも知らない。",233
+E3-013,"I wonder where she bought that bag.","私は どこに彼女は買う〔過去〕ことに 袋ということを 驚く",0,"私は彼女がどこでそのかばんを買ったのか不思議に思った。",367
+E3-014,"The movie was so boring that I fell asleep.","映画は 私は眠って落下する〔過去〕ということを 穴をあける（している）〔過去〕",1,"その映画はとても退屈だったので、私は眠りについた。",263
+E3-015,"It was so cold that the lake froze.","それは そういうふうに 深紅色の顔料は凍る〔過去〕ということ、寒い である",0,"寒くて湖が凍った。",179
+E3-016,"Never did I imagine such a result.","私は そのような結果を 想像する",0,"そんな結果が想像もつかない。",218
+E3-017,"Rarely does she make a mistake.","彼女は まれに 誤りを 作る",0,"彼女はめったに間違いを犯さない。",193
+E3-018,"The woman talking to the teacher is my mother.","女は （先生へtalkingという） 私の母 である",0,"先生と話している女性は私の母です。",196
+E3-019,"We have many problems to solve.","私たちは 多くの問題を （解くという） 持っている",1,"解決すべき課題はたくさんあります。",167
+E3-020,"It was my brother that broke the vase.","それは （花びんを壊す〔過去〕という） 私の兄弟 である",0,"花瓶を壊したのは私の兄だった。",335
+E3-021,"The letter which he sent me yesterday made me happy.","手紙は （彼は私を昨日送る〔過去〕という） 私を 幸せに 作る〔過去〕",1,"彼が昨日送った手紙は私を幸せにした。",239
+E3-022,"Having lost the key she could not enter the room.","彼女は かぎを失うながら、部屋を 入るできた〔ない〕",0,"彼女は鍵をなくしたので部屋に入ることができなかった。",233
+E3-023,"If I had more time I would travel around the world.","私は 私はもっと多くの時間を持っている〔過去〕ならば、世界のまわりで 旅行するだろう",0,"もっと時間があれば世界中を旅する。",263
+E3-024,"I wish I had a car.","私は 私は車を持っている〔過去〕ということを あればよいのにと思う",1,"車があればいいのに。",160
+E3-025,"The harder you work the more you earn.","あなたは 難しいあなたは働く、もっと多くの かせぐ",0,"一生懸命働くほど稼げる。",158
+E3-026,"Not only is he kind but he is also honest.","彼は なく〔ない〕 〜だけ 、そしてしかし彼は〜も正直である 親切な である",1,"彼は親切であるだけでなく、正直でもある。",236
+E3-027,"She told me that she had seen the movie.","彼女は 私に 彼女は映画をseeの過去分詞（してきた）ということを 伝える〔過去〕",1,"彼女は私にその映画を見たと言った。",151
+E3-028,"It is believed that the castle was built in 1600.","それは 城はで1600組み立てる（される）〔過去〕ということ、信じる（される）〔過去〕",0,"慶長5年(1600年)に築城されたと伝えられる。",346
+E3-029,"He found it strange that nobody answered.","彼は それを 奇妙に だれも…ないは答え〔過去〕ということ、見つける〔過去〕",0,"彼は誰も答えなかったのは奇妙だった。",281
+E3-030,"Whether we win or lose is not important.","（文型が判定できないため語の訳のみ）私たち 勝つ または 失う ある 〜ない 重要な",0,"勝っても負けても重要ではありません。",202
+P-EVAL-1-1,"When the city of Milford opened its first twenty-four-hour library in 2015, many residents thought the idea was foolish.","多くの居住者は 都市はMilfordのそのfirsttwenty-four-hour図書館をで2015開ける〔過去〕とき、考えは愚かである〔過去〕ということを 思う〔過去〕",1,"2015年に最初の24時間図書館がオープンしたとき、多くの住民はこのアイデアは汚いと考えていた。",492
+P-EVAL-1-2,"""Who reads at three in the morning?"" asked one newspaper, and the question seemed reasonable.","one新聞は 誰はthreeで朝で読むことを 、そしてと質問は理性的な思われる〔過去〕 尋ねる〔過去〕",0,"「だれが朝三時に読むんだ?」と新聞に尋ねると、その質問は理にかなったものだった。",628
+P-EVAL-1-3,"The library, however, was not designed only for readers.","図書館は しかし 〜だけ 読者のために 略図（される）〔ない〕〔過去〕",0,"しかし、この図書館は読者のみを対象にしたものではない。",348
+P-EVAL-1-4,"It offered quiet rooms, free internet, and a warm place to sit, and within a year it had become one of the busiest public buildings in the town.","それは 静かな部屋を 、そしてinternetをと暖かい場所をと年それ以内に人を忙しい公の建物の町で独立している座るなる（してきた） 提供する〔過去〕",0,"静かな部屋、無料のインターネット、座る場所を提供し、1年以内には町で最も忙しい公共建物の一つになりました。",643
+P-EVAL-1-5,"The people who used the library at night were not the people the planners had expected.","人々は （図書館を夜で使う〔過去〕という） なく〔ない〕 （計画者は予期する（してきた）という） 人々 である",0,"夜、図書館を利用したのは、計画立案者が想定したような人ではなかった。",389
+P-EVAL-1-6,"Nurses and factory workers came after their shifts;","看護人と工場仕事をする人は 彼らの移し替えるの後 来る〔過去〕",0,"看護師や工場労働者はシフトの後",282
+P-EVAL-1-7,"students who shared small apartments came to study;","学生は （小さいアパートを分け前〔過去〕という） 勉強することを 来る〔過去〕",0,"小さなアパートをシェアする学生たちは、",240
+P-EVAL-1-8,"a few elderly men came simply because they could not sleep.","少しのかなり年配の男は 簡単に 彼らは眠りできた〔ない〕ので、来る〔過去〕",0,"数人の老人が 眠れなかったから来た",260
+P-EVAL-1-9,"""I don't borrow books,"" said Mr. Harris, a retired bus driver.","MrHarrisは 「私は本を借りる〔ない〕」を （んぴなバス追う人） 言う〔過去〕",0,"「私は本を読まない」と、引退したバス運転手のハリスさんは言った。",476
+P-EVAL-1-10,"""I come here to be with other people.""","（文型が判定できないため語の訳のみ）私 来る ここに ある 他の 人々",1,"「私は、ほかの人たちと一緒にここに来るわ」",323
+P-EVAL-1-11,"The staff soon noticed that the night visitors talked to one another more than daytime visitors did.","つえは すぐに 夜訪問者は話す〔過去〕ということを 人目を引くこと〔過去〕",0,"スタッフはすぐに、夜の訪問者は昼間の訪問者よりも互いに話すことに気付きました。",449
+P-EVAL-1-12,"Not all of the effects were positive.","全体のは なく〔ない〕 効果の 実際的な である",1,"効果はどれもポジティブではなかった。",153
+P-EVAL-1-13,"Some neighbors complained about noise, and the cost of keeping the building open was higher than the council had promised.","（文型が判定できないため語の訳のみ）いくつかの neighbors 不平を言う 音 と 代価 保つ 建物 開く berylliumの化学記号 高い 諮問会 約束",0,"隣人は騒音について不満を述べ、建物をオープンにしておくコストは評議会が約束したよりも高かった。",597
+P-EVAL-1-14,"In 2019, the city considered closing the library at midnight to save money.","都市は で2019 図書館を閉じることを お金を救うことに 真夜中で よく考える〔過去〕",1,"2019年、市はお金を節約するために深夜に図書館を閉鎖することを検討しました。",439
+P-EVAL-1-15,"The plan was abandoned after more than 3,000 people signed a petition (the largest in the town's history), and the council agreed to keep the doors open.","計画は もっと多く3,000人々より大きいと表れ〔過去〕あとで、捨てる（される）〔過去〕",1,"3000人以上の人々が請願書に署名し(町の歴史上最大)、この計画は放棄され、市議会はドアを開け続けることに同意した。",907
+P-EVAL-1-16,"Today the Milford library is often described as a model for other cities.","Milford図書館は 今日 模型として 他の都市のために 描写する（される）〔過去〕",0,"今日では、ミルフォード図書館はしばしば他の都市の模型として説明されている。",423
+P-EVAL-1-17,"Whether it can be copied elsewhere is unclear, because every town is different.","それはどこかよそに写す（される）できる〔過去〕かどうか、は すべての町は風変わりであるので、はっきりしない である",1,"どの町にも違いがあるため、他の場所でもコピーできるかどうかは不明確です。",440
+P-EVAL-1-18,"What the experiment shows, however, is that a public building can serve needs its designers never imagined.","実験見せるは しかし 何は公の建物必要その設計者を仕えるできる想像する〔過去〕ということ である",1,"しかしこの実験によると、公共の建物はデザイナーが想像もしなかったようなニーズに対応できる。",554
+P-EVAL-2-1,"Most people have had the embarrassing experience of meeting someone, hearing their name, and forgetting it almost immediately.","（文型が判定できないため語の訳のみ）ほとんどの 人々 持っている まごつかせる 経験 集会 誰か 聞く 彼らの 名 と 忘れる それ ほとんど 即座に",0,"ほとんどの人は、誰かに出会い、自分の名前を聞いて、ほとんどすぐに忘れてしまうという恥ずかしい経験をしています。",565
+P-EVAL-2-2,"Why does this happen so often?","これは なぜ そういうふうに しばしば 起こる",0,"なぜこんなことが起こるのでしょう?",230
+P-EVAL-2-3,"Psychologists have studied the problem for decades, and their answer is surprisingly simple: names are hard to remember because they mean nothing.","心理学者は 問題を 10年間のために 、そしてと彼らの答えは驚くべき簡単な名である 勉強する（してきた）",1,"心理学者たちは、数十年にわたりこの問題を調査してきました。そして彼らの答えは驚くほど簡単です。",416
+P-EVAL-2-4,"When you learn that a stranger is a doctor, the word connects to many things you already know — hospitals, white coats, long years of study.","（文型が判定できないため語の訳のみ）あなた 学ぶ 見知らぬ人 ある 医者 言葉 連結する 多くの 物 あなた すでに 知っている 病院 白 コート 長い 年 研究",0,"病人は医師だと知ると、この言葉は既に知っている多くのことに通じます。病院、白いコート、長年の研究などです。",720
+P-EVAL-2-5,"A name such as ""Baker"" or ""Carter,"" by contrast, is just a sound.","名は パン屋またはCarter 対照によって ちょうど 音 である",1,"対照的に「ベイカー」や「カーター」といった名前は、ただの音です。",537
+P-EVAL-2-6,"Interestingly, the same word is much easier to remember as a job than as a name.","同じ言葉は 興味深いことに 大いに 覚えていること 職として より 名として 容易な である",2,"興味深いことに、同じ単語は名前よりも仕事として覚えやすいです。",465
+P-EVAL-2-7,"In one famous experiment, participants who were told that a man in a photograph was a baker remembered the word far better than those who were told his name was Baker.","（文型が判定できないため語の訳のみ）one 有名な 実験 関係者 伝える 男 写真 ある パン屋 覚えている 言葉 遠くに よい それら 誰 伝える 彼の 名 ある Baker",1,"ある有名な実験では、写真に写っている男性がパン屋だと言われた参加者は、パン屋というよりずっと良い言葉を思い出した。",662
+P-EVAL-2-8,"There is also a social reason.","〜も 社会的な理由が ある",0,"社会的理由もあります。",198
+P-EVAL-2-9,"At the moment we hear a name, we are usually busy doing something else: shaking hands, smiling, or thinking about what to say next.","（文型が判定できないため語の訳のみ）瞬間 私たち 聞く 名 私たち ある いつもに 忙しい doing 何か そのほかに 振る 手 こにこした または 思う 何 言う 次の",0,"名前が聞こえてきた瞬間、私たちは通常、握手をしたり、笑顔をしたり、次に何を言うべきかを考えたりする他のことをしています。",682
+P-EVAL-2-10,"Attention, not memory, is the real problem.","注意は （記憶なく〔ない〕） 本当の問題 である",1,"記憶ではなく注意することが本当の問題です。",289
+P-EVAL-2-11,"People who repeat the name aloud, or who use it in the conversation that follows, forget it far less often.","（文型が判定できないため語の訳のみ）人々 繰り返して言う 名 声を出して または 誰 使う それ 会話 後について行く 忘れる それ 遠くに もっと少なく しばしば",0,"名前を声に出して繰り返す人、あるいは続く会話でそれを使用する人は、それをはるかに忘れる頻度。",493
+P-EVAL-2-12,"Does any of this matter?","どんな この物質の する",0,"この問題はありますか?",98
+P-EVAL-2-13,"Forgetting a name is rarely serious, but it can make others feel unimportant.","それは 名まれにまじめなしかし忘れるであるながら、others触れるを 重要でなく 作るできる",1,"名前を忘れることはめったにないが、他人を重要でないと感じることがある。",436
+P-EVAL-2-14,"The good news is that the skill can be learned.","よい報道は 熟練は学ぶ（される）できる〔過去〕ということ である",0,"良いニュースは、スキルを学ぶことができることです。",329
+P-EVAL-2-15,"If you treat a name as information rather than as noise, you will find that it stays with you.","あなたは あなたは名を情報として確かにより音として扱うならば、それはあなたとどまるということを 見つけるだろう",0,"名前がノイズではなく情報として扱われると、それはあなたと一緒にいることに気付くでしょう。",442

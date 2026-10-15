@@ -1,4 +1,4 @@
-# 処理の流れ（v0.8）
+# 処理の流れ（v0.9）
 
 ```
 入力テキスト
@@ -23,6 +23,7 @@ src/patterns.js 文型判定：
   ├─ index.html / src/render.js  色＋記号＋ラベルで表示、ホバーカード（src/dict.js で訳語）
   ├─ src/tree.js                 構造図（SVG）
   ├─ src/gloss.js                構造訳（役割と辞書から日本語を機械的に組み立てる）
+  ├─ src/mt.js                   AI 翻訳（任意）: Transformers.js + FuguMT ONNX をブラウザ内で実行
   ├─ eval.html / eval.js         テストセット一括評価 → CSV / JSON（ブラウザ）
   └─ scripts/evaluate.mjs        同じ評価を Node で実行し results/ に保存（卒論用の正式な数値）
 
@@ -33,6 +34,9 @@ src/patterns.js 文型判定：
 3. 役割に助詞を付けて日本語の語順（S は → 文頭の修飾語 → O を／O に O を／O を C に → 文末の修飾語 → V）に並べる。SVC は連結動詞の訳（look→に見える、become→になる）
 辞書の訳語は EJDict-hand の最初の義を使うが、固有名詞義（Man→マン島）・活用説明（〜の過去形）・記号義を後回しにし、基本語 300 語程度は中高英語での最頻義で上書きする（`OVERRIDE`）。
 自然な翻訳ではなく「構造どおりに読むとこうなる」を示す学習用の直訳であり、多義語の選択誤り（bark→皮をはぐ）は意図的に残る限界として扱う。
+
+## AI 翻訳（任意機能）
+`src/mt.js`。Transformers.js（CDN）と ONNX Runtime Web（WebAssembly）で、FuguMT en→ja の ONNX 量子化モデル（Kadonox/fugumt-en-ja-onnx、約 145 MB、CC BY-SA 4.0）をブラウザ内で実行する。チェックを入れた時だけ Hugging Face からモデルを取得し、ブラウザのキャッシュに保存（2 回目以降はオフライン）。文章はサーバに送らない。Service Worker は他オリジンの要求に関与しない。スマホでは初回ダウンロードに Wi-Fi を推奨。
 
 ## 辞書データ
 EJDict-hand（パブリックドメイン）45,366 行から、見出し語が英字のみの 36,236 語を取り、各語の最初の 4 義（90 字まで）を残して頭文字ごとの JSON（data/dict/a.json …、合計約 3 MB）に分割（小文字の見出しを優先し、大文字の固有名詞義は後ろに付ける）。ブラウザは必要な頭文字のファイルだけを読み込む。

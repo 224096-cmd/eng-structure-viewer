@@ -1,8 +1,9 @@
-import { loadRules, analyzeSentence, splitSentencesWithMeta } from './src/analyzer.js?v=0.8';
-import { renderResult } from './src/render.js?v=0.8';
-import { renderTree } from './src/tree.js?v=0.8';
-import { prefetch } from './src/dict.js?v=0.8';
-import { sentenceGloss } from './src/gloss.js?v=0.8';
+import { loadRules, analyzeSentence, splitSentencesWithMeta } from './src/analyzer.js?v=0.9';
+import { renderResult } from './src/render.js?v=0.9';
+import { renderTree } from './src/tree.js?v=0.9';
+import { prefetch } from './src/dict.js?v=0.9';
+import { sentenceGloss } from './src/gloss.js?v=0.9';
+import * as MT from './src/mt.js?v=0.9';
 
 const $ = id => document.getElementById(id);
 const PATTERNS = ['SV', 'SVC', 'SVO', 'SVOO', 'SVOC', 'HEADING', 'UNKNOWN'];
@@ -20,9 +21,9 @@ async function init() {
   }
 }
 
-let lastGloss = {};
+let lastGloss = {}, lastMT = {};
 async function run() {
-  lastGloss = {};
+  lastGloss = {}; lastMT = {};
   if (running) return;
   const text = $('input').value.trim();
   const level = Number($('level').value);
@@ -66,6 +67,11 @@ async function run() {
       slot.appendChild(b);
     }
     prefetch(r.tokens);
+    if (MT.isReady() && $('useMT').checked) {
+      const m = document.createElement('div'); m.className = 'gloss mt'; m.innerHTML = '<span class="gl-label mt">AI 翻訳</span><span class="gl-text muted">…</span>';
+      el.insertBefore(m, slot);
+      MT.translate(s.text).then(res => { lastMT[r.index] = res.ja; m.querySelector('.gl-text').textContent = res.ja; m.querySelector('.gl-text').classList.remove('muted'); m.title = `FuguMT（ブラウザ内）${res.ms} ms`; }).catch(e => { m.querySelector('.gl-text').textContent = '翻訳に失敗: ' + e.message; });
+    }
     if ($('showGloss').checked) {
       const g = document.createElement('div'); g.className = 'gloss'; g.innerHTML = '<span class="gl-label">構造訳</span><span class="gl-text muted">…</span>';
       el.insertBefore(g, slot);
@@ -105,7 +111,7 @@ function renderSummary(results, words, nSent, totalMs, level) {
 function download() {
   if (!lastResults) return;
   const slim = lastResults.map(r => ({
-    index: r.index, paragraph: r.paragraph, sentence: r.sentence, gloss: lastGloss[r.index] || null, level: r.level, pattern: r.pattern.type, ruleId: r.pattern.ruleId, transforms: r.pattern.transforms, timeMs: r.timeMs,
+    index: r.index, paragraph: r.paragraph, sentence: r.sentence, gloss: lastGloss[r.index] || null, aiTranslation: lastMT[r.index] || null, level: r.level, pattern: r.pattern.type, ruleId: r.pattern.ruleId, transforms: r.pattern.transforms, timeMs: r.timeMs,
     tokens: r.tokens.filter(t => !t.implicit).map(t => ({ text: t.display, pos: t.pos, lemma: t.lemma, role: t.role, chunk: t.chunkType }))
   }));
   const blob = new Blob([JSON.stringify({ exportedAt: new Date().toISOString(), userAgent: navigator.userAgent, results: slim }, null, 2)], { type: 'application/json' });
@@ -117,7 +123,7 @@ function download() {
 
 async function loadSample(name) {
   try {
-    const d = await (await fetch(`data/${name}?v=0.8`)).json();
+    const d = await (await fetch(`data/${name}?v=0.9`)).json();
     $('input').value = d.passages[0].text;
     $('level').value = '3';  // 長文は入試レベルの規則が必要
     run();
@@ -129,6 +135,24 @@ $('download').addEventListener('click', download);
 $('level').addEventListener('change', run);
 $('treeMode').addEventListener('change', run);
 $('showGloss').addEventListener('change', run);
+$('useMT').addEventListener('change', async e => {
+  if (!e.target.checked) { run(); return; }
+  if (MT.isReady()) { run(); return; }
+  const st = $('mtStatus'); st.style.display = '';
+  st.textContent = `AI 翻訳モデル（${MT.MODEL_INFO.name}、約 ${MT.MODEL_INFO.sizeMB} MB）を読み込みます。初回のみダウンロード（Wi-Fi 推奨）、2 回目以降はオフラインでも使えます…`;
+  const files = {};
+  try {
+    await MT.loadModel(p => {
+      if (p.status === 'progress' && p.file) { files[p.file] = p.progress || 0; const vals = Object.values(files); const avg = vals.reduce((a, b) => a + b, 0) / vals.length; st.textContent = `モデルをダウンロード中… ${avg.toFixed(0)}%（${p.file.split('/').pop()}）`; }
+      else if (p.status === 'ready') st.textContent = 'モデルの準備ができました。';
+    });
+    st.textContent = `AI 翻訳の準備完了（${MT.MODEL_INFO.name}、${MT.MODEL_INFO.license}）。各文の下に表示します。`;
+    run();
+  } catch (err) {
+    st.textContent = 'モデルの読み込みに失敗しました（ネットワーク・ブラウザの対応を確認してください）: ' + err.message;
+    e.target.checked = false;
+  }
+});
 $('sample').addEventListener('click', () => loadSample('passages_dev.json'));
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(() => {});
 $('run').disabled = true;

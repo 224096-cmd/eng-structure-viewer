@@ -47,6 +47,26 @@
     "SVO",
     "SVOC"
    ]
+  },
+  {
+   "id": "P-DEV-3",
+   "title": "Rethinking Our Relationship with Technology（開発用・ユーザー提供）",
+   "level": 3,
+   "text": "Reading Passage: Rethinking Our Relationship with Technology\n\nIn today's hyper-connected world, smartphones and constant internet access have made our lives far more convenient. However, this non-stop digital interaction comes with a price. Many people experience increased anxiety, reduced attention spans, and a feeling of being constantly overwhelmed. In response to these challenges, the concept of a \"digital detox\" — intentionally taking a break from electronic devices — has gathered significant attention.\n\nA digital detox does not mean abandoning technology altogether. Instead, it encourages individuals to establish healthy boundaries. For example, some people choose to turn off notifications during dinner, while others set aside entire weekends to stay offline. Research shows that taking brief breaks from screens can improve sleep quality, enhance face-to-face communication, and boost overall mental well-being.\n\nDespite these benefits, practicing a digital detox can be difficult due to work obligations and social expectations. To make it manageable, experts suggest starting small, such as creating phone-free zones at home or replacing late-night screen time with reading a physical book. By making conscious choices about when and how we use technology, we can regain control over our time and mental energy.",
+   "gold": [
+    "HEADING",
+    "SVOC",
+    "SV",
+    "SVO",
+    "SVO",
+    "SVO",
+    "SVOC",
+    "SVO",
+    "SVO",
+    "SVC",
+    "SVO",
+    "SVO"
+   ]
   }
  ]
 }

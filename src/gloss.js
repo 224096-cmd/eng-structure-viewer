@@ -3,7 +3,7 @@
 // 自然な翻訳ではなく「構造どおりに訳すとこうなる」を示す学習用の直訳。AI モデルは使わない。
 //   S → 「〜は」、O → 「〜を」、O（二重目的語の 1 つ目）→ 「〜に」、C → 「〜で（ある）」
 //   M（前置詞句）→ 前置詞の訳（in → 〜で、to → 〜へ …）、節 → 「〜ということ」「〜する（名詞）」「〜なので」など
-import { lookup } from './dict.js?v=0.8';
+import { lookup } from './dict.js?v=0.9';
 
 const PREP_JA = { in: 'で', on: 'で', at: 'で', to: 'へ', for: 'のために', with: 'と', by: 'によって', from: 'から', of: 'の', about: 'について', into: 'の中へ', over: 'にわたって', under: 'の下で', during: 'の間', after: 'の後', before: 'の前', since: '以来', until: 'まで', through: 'を通して', between: 'の間で', among: 'の間で', without: 'なしで', around: 'のまわりで', across: 'を横切って', along: 'に沿って', near: 'の近くで', against: 'に対して', toward: 'へ向かって', towards: 'へ向かって', like: 'のような', than: 'より', as: 'として', beyond: 'を超えて', within: '以内に', despite: 'にもかかわらず', behind: 'の後ろで', above: 'の上で', below: 'の下で', per: 'あたり', upon: 'の上に', onto: 'の上へ', throughout: 'の間ずっと', off: 'から離れて', out: '外へ' };
 const SCONJ_JA = { because: 'ので', if: 'ならば', when: 'とき', while: '間に', although: 'けれども', though: 'けれども', since: 'ので', unless: 'でなければ', until: 'まで', after: 'あとで', before: '前に', whether: 'かどうか', as: 'ように', once: 'したら', whereas: '一方で', that: 'ということ' };
