@@ -1,6 +1,6 @@
-import { loadRules, analyzeSentence } from './src/analyzer.js';
-import { escapeHtml } from './src/render.js';
-import { tagSentence } from './src/pos.js';
+import { loadRules, analyzeSentence } from './src/analyzer.js?v=0.4';
+import { escapeHtml } from './src/render.js?v=0.4';
+import { tagSentence } from './src/pos.js?v=0.4';
 
 const $ = id => document.getElementById(id);
 const PATTERNS = ['SV', 'SVC', 'SVO', 'SVOO', 'SVOC'];
@@ -62,7 +62,7 @@ function table(head, rows, rowClass) {
 }
 
 async function loadDataset(url) {
-  testset = parseCSV(await (await fetch(url)).text());
+  testset = parseCSV(await (await fetch(url + '?v=' + Date.now())).text());
   datasetName = url.split('/').pop();
   $('status').textContent = `${datasetName} を読み込みました（${testset.length} 文）。「一括評価」を押してください。`;
 }
@@ -118,7 +118,7 @@ function mapForCompare(t, udMode) {
 
 async function runPos() {
   const udMode = $('udMode').checked;
-  const data = await (await fetch('data/ud_ewt_sample.json')).json();
+  const data = await (await fetch('data/ud_ewt_sample.json?v=0.3')).json();
   const t0 = performance.now();
   let aligned = 0, unaligned = 0, nTok = 0, nOk = 0, lemmaN = 0, lemmaOk = 0;
   const perTag = {}; const conf = {}; const errors = [];

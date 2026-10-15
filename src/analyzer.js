@@ -1,11 +1,12 @@
 // analyzer.js — 解析の入口。1文ごとに 品詞 → チャンク → 文型 を実行し、JSON で返す
-import { tagSentence } from './pos.js';
-import { chunk } from './chunker.js';
-import { detectPattern } from './patterns.js';
+import { tagSentence } from './pos.js?v=0.4';
+import { chunk } from './chunker.js?v=0.4';
+import { detectPattern } from './patterns.js?v=0.4';
 
+const RULES_VERSION = '0.4';
 let RULES = null;
 export async function loadRules(url = 'rules/patterns.json') {
-  if (!RULES) RULES = await (await fetch(url)).json();
+  if (!RULES) RULES = await (await fetch(url + '?v=' + RULES_VERSION)).json();
   return RULES;
 }
 export function getRules() { return RULES; }

@@ -18,7 +18,7 @@
 - **SVO**：他動詞の後に目的語（名詞句・代名詞・that 節・不定詞・動名詞）が来る。
 - **SVOO**：「人＋物」の二重目的語（give, show, tell, send, ask など）。
 - **SVOC**：目的語の後に、目的語の状態・名前を表す語（O＝C の関係）が来る（make, call, name, find, keep など）。
-- **受動態**（be＋過去分詞）は **SV** とする。ただし過去分詞が形容詞化している場合（The window was broken. の「壊れている状態」）は SVC とも解釈でき、曖昧例として記録する。
+- **受動態**（be＋過去分詞）は **SV** とする。受動態の後に目的語が残る場合（I was given a chance.）は **SVO**、補語が残る場合（The dog was called Pochi.）は **SV** とする。ただし過去分詞が形容詞化している場合（The window was broken. の「壊れている状態」）は SVC とも解釈でき、曖昧例として記録する。
 - **命令文**は主語省略として、動詞以降で SV / SVO 等を判定する。
 - **There is 構文**は SV とする（there を M 扱い）。
 
@@ -29,4 +29,5 @@ every morning / last night / yesterday などは **M** として扱う（目的�
 判定が分かれる文は grammar_tag に「曖昧」を含め、どちらの解釈を採ったかを本ファイル末尾に記録する。
 
 ### 記録
+- D2-047 What do you think about it? → what は think の目的語とみなし SVO（当初 SV としていたが修正）。
 - L2-006 The window was broken. → 受動態として SV を採用（形容詞化すれば SVC）。

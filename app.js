@@ -1,5 +1,5 @@
-import { loadRules, analyzeText } from './src/analyzer.js';
-import { renderResult } from './src/render.js';
+import { loadRules, analyzeText } from './src/analyzer.js?v=0.4';
+import { renderResult } from './src/render.js?v=0.4';
 
 const $ = id => document.getElementById(id);
 let lastResults = null;

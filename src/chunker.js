@@ -1,11 +1,15 @@
 // chunker.js — 品詞列をチャンク（句）にまとめる
-// 出力: chunks = [{ type, tokens:[idx...], head }]
-//   type: NP(名詞句) / VP(動詞句) / VP_be(be動詞句) / ADJP(形容詞句) / PP(前置詞句) / ADVP(副詞句) / SCONJ / CCONJ / PUNCT / X
+// 出力: chunks = [{ type, tokens:[idx...], head, ...特徴 }]
+//   type: NP / VP / VP_be / ADJP / PP / ADVP / REL / SCONJ / CCONJ / X
+//   特徴: linking(連結動詞) passive(受動) auxOnly(助動詞のみ) infinitive(不定詞句) gerund(動名詞句)
+//         existential(There is の be) wh(疑問詞) bare(助動詞なしの分詞・原形)
 // レベル依存の処理は options.level で切り替える
 
 const TIME_NOUNS = new Set(['morning', 'afternoon', 'evening', 'night', 'day', 'week', 'month', 'year', 'time', 'weekend', 'summer', 'winter', 'spring', 'autumn', 'fall', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']);
-const TIME_DETS = new Set(['every', 'last', 'next', 'this', 'each']);
+const TIME_DETS = new Set(['every', 'last', 'next', 'this', 'each', 'all']);
 const LINKING_VERBS = new Set(['be', 'become', 'seem', 'look', 'feel', 'sound', 'taste', 'smell', 'get', 'remain', 'stay', 'turn', 'appear', 'grow', 'keep']);
+// 他動詞として扱う句動詞（動詞＋小辞/前置詞）
+const PHRASAL = new Set(['look after', 'look for', 'take off', 'put on', 'turn on', 'turn off', 'pick up', 'give up', 'take care of', 'look up', 'put off', 'get on', 'get off', 'wake up', 'bring up', 'set up']);
 
 export function chunk(tokens, options = { level: 1 }) {
   const level = options.level || 1;
@@ -13,26 +17,31 @@ export function chunk(tokens, options = { level: 1 }) {
   let k = 0;
   const n = tokens.length;
   const pos = i => (i < n ? tokens[i].pos : null);
+  const lem = i => (i < n ? tokens[i].lemma : '');
+  const txt = i => (i < n ? tokens[i].text.toLowerCase() : '');
+  const prevType = () => (chunks.length ? chunks[chunks.length - 1].type : null);
 
   while (k < n) {
     const p = pos(k);
 
-    // 名詞句: DET? (ADV? ADJ)* NUM* (NOUN|PROPN)+ | PRON | 所有格+名詞
+    // ---- 名詞句 ----
     if (p === 'DET' || p === 'ADJ' || p === 'NOUN' || p === 'PROPN' || p === 'PRON' || p === 'NUM') {
       const start = k;
       const possWithNoun = p === 'PRON' && tokens[k].tags.includes('Possessive') && ['ADJ', 'NOUN', 'PROPN', 'NUM'].includes(pos(k + 1));
       if (p === 'PRON' && !possWithNoun) {
-        chunks.push({ type: 'NP', tokens: [k], head: k });
+        chunks.push({ type: 'NP', tokens: [k], head: k, wh: tokens[k].tags.includes('QuestionWord'), existential: txt(k) === 'there', it: txt(k) === 'it' });
         k++; continue;
       }
       if (p === 'DET' || possWithNoun) k++;
       while (k < n && (pos(k) === 'ADJ' || pos(k) === 'NUM' || (pos(k) === 'ADV' && pos(k + 1) === 'ADJ'))) k++;
-      // レベル2: 分詞（動詞の -ing / -ed）が名詞の前に来る前置修飾
       if (level >= 2) while (k < n && pos(k) === 'VERB' && (pos(k + 1) === 'NOUN' || pos(k + 1) === 'PROPN') && /(ing|ed)$/.test(tokens[k].text)) k++;
       let head = -1;
-      while (k < n && (pos(k) === 'NOUN' || pos(k) === 'PROPN')) { head = k; k++; }
+      const startedWithDet = pos(start) === 'DET';
+      while (k < n && (pos(k) === 'NOUN' || pos(k) === 'PROPN')) {
+        if (startedWithDet && head !== -1 && pos(head) === 'NOUN' && pos(k) === 'PROPN') break; // the baby Emma → 2 つの NP
+        head = k; k++;
+      }
       if (head === -1) {
-        // 名詞が無い（形容詞だけ等）→ 形容詞句
         if (k > start && tokens.slice(start, k).some(t => t.pos === 'ADJ')) {
           chunks.push({ type: 'ADJP', tokens: range(start, k), head: k - 1 });
         } else {
@@ -41,31 +50,49 @@ export function chunk(tokens, options = { level: 1 }) {
         }
         continue;
       }
-      // 時を表す名詞句（every morning, last night）は副詞句として扱う
-      const first = tokens[start].text.toLowerCase();
-      const isTime = TIME_NOUNS.has(tokens[head].lemma) && (TIME_DETS.has(first) || TIME_DETS.has(tokens[start].lemma));
+      const first = txt(start);
+      const isTime = TIME_NOUNS.has(tokens[head].lemma) && TIME_DETS.has(first);
       chunks.push({ type: isTime ? 'ADVP' : 'NP', tokens: range(start, k), head });
       continue;
     }
 
-    // 動詞句: AUX* (ADV)? VERB | AUX 単独（be 本動詞は pos.js で VERB になっている）
+    // ---- 動詞句 ----
     if (p === 'AUX' || p === 'VERB') {
       const start = k;
+      const bare = p === 'VERB';
       while (k < n && pos(k) === 'AUX') k++;
       while (k < n && (pos(k) === 'ADV' || (pos(k) === 'PART' && tokens[k].tags.includes('Negative'))) && (pos(k + 1) === 'VERB' || pos(k + 1) === 'AUX')) k++;
       while (k < n && pos(k) === 'AUX') k++;
-      let head = -1;
-      if (k < n && pos(k) === 'VERB') { head = k; k++; if (k < n && pos(k) === 'PART' && tokens[k].tags.includes('Particle')) k++; }
-      else head = k - 1; // 助動詞のみ
-      // 不定詞 to + 動詞 は目的語として後で扱う（ここでは VP に含めない）
+      let head = -1, auxOnly = false;
+      if (k < n && pos(k) === 'VERB') { head = k; k++; }
+      else { head = k - 1; auxOnly = true; }
       const headTok = tokens[head];
-      const isBe = headTok.lemma === 'be';
-      const isLinking = LINKING_VERBS.has(headTok.lemma);
-      chunks.push({ type: isBe ? 'VP_be' : 'VP', tokens: range(start, k), head, linking: isLinking, passive: isPassive(tokens, start, k) });
+      // 動名詞句（レベル2）: 助動詞なしの -ing が VP の直後（enjoy playing）または文頭（Swimming is）
+      const isIng = /ing$/.test(headTok.text) && headTok.pos === 'VERB' && bare;
+      if (level >= 2 && isIng && (prevType() === 'VP' || prevType() === null)) {
+        const sub = chunk(tokens.slice(k), options);
+        if (sub.length && sub[0].type === 'NP') k += sub[0].tokens.length;
+        chunks.push({ type: 'NP', tokens: range(start, k), head, gerund: true });
+        continue;
+      }
+      // 句動詞: 小辞 / 前置詞を吸収
+      let phrasal = false;
+      if (k < n && (pos(k) === 'PART' && tokens[k].tags.includes('Particle'))) { k++; phrasal = true; }
+      else if (k < n && (pos(k) === 'ADP' || pos(k) === 'PART')) {
+        const two = headTok.lemma + ' ' + txt(k), three = two + ' ' + txt(k + 1);
+        if (PHRASAL.has(three)) { k += 2; phrasal = true; }
+        else if (PHRASAL.has(two)) { k += 1; phrasal = true; }
+      }
+      const isBe = headTok.lemma === 'be' && !auxOnly;
+      chunks.push({
+        type: isBe ? 'VP_be' : 'VP', tokens: range(start, k), head,
+        linking: !phrasal && LINKING_VERBS.has(headTok.lemma), passive: isPassive(tokens, start, k),
+        auxOnly, bare: bare && !auxOnly, existential: isBe && prevType() === 'NP' && chunks[chunks.length - 1].existential
+      });
       continue;
     }
 
-    // 前置詞句: ADP + 次の名詞句（再帰的に簡易処理）
+    // ---- 前置詞句 ----
     if (p === 'ADP') {
       const start = k; k++;
       const sub = chunk(tokens.slice(k), options);
@@ -78,12 +105,14 @@ export function chunk(tokens, options = { level: 1 }) {
       continue;
     }
 
-    // 不定詞 to + VERB (+ NP) → 名詞的用法として NP 扱い（レベル2以上）
+    // ---- 不定詞 to + VERB (+ NP) → 名詞的用法として NP（レベル2以上） ----
     if (p === 'PART' && pos(k + 1) === 'VERB') {
       const start = k; k += 2;
       if (level >= 2) {
         const sub = chunk(tokens.slice(k), options);
-        if (sub.length && sub[0].type === 'NP') k += sub[0].tokens.length;
+        let j = 0;
+        // to be a pilot / to make this dish のように後続の NP / ADJP / PP を 1 つ吸収
+        if (sub.length && ['NP', 'ADJP'].includes(sub[0].type)) { k += sub[0].tokens.length; j = 1; }
         chunks.push({ type: 'NP', tokens: range(start, k), head: start + 1, infinitive: true });
       } else {
         chunks.push({ type: 'X', tokens: range(start, k), head: start });
@@ -93,19 +122,37 @@ export function chunk(tokens, options = { level: 1 }) {
 
     if (p === 'REL') { chunks.push({ type: 'REL', tokens: [k], head: k }); k++; continue; }
     if (p === 'PART') { chunks.push({ type: 'ADVP', tokens: [k], head: k }); k++; continue; }
-    if (p === 'ADV') { chunks.push({ type: 'ADVP', tokens: [k], head: k }); k++; continue; }
+    if (p === 'ADV') { chunks.push({ type: 'ADVP', tokens: [k], head: k, wh: k === 0 && /^(when|where|why|how)$/.test(txt(k)) }); k++; continue; }
     if (p === 'SCONJ') { chunks.push({ type: 'SCONJ', tokens: [k], head: k }); k++; continue; }
     if (p === 'CCONJ') { chunks.push({ type: 'CCONJ', tokens: [k], head: k }); k++; continue; }
+    if (p === 'INTJ') { chunks.push({ type: 'ADVP', tokens: [k], head: k }); k++; continue; }
     chunks.push({ type: 'X', tokens: [k], head: k }); k++;
   }
-  return chunks;
+
+  // 等位接続の名詞句をまとめる: NP CCONJ NP → NP（レベル1）
+  return mergeCoordinatedNP(chunks, tokens);
+}
+
+function mergeCoordinatedNP(chunks, tokens) {
+  chunks.forEach((c, i) => { if (c.type === 'VP' && c.linking && chunks[i + 1] && chunks[i + 1].gerund) c.linking = false; }); // kept walking
+  const out = [];
+  for (let i = 0; i < chunks.length; i++) {
+    const c = chunks[i];
+    if (c.type === 'NP' && chunks[i + 1] && chunks[i + 1].type === 'CCONJ' && chunks[i + 2] && chunks[i + 2].type === 'NP') {
+      const merged = { type: 'NP', tokens: [...c.tokens, ...chunks[i + 1].tokens, ...chunks[i + 2].tokens], head: chunks[i + 2].head, coordinated: true };
+      out.push(merged); i += 2;
+      continue;
+    }
+    out.push(c);
+  }
+  return out;
 }
 
 function isPassive(tokens, s, e) {
   const seg = tokens.slice(s, e);
   const hasBe = seg.some(t => t.lemma === 'be' && t.pos === 'AUX');
-  const last = seg[seg.length - 1];
-  return hasBe && last.pos === 'VERB' && (last.tags.includes('PastTense') || last.tags.includes('Participle') || /ed$/.test(last.text));
+  const last = seg.filter(t => t.pos === 'VERB').pop();
+  return !!(hasBe && last && (last.tags.includes('PastTense') || last.tags.includes('Participle') || /(ed|en)$/.test(last.text)));
 }
 
 function range(a, b) { const r = []; for (let i = a; i < b; i++) r.push(i); return r; }

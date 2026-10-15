@@ -16,7 +16,7 @@
 | `src/patterns.js` | 文型判定エンジン |
 | `src/render.js` | 描画・ホバーカード |
 | `rules/patterns.json` | 文型規則（level 付き） |
-| `data/testset_dev.csv` | 開発用テストセット（50 文） |
+| `data/testset_dev.csv` | 開発用テストセット（100 文） |
 | `data/testset_eval.csv` | 評価用テストセット（100 文・規則改良には使わない） |
 | `data/ud_ewt_sample.json` | 品詞評価用 UD English-EWT 抜粋（300 文、CC BY-SA 4.0） |
 | `docs/annotation_guide.md` | テストセットのアノテーション仕様 |
@@ -26,6 +26,7 @@
 | `vendor/compromise.js` | 品詞タグ付けライブラリ（MIT License） |
 
 ## 更新履歴
+- v0.4 : 疑問文・There is・等位接続主語・動名詞・使役知覚・分詞修飾・形式主語など規則拡張、開発用 +50 文、キャッシュ対策（?v=）。評価用 100 文: 71% → 95%
 - v0.3 : 評価用テストセット 100 文（未知データ）、UD English-EWT による品詞・原形評価、評価プロトコル。規則は v0.2 から変更なし
 - v0.2 : 品詞・原形のホバー表示、レベル付き文型規則（JSON）、S/V/O/C/M の色分け、評価モード、開発用テストセット 50 文
 - v0.1 : 最小構成・Pages デプロイ確認

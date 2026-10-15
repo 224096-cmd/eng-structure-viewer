@@ -49,3 +49,53 @@ L2-017,2,She has been to London twice.,SV,現在完了（経験）
 L2-018,2,We should leave now.,SV,助動詞
 L2-019,2,He is studying hard because he has an exam.,SV,because 節
 L2-020,2,If it rains tomorrow we will stay home.,SV,if 節
+D1-031,1,Do you play soccer?,SVO,疑問文
+D1-032,1,Does she like dogs?,SVO,疑問文
+D1-033,1,Is he a teacher?,SVC,be 疑問文
+D1-034,1,Are you ready?,SVC,be 疑問文
+D1-035,1,Can you help me?,SVO,助動詞疑問文
+D1-036,1,Will you give me a hand?,SVOO,助動詞疑問文＋SVOO
+D1-037,1,Where do you live?,SV,wh 疑問文（副詞）
+D1-038,1,What did you buy?,SVO,wh 疑問文（目的語）
+D1-039,1,There is a cat under the chair.,SV,There is 構文
+D1-040,1,There are many books in the room.,SV,There are 構文
+D1-041,1,Ken and Yumi are students.,SVC,等位接続の主語
+D1-042,1,My mother and father like tea.,SVO,等位接続の主語
+D1-043,1,Please give me some water.,SVOO,命令文＋SVOO
+D1-044,1,Show us your photos.,SVOO,命令文＋SVOO
+D1-045,1,We studied all day.,SV,時の名詞句 all
+D1-046,1,They sang together.,SV,副詞 together
+D1-047,1,She lives alone.,SV,副詞 alone
+D1-048,1,I have seen such a thing.,SVO,such＋名詞句
+D1-049,1,He is sleeping now.,SV,進行形
+D1-050,1,Japanese is spoken here.,SV,言語名の主語＋受動態
+D2-021,2,She likes playing the piano.,SVO,動名詞の目的語
+D2-022,2,He stopped talking.,SVO,動名詞の目的語
+D2-023,2,Reading is fun.,SVC,動名詞主語
+D2-024,2,Cooking is my hobby.,SVC,動名詞主語
+D2-025,2,My mother let me go out.,SVOC,使役 let
+D2-026,2,The teacher made us clean the room.,SVOC,使役 make
+D2-027,2,I heard her sing a song.,SVOC,知覚動詞
+D2-028,2,We saw them play soccer.,SVOC,知覚動詞
+D2-029,2,She told me to wait.,SVOC,tell O to do
+D2-030,2,He wants me to help him.,SVOC,want O to do
+D2-031,2,They named the baby Emma.,SVOC,name O C
+D2-032,2,We elected him captain.,SVOC,elect O C
+D2-033,2,I think she is kind.,SVO,that 省略
+D2-034,2,I hope you can come.,SVO,that 省略
+D2-035,2,The girl playing the piano is Mary.,SVC,分詞の後置修飾
+D2-036,2,I have a friend living in Canada.,SVO,分詞の後置修飾
+D2-037,2,This is a letter written by my aunt.,SVC,分詞の後置修飾
+D2-038,2,It is easy to make this dish.,SVC,形式主語 it
+D2-039,2,I found it difficult to solve the problem.,SVOC,形式目的語 it
+D2-040,2,She takes care of her brother.,SVO,句動詞
+D2-041,2,He looked for his key.,SVO,句動詞
+D2-042,2,We know that he is honest.,SVO,that 節
+D2-043,2,She said that the movie was good.,SVO,that 節
+D2-044,2,Though it was late we kept walking.,SVO,though 節＋動名詞
+D2-045,2,He made me a sandwich.,SVOO,make A B
+D2-046,2,I was told the news.,SVO,受動態（SVOO の受動）
+D2-047,2,What do you think about it?,SVO,wh 疑問文＋前置詞句
+D2-048,2,Who wrote this song?,SVO,wh 主語疑問文
+D2-049,2,The dog was called Pochi.,SV,受動態
+D2-050,2,Music makes people happy.,SVOC,make O C
