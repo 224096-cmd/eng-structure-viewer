@@ -16,12 +16,12 @@ plt.rcParams['axes.unicode_minus'] = False
 
 rows = list(csv.DictReader(open(os.path.join(ROOT, 'results', 'summary_all.csv'), encoding='utf8')))
 pos = list(csv.DictReader(open(os.path.join(ROOT, 'results', 'summary_pos_all.csv'), encoding='utf8')))
-versions = [v for v in ['v0.3', 'v0.4', 'v0.5', 'v0.6', 'v0.7', 'v0.8', 'v0.9'] if any(r['version'] == v for r in rows)]
+versions = [v for v in ['v0.3', 'v0.4', 'v0.5', 'v0.6', 'v0.7', 'v0.8', 'v0.9', 'v1.0'] if any(r['version'] == v for r in rows)]
 def get(v, ds, rl, col):
     r = [x for x in rows if x['version'] == v and x['dataset'] == ds and int(x['rules_le']) == rl]
     return float(r[0][col]) * 100 if r and r[0][col] else None
 # 最大規則レベル（版ごと）
-maxrl = {'v0.3': 2, 'v0.4': 2, 'v0.5': 3, 'v0.6': 3, 'v0.7': 3, 'v0.8': 3, 'v0.9': 3}
+maxrl = {'v0.3': 2, 'v0.4': 2, 'v0.5': 3, 'v0.6': 3, 'v0.7': 3, 'v0.8': 3, 'v0.9': 3, 'v1.0': 3}
 
 # 図1: 学習曲線（評価用、L1 / L2 の文、品詞）
 fig, ax = plt.subplots(figsize=(6.4, 4), dpi=150)
@@ -44,7 +44,7 @@ v = versions[-1]
 M = np.array([[get(v, 'eval', rl, f'acc_L{lv}') or 0 for rl in (1, 2, 3)] for lv in (1, 2, 3)])
 fig, ax = plt.subplots(figsize=(5.2, 3.8), dpi=150)
 ax.imshow(M, cmap='Blues', vmin=0, vmax=100)
-ax.set_xticks(range(3)); ax.set_xticklabels(['規則 ≤1', '規則 ≤2', '規則 ≤3'])
+ax.set_xticks(range(3)); ax.set_xticklabels(['規則≦1', '規則≦2', '規則≦3'])
 ax.set_yticks(range(3)); ax.set_yticklabels(['レベル1の文', 'レベル2の文', 'レベル3の文'])
 for i in range(3):
     for j in range(3): ax.text(j, i, f'{M[i, j]:.1f}%', ha='center', va='center', color='white' if M[i, j] > 60 else 'black', fontsize=10)
@@ -58,6 +58,6 @@ dev = [get(v, 'dev', 3, f'acc_L{lv}') for lv in (1, 2, 3)]; ev = [get(v, 'eval',
 x = np.arange(3); w = 0.36
 ax.bar(x - w / 2, dev, w, label='開発用（規則を作りながら見た文）'); ax.bar(x + w / 2, ev, w, label='評価用（未知の文）')
 for i in range(3): ax.text(x[i] - w / 2, dev[i] + 1, f'{dev[i]:.0f}', ha='center', fontsize=8); ax.text(x[i] + w / 2, ev[i] + 1, f'{ev[i]:.0f}', ha='center', fontsize=8)
-ax.set_xticks(x); ax.set_xticklabels(labels); ax.set_ylim(0, 110); ax.set_ylabel('正解率 (%)'); ax.legend(fontsize=8); ax.set_title(f'{v} 開発用と評価用の差（規則 ≤3）')
+ax.set_xticks(x); ax.set_xticklabels(labels); ax.set_ylim(0, 110); ax.set_ylabel('正解率 (%)'); ax.legend(fontsize=8); ax.set_title(f'{v} 開発用と評価用の差（規則≦3）')
 fig.tight_layout(); fig.savefig(os.path.join(OUT, 'dev_vs_eval.png')); plt.close(fig)
 print('figures written to', OUT)

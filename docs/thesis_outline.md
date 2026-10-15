@@ -23,7 +23,7 @@
 - RQ2：規則の規模（レベル1→3）と精度の関係はどうか。規則の追加は既存の精度を下げる（干渉する）か
 - RQ3：誤りはどの文法現象に集中するか
 - RQ4：長文（入試長文レベル）でも短文と同程度に動作するか
-- RQ5：ルールベース（構造訳）と小型ニューラル翻訳は、サイズ・速度・出力の性質でどう異なるか（表 5-8：`results/v0.9/translation_summary.json`、比較例 `translation_comparison.csv`）
+- RQ5：ルールベース（構造訳）と小型ニューラル翻訳は、サイズ・速度・出力の性質でどう異なるか（表 5-8：`results/v1.0/translation_summary.json`、比較例 `translation_comparison.csv`）
 
 ## 第2章 関連技術・先行研究
 - 品詞タグ付け（POS tagging）と Universal Dependencies（UPOS 体系の説明）

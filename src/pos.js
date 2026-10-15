@@ -2,7 +2,7 @@
 // 依存: vendor/compromise.js（グローバル nlp）
 // 出力: tokens = [{ i, text, display, pre, post, pos, posJa, lemma, tags, commaAfter, quoteOpen, ... }]
 //   判定の優先順位: ①語彙で決まるもの → ②文脈で決まる機能語 → ③be/do/have → ④compromise のタグ
-import { punctFeatures } from './text.js?v=0.9';
+import { punctFeatures } from './text.js?v=1.0';
 
 const POS_JA = {
   NOUN: '名詞', PROPN: '固有名詞', PRON: '代名詞', VERB: '動詞', AUX: '助動詞',
@@ -131,6 +131,7 @@ function mapTag(terms, k, assigned, ctx = {}) {
   if (/ing$/.test(word) && tags.has('Noun') && !tags.has('Verb') && prev && has(prev, 'Adjective') && next && (has(next, 'Determiner') || has(next, 'Pronoun') || has(next, 'Noun')) && isVerbStem(word)) return 'VERB';
   if (MANNER_ADVS.has(word) && !next && prev && !has(prev, 'Determiner') && !has(prev, 'Adjective') && k > 1 && terms.slice(0, k).some(t => has(t, 'Verb'))) return 'ADV';
   if (MANNER_ADVS.has(word) && prev && ((has(prev, 'Verb') && !BE_FORMS.has(prevW)) || (prevW === 'so' && k >= 2 && has(terms[k - 2], 'Verb') && !BE_FORMS.has(w(terms[k - 2])))) && !has(next, 'Noun')) return 'ADV';
+  if (tags.has('Date') && /^\d[\d,.]*$/.test(term.text || '')) return 'NUM';   // 年号などの数字は NUM（UD と同じ）
   if (tags.has('Date') && !has(prev, 'Determiner') && !has(prev, 'Adjective') && !has(prev, 'Possessive') && !has(prev, 'Value') && !has(prev, 'Noun') && !/s$/.test(word)) return 'ADV';
   if (tags.has('Date') && (has(prev, 'Determiner') || has(prev, 'Adjective') || /s$/.test(word))) return 'NOUN';
   // 大文字始まりの前置詞（Over five years）や、動詞と誤られた前置詞

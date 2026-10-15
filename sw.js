@@ -1,5 +1,5 @@
 // sw.js — オフライン動作用 Service Worker。本体ファイルは先読み、辞書・データは使ったものを保存
-const VERSION = 'esv-v0.9';
+const VERSION = 'esv-v1.0';
 const CORE = ['./', './index.html', './eval.html', './style.css', './app.js', './eval.js', './manifest.json', './icon.svg',
   './vendor/compromise.js', './src/pos.js', './src/chunker.js', './src/patterns.js', './src/analyzer.js', './src/render.js', './src/dict.js', './src/tree.js', './src/text.js', './src/gloss.js', './src/mt.js', './data/passages_dev.json',
   './rules/patterns.json', './data/testset_dev.csv', './data/testset_eval.csv'];

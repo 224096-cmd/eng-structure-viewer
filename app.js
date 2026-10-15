@@ -1,9 +1,9 @@
-import { loadRules, analyzeSentence, splitSentencesWithMeta } from './src/analyzer.js?v=0.9';
-import { renderResult } from './src/render.js?v=0.9';
-import { renderTree } from './src/tree.js?v=0.9';
-import { prefetch } from './src/dict.js?v=0.9';
-import { sentenceGloss } from './src/gloss.js?v=0.9';
-import * as MT from './src/mt.js?v=0.9';
+import { loadRules, analyzeSentence, splitSentencesWithMeta } from './src/analyzer.js?v=1.0';
+import { renderResult } from './src/render.js?v=1.0';
+import { renderTree } from './src/tree.js?v=1.0';
+import { prefetch } from './src/dict.js?v=1.0';
+import { sentenceGloss } from './src/gloss.js?v=1.0';
+import * as MT from './src/mt.js?v=1.0';
 
 const $ = id => document.getElementById(id);
 const PATTERNS = ['SV', 'SVC', 'SVO', 'SVOO', 'SVOC', 'HEADING', 'UNKNOWN'];
@@ -70,11 +70,16 @@ async function run() {
     if (MT.isReady() && $('useMT').checked) {
       const m = document.createElement('div'); m.className = 'gloss mt'; m.innerHTML = '<span class="gl-label mt">AI 翻訳</span><span class="gl-text muted">…</span>';
       el.insertBefore(m, slot);
-      MT.translate(s.text).then(res => { lastMT[r.index] = res.ja; m.querySelector('.gl-text').textContent = res.ja; m.querySelector('.gl-text').classList.remove('muted'); m.title = `FuguMT（ブラウザ内）${res.ms} ms`; }).catch(e => { m.querySelector('.gl-text').textContent = '翻訳に失敗: ' + e.message; });
+      // 見出し行（"Reading Passage: …" など）はラベル部分を除いて翻訳する（モデルがラベルを誤訳しやすいため）
+      const hm = r.pattern.type === 'HEADING' ? /^(reading passage|passage|reading|text|part [a-z0-9]+)\s*[:：\-–—]\s*(.+)$/i.exec(s.text.trim()) : null;
+      const src = hm ? hm[2] : s.text;
+      MT.translate(src).then(res => { const ja = (hm ? '読解文：' : '') + res.ja; lastMT[r.index] = ja; m.querySelector('.gl-text').textContent = ja; m.querySelector('.gl-text').classList.remove('muted'); m.title = `FuguMT（ブラウザ内）${res.ms} ms`; }).catch(e => { m.querySelector('.gl-text').textContent = '翻訳に失敗: ' + e.message; });
     }
-    if ($('showGloss').checked) {
+    // 構造訳は常に計算して JSON に残す。画面に出すのは「構造訳を表示」がオンのときだけ
+    {
+      const show = $('showGloss').checked;
       const g = document.createElement('div'); g.className = 'gloss'; g.innerHTML = '<span class="gl-label">構造訳</span><span class="gl-text muted">…</span>';
-      el.insertBefore(g, slot);
+      if (show) el.insertBefore(g, slot);
       sentenceGloss(r).then(res => { lastGloss[r.index] = res.ja; g.querySelector('.gl-text').textContent = res.ja; g.querySelector('.gl-text').classList.remove('muted'); g.title = res.note; });
     }
     if (i % 8 === 7) { $('status').textContent = `解析中… ${i + 1}/${sents.length} 文`; await new Promise(res => setTimeout(res, 0)); }
@@ -123,7 +128,7 @@ function download() {
 
 async function loadSample(name) {
   try {
-    const d = await (await fetch(`data/${name}?v=0.9`)).json();
+    const d = await (await fetch(`data/${name}?v=1.0`)).json();
     $('input').value = d.passages[0].text;
     $('level').value = '3';  // 長文は入試レベルの規則が必要
     run();
@@ -136,6 +141,9 @@ $('level').addEventListener('change', run);
 $('treeMode').addEventListener('change', run);
 $('showGloss').addEventListener('change', run);
 $('useMT').addEventListener('change', async e => {
+  try { localStorage.setItem('esv.useMT', e.target.checked ? '1' : '0'); } catch (_) {}
+  if (e.target.checked) $('showGloss').checked = false;   // AI 翻訳を使うときは構造訳を隠す（必要なら手動でオン）
+  else $('showGloss').checked = true;
   if (!e.target.checked) { run(); return; }
   if (MT.isReady()) { run(); return; }
   const st = $('mtStatus'); st.style.display = '';
@@ -157,3 +165,5 @@ $('sample').addEventListener('click', () => loadSample('passages_dev.json'));
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(() => {});
 $('run').disabled = true;
 init();
+// 前回 AI 翻訳をオンにしていたら、次回以降は自動で読み込む（モデルはブラウザのキャッシュから。オフラインでも可）
+try { if (localStorage.getItem('esv.useMT') === '1') { $('useMT').checked = true; $('useMT').dispatchEvent(new Event('change')); } } catch (_) {}

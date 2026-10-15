@@ -61,6 +61,7 @@ export function chunk(tokens, options = { level: 1 }) {
         if (startedWithDet && head !== -1 && pos(head) === 'NOUN' && tokens[head].tags.includes('Plural') && pos(k) === 'NOUN' && !tokens[k].tags.includes('Plural') && k === n - 1) break; // the children music → 2 つの NP（文末）
         head = k; k++;
       }
+      if (head === -1 && k > start && start === 0 && tokens.slice(start, k).every(t => t.pos === 'NUM' || t.pos === 'DET')) head = k - 1;   // 前置詞の直後の数字だけの名詞句（in 1998）: 再帰呼び出し（前置詞句の中身）でのみ
       if (head === -1) {
         if (k > start && tokens.slice(start, k).some(t => t.pos === 'ADJ')) {
           chunks.push({ type: 'ADJP', tokens: range(start, k), head: k - 1, theComparative: pos(start) === 'DET' && txt(start) === 'the' && /(er|more|less|worse)$/.test(txt(k - 1)) });

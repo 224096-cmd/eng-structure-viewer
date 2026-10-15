@@ -1,0 +1,13 @@
+﻿i,sentence,gold,pred,correct,core,transforms
+1,"Reading Passage: Rethinking Our Relationship with Technology",HEADING,HEADING,1,"NP NP",""
+2,"In today's hyper-connected world, smartphones and constant internet access have made our lives far more convenient.",SVOC,SVOC,1,"NP VP NP ADJP","leading_adverbial"
+3,"However, this non-stop digital interaction comes with a price.",SV,SV,1,"NP VP","leading_adverbial"
+4,"Many people experience increased anxiety, reduced attention spans, and a feeling of being constantly overwhelmed.",SVO,SVO,1,"NP VP NP","compound_sentence+participle_modifier"
+5,"In response to these challenges, the concept of a ""digital detox"" — intentionally taking a break from electronic devices — has gathered significant attention.",SVO,SVO,1,"NP VP NP","dash_insert+leading_adverbial"
+6,"A digital detox does not mean abandoning technology altogether.",SVO,SVO,1,"NP VP NP",""
+7,"Instead, it encourages individuals to establish healthy boundaries.",SVOC,SVOC,1,"NP VP NP NP","leading_adverbial"
+8,"For example, some people choose to turn off notifications during dinner, while others set aside entire weekends to stay offline.",SVO,SVO,1,"NP VP NP","leading_adverbial+subordinate_clause"
+9,"Research shows that taking brief breaks from screens can improve sleep quality, enhance face-to-face communication, and boost overall mental well-being.",SVO,SVO,1,"NP VP NP","coordinated_predicate+that_clause"
+10,"Despite these benefits, practicing a digital detox can be difficult due to work obligations and social expectations.",SVC,SVC,1,"NP VP_be ADJP","leading_adverbial"
+11,"To make it manageable, experts suggest starting small, such as creating phone-free zones at home or replacing late-night screen time with reading a physical book.",SVO,SVO,1,"NP VP NP","leading_infinitive+leading_adverbial+coordinated_gerund"
+12,"By making conscious choices about when and how we use technology, we can regain control over our time and mental energy.",SVO,SVO,1,"NP VP NP","subordinate_clause"

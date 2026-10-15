@@ -1,0 +1,12 @@
+{
+  "version": "v1.0",
+  "sentences": 163,
+  "model": "Kadonox/fugumt-en-ja-onnx (q8)",
+  "license": "CC BY-SA 4.0",
+  "modelLoadMs": 12098,
+  "modelSizeMB": 145,
+  "structureGlossAvgMs": 0.99,
+  "fugumtAvgMs": 248,
+  "structureGlossSizeMB": 3,
+  "environment": "Node 22, CPU (container)"
+}
