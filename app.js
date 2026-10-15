@@ -1,10 +1,11 @@
-import { loadRules, analyzeSentence, splitSentencesWithMeta } from './src/analyzer.js?v=0.7';
-import { renderResult } from './src/render.js?v=0.7';
-import { renderTree } from './src/tree.js?v=0.7';
-import { prefetch } from './src/dict.js?v=0.7';
+import { loadRules, analyzeSentence, splitSentencesWithMeta } from './src/analyzer.js?v=0.8';
+import { renderResult } from './src/render.js?v=0.8';
+import { renderTree } from './src/tree.js?v=0.8';
+import { prefetch } from './src/dict.js?v=0.8';
+import { sentenceGloss } from './src/gloss.js?v=0.8';
 
 const $ = id => document.getElementById(id);
-const PATTERNS = ['SV', 'SVC', 'SVO', 'SVOO', 'SVOC', 'UNKNOWN'];
+const PATTERNS = ['SV', 'SVC', 'SVO', 'SVOO', 'SVOC', 'HEADING', 'UNKNOWN'];
 let lastResults = null;
 let running = false;
 
@@ -19,7 +20,9 @@ async function init() {
   }
 }
 
+let lastGloss = {};
 async function run() {
+  lastGloss = {};
   if (running) return;
   const text = $('input').value.trim();
   const level = Number($('level').value);
@@ -63,6 +66,11 @@ async function run() {
       slot.appendChild(b);
     }
     prefetch(r.tokens);
+    if ($('showGloss').checked) {
+      const g = document.createElement('div'); g.className = 'gloss'; g.innerHTML = '<span class="gl-label">構造訳</span><span class="gl-text muted">…</span>';
+      el.insertBefore(g, slot);
+      sentenceGloss(r).then(res => { lastGloss[r.index] = res.ja; g.querySelector('.gl-text').textContent = res.ja; g.querySelector('.gl-text').classList.remove('muted'); g.title = res.note; });
+    }
     if (i % 8 === 7) { $('status').textContent = `解析中… ${i + 1}/${sents.length} 文`; await new Promise(res => setTimeout(res, 0)); }
   }
   const total = Math.round((performance.now() - t0) * 10) / 10;
@@ -83,7 +91,7 @@ function renderSummary(results, words, nSent, totalMs, level) {
       <span class="metric">合計 <b>${totalMs}</b> ms</span>
       <span class="metric">判定不能 <b>${counts.UNKNOWN}</b> 文</span>
     </div>
-    <div class="pattern-counts">${PATTERNS.map(p => `<button class="pc ${p === 'UNKNOWN' ? 'unk' : ''}" data-p="${p}">${p === 'UNKNOWN' ? '判定不能' : p} <b>${counts[p]}</b></button>`).join('')}
+    <div class="pattern-counts">${PATTERNS.map(p => `<button class="pc ${p === 'UNKNOWN' ? 'unk' : ''}" data-p="${p}">${p === 'UNKNOWN' ? '判定不能' : p === 'HEADING' ? '見出し' : p} <b>${counts[p]}</b></button>`).join('')}
       <button class="pc" data-p="ALL">すべて表示</button></div>
     <p class="small muted">文型のボタンを押すと、その文型の文だけを表示します。番号は「段落-文」。</p>`;
   sum.querySelectorAll('.pc').forEach(b => b.onclick = () => {
@@ -97,7 +105,7 @@ function renderSummary(results, words, nSent, totalMs, level) {
 function download() {
   if (!lastResults) return;
   const slim = lastResults.map(r => ({
-    index: r.index, paragraph: r.paragraph, sentence: r.sentence, level: r.level, pattern: r.pattern.type, ruleId: r.pattern.ruleId, transforms: r.pattern.transforms, timeMs: r.timeMs,
+    index: r.index, paragraph: r.paragraph, sentence: r.sentence, gloss: lastGloss[r.index] || null, level: r.level, pattern: r.pattern.type, ruleId: r.pattern.ruleId, transforms: r.pattern.transforms, timeMs: r.timeMs,
     tokens: r.tokens.filter(t => !t.implicit).map(t => ({ text: t.display, pos: t.pos, lemma: t.lemma, role: t.role, chunk: t.chunkType }))
   }));
   const blob = new Blob([JSON.stringify({ exportedAt: new Date().toISOString(), userAgent: navigator.userAgent, results: slim }, null, 2)], { type: 'application/json' });
@@ -109,7 +117,7 @@ function download() {
 
 async function loadSample(name) {
   try {
-    const d = await (await fetch(`data/${name}?v=0.7`)).json();
+    const d = await (await fetch(`data/${name}?v=0.8`)).json();
     $('input').value = d.passages[0].text;
     $('level').value = '3';  // 長文は入試レベルの規則が必要
     run();
@@ -120,6 +128,7 @@ $('run').addEventListener('click', run);
 $('download').addEventListener('click', download);
 $('level').addEventListener('change', run);
 $('treeMode').addEventListener('change', run);
+$('showGloss').addEventListener('change', run);
 $('sample').addEventListener('click', () => loadSample('passages_dev.json'));
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(() => {});
 $('run').disabled = true;

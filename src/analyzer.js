@@ -1,9 +1,9 @@
 // analyzer.js — 解析の入口。1文ごとに 品詞 → チャンク → 文型 を実行し、JSON で返す
-import { tagSentence } from './pos.js?v=0.7';
-import { chunk } from './chunker.js?v=0.7';
-import { detectPattern } from './patterns.js?v=0.7';
+import { tagSentence } from './pos.js?v=0.8';
+import { chunk } from './chunker.js?v=0.8';
+import { detectPattern } from './patterns.js?v=0.8';
 
-const RULES_VERSION = '0.7';
+const RULES_VERSION = '0.8';
 let RULES = null;
 export async function loadRules(url = 'rules/patterns.json') {
   if (!RULES) RULES = await (await fetch(url + '?v=' + RULES_VERSION)).json();
@@ -11,7 +11,7 @@ export async function loadRules(url = 'rules/patterns.json') {
 }
 export function getRules() { return RULES; }
 
-import { splitSentences as splitText } from './text.js?v=0.7';
+import { splitSentences as splitText } from './text.js?v=0.8';
 export function splitSentences(text) { return splitText(text).map(s => s.text); }
 export function splitSentencesWithMeta(text) { return splitText(text); }
 

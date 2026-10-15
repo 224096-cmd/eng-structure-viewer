@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>研究ポスター - English Structure Viewer</title>
+<style>
+  @page { size: A1 portrait; margin: 0; }
+  :root { --S:#1f6fd6; --V:#d6342f; --O:#1e8f4e; --C:#c7860c; --M:#6b7280; --ink:#1d2330; --accent:#2f5cff; --bg:#f4f6f9; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:#dde3ea; font-family: "Noto Sans JP", "Noto Sans CJK JP", "Hiragino Sans", "Yu Gothic", "Meiryo", system-ui, sans-serif; color:var(--ink); }
+  .poster { width: 1189px; height: 1684px; margin: 0 auto; background: #fff; display:grid; grid-template-rows: 150px 1fr 48px; }
+  @media screen { .poster { box-shadow: 0 0 40px rgba(0,0,0,.25); margin: 24px auto; } }
+  header { background: linear-gradient(90deg, #2f5cff, #1f6fd6); color:#fff; padding: 18px 36px; display:flex; flex-direction:column; justify-content:center; }
+  header h1 { margin:0; font-size: 34px; letter-spacing: .5px; }
+  header .sub { font-size: 17px; opacity:.95; margin-top: 6px; }
+  header .meta { font-size: 13px; opacity:.85; margin-top: 6px; }
+  main { display:grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto auto 1fr; gap: 14px; padding: 16px 28px 0; }
+  .box { border: 2px solid #e2e6ee; border-radius: 14px; padding: 12px 16px; background:#fff; }
+  .box h2 { margin: 0 0 8px; font-size: 19px; color: var(--accent); border-left: 6px solid var(--accent); padding-left: 10px; }
+  .box p, .box li { font-size: 13.5px; line-height: 1.55; margin: 4px 0; }
+  .box ul { margin: 4px 0 4px 18px; padding:0; }
+  .wide { grid-column: 1 / 3; }
+  .kpi { display:flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
+  .kpi div { flex:1; min-width: 130px; background: var(--bg); border-radius: 10px; padding: 8px 10px; text-align:center; }
+  .kpi b { display:block; font-size: 28px; color: var(--accent); line-height:1.1; }
+  .kpi span { font-size: 12px; color:#555; }
+  table { border-collapse: collapse; width:100%; font-size: 12.5px; }
+  th, td { border:1px solid #dfe3ea; padding: 4px 6px; text-align:center; }
+  th { background:#f0f2f5; }
+  td.l { text-align:left; }
+  .flow { display:flex; align-items:center; gap: 6px; font-size: 12.5px; margin: 6px 0; flex-wrap: wrap; }
+  .flow .st { background: var(--bg); border-radius: 8px; padding: 6px 9px; border:1px solid #dfe3ea; }
+  .flow .ar { color:#9ca3af; font-size: 18px; }
+  .demo { font-size: 17px; line-height: 2.4; margin: 6px 0 2px; }
+  .ch { display:inline-block; padding: 0 6px; margin: 2px 3px; border-radius: 6px; border-bottom: 3px solid; }
+  .S { background:#e3eefc; border-color:var(--S);} .V{ background:#fde6e5; border-color:var(--V);} .O{ background:#e2f5ea; border-color:var(--O);} .C{ background:#fdf2d5; border-color:var(--C);} .M{ background:#eef0f3; border-bottom: 2px dashed var(--M);}
+  .lab { font-size: .6em; font-weight: 700; vertical-align: super; margin-left: 2px; }
+  .S .lab{color:var(--S)} .V .lab{color:var(--V)} .O .lab{color:var(--O)} .C .lab{color:var(--C)} .M .lab{color:var(--M)}
+  .gloss { font-size: 13.5px; background:#f8fafc; border-left: 4px solid #94a3b8; padding: 5px 9px; border-radius: 0 8px 8px 0; margin-top: 4px; }
+  img { width: 100%; border-radius: 8px; border: 1px solid #e2e6ee; }
+  .two { display:grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  footer { font-size: 12px; color:#555; padding: 10px 36px; border-top: 1px solid #e2e6ee; display:flex; justify-content:space-between; }
+  .note { font-size: 12px; color:#666; }
+  .tag { display:inline-block; font-size: 11px; background:#eef0f3; border-radius: 10px; padding: 1px 8px; margin: 1px 2px; }
+</style>
+</head>
+<body>
+<div class="poster">
+  <header>
+    <h1>ブラウザ内で完結する英文構造可視化システムの開発</h1>
+    <div class="sub">― ルールベース解析による文型（SVOC）・品詞・構造訳の提示と精度評価 ―</div>
+    <div class="meta">三重大学 教育学部 技術・ものづくり教育コース　卒業研究　｜　公開 URL: https://224096-cmd.github.io/eng-structure-viewer/　｜　GitHub Pages 上で動作・サーバ不要・AI モデル不使用・オフライン対応</div>
+  </header>
+
+  <main>
+    <section class="box">
+      <h2>1. 背景と目的</h2>
+      <p>英文読解では「主語・動詞・目的語がどれか」という<b>文構造の把握</b>がつまずきの原因になりやすい。既存の構文解析ツールはサーバや大きな AI モデルを必要とし、授業・自習で使うスマホや GIGA 端末では動かしにくい。</p>
+      <p><b>目的</b>：サーバも AI モデルも使わず、<b>ブラウザ内のルールベース処理だけ</b>で文型・品詞・訳語・構造訳を可視化するシステムを開発し、その精度を公開データと自作テストセットで<b>定量評価</b>する。</p>
+      <ul>
+        <li>RQ1 ルールベースだけでどの程度の精度か</li>
+        <li>RQ2 規則の規模（レベル 1→3）と精度の関係、規則の干渉</li>
+        <li>RQ3 誤りはどの文法現象に集中するか</li>
+        <li>RQ4 入試長文でも短文と同程度に動くか</li>
+      </ul>
+    </section>
+
+    <section class="box">
+      <h2>2. システムの構成</h2>
+      <div class="flow">
+        <span class="st">文分割<br><small>略語・引用符・段落</small></span><span class="ar">→</span>
+        <span class="st">品詞タグ付け<br><small>辞書＋規則（compromise.js）</small></span><span class="ar">→</span>
+        <span class="st">チャンク化<br><small>名詞句・動詞句・前置詞句</small></span><span class="ar">→</span>
+        <span class="st">変形・畳み込み<br><small>疑問文・関係詞節・分詞構文…</small></span><span class="ar">→</span>
+        <span class="st">文型判定<br><small>JSON 規則 25 個（level 付き）</small></span>
+      </div>
+      <p>規則ごとに <b>level</b>（1 中学／2 高校／3 入試）を持たせ、「level ≤ N だけ有効」にして実験の軸にした。訳語は EJDict-hand（パブリックドメイン）。Service Worker により一度開けば<b>オフライン</b>で動作。</p>
+      <p><span class="tag">色＋記号＋ラベル（色覚配慮）</span><span class="tag">ホバーで品詞・原形・訳語</span><span class="tag">構造図（SVG）</span><span class="tag">構造訳（日本語）</span><span class="tag">長文：文番号・文型別絞り込み</span><span class="tag">結果を CSV/JSON 保存</span></p>
+    </section>
+
+    <section class="box wide">
+      <h2>3. 画面例（解析結果）</h2>
+      <div class="demo">
+        <span class="ch M">In 1998,<span class="lab">M</span></span><span class="ch S">a small group<span class="lab">S</span></span><span class="ch M">of researchers<span class="lab">M</span></span><span class="ch V">began<span class="lab">V</span></span><span class="ch O">a project<span class="lab">O</span></span><span class="ch M">that, at first, attracted little attention.<span class="lab">M・関係詞節</span></span>
+        &nbsp;&nbsp;<span class="ch S">She<span class="lab">S</span></span><span class="ch V">made<span class="lab">V</span></span><span class="ch O">him<span class="lab">O</span></span><span class="ch C">happy.<span class="lab">C</span></span>
+      </div>
+      <div class="two">
+        <div class="gloss"><b>構造訳</b>：1998年に 小さな集団は 研究者の （最初は、ほとんど注意を引かなかったという） 計画を 始める〔過去〕<br><span class="note">役割（S/V/O/C/M）と辞書の訳語から機械的に組み立てた直訳。「構造どおりに読むとこうなる」を示す学習用のもので、多義語の選択誤り（bark→「皮をはぐ」）は限界として残る。</span></div>
+        <div class="gloss"><b>適用した処理をチップで表示</b>：<span class="tag">文頭の副詞句</span><span class="tag">関係詞節</span><span class="tag">引用</span><span class="tag">伝達の倒置</span><span class="tag">重文</span><span class="tag">分詞構文</span><span class="tag">that 省略</span> …<br><span class="note">判定不能の文には「対象レベルを 3 にすると SVO と判定されます」と案内し、規則レベルの効果を学習者にも見せる。</span></div>
+      </div>
+    </section>
+
+    <section class="box">
+      <h2>4. 評価方法</h2>
+      <table>
+        <tr><th>対象</th><th>データ</th><th>規模</th></tr>
+        <tr><td>品詞・原形</td><td class="l">Universal Dependencies English-EWT（CC BY-SA）</td><td>300 文・3,247 語</td></tr>
+        <tr><td>文型（短文）</td><td class="l">自作：開発用／<b>評価用（未知・改良に使わない）</b></td><td>182 文／130 文</td></tr>
+        <tr><td>文型（長文）</td><td class="l">自作：入試長文 開発用 2 編／評価用 2 編</td><td>31 文／33 文</td></tr>
+      </table>
+      <p class="note">評価プロトコル：評価用の文は見ずに、誤りの「文法項目名」だけから開発用に文を追加して改良し、版ごとに 1 回だけ評価用を実行して記録する（機械学習の train/test 分割に相当）。すべて Node スクリプトで再現可能。</p>
+    </section>
+
+    <section class="box">
+      <h2>5. 結果（評価用＝未知のデータ）</h2>
+      <div class="kpi">
+        <div><b>93.8%</b><span>文型 正解率<br>短文 130 文（規則 ≤3）</span></div>
+        <div><b>73%</b><span>文型 正解率<br>入試長文 33 文</span></div>
+        <div><b>87.7%</b><span>品詞 正解率<br>UD 300 文</span></div>
+        <div><b>0.5 秒</b><span>処理時間<br>2,000 語・120 文（PC）</span></div>
+      </div>
+      <table style="margin-top:8px">
+        <tr><th>文のレベル＼有効規則</th><th>≤1</th><th>≤2</th><th>≤3</th></tr>
+        <tr><td>レベル1（中学）50 文</td><td>98%</td><td>98%</td><td>98%</td></tr>
+        <tr><td>レベル2（高校）50 文</td><td>36%</td><td>98%</td><td>98%</td></tr>
+        <tr><td>レベル3（入試）30 文</td><td>7%</td><td>27%</td><td>80%</td></tr>
+      </table>
+      <p class="note">クロス表（RQ2）：規則を足すほど難しい文が解けるようになり、やさしい文の精度は下がらなかった（干渉なし）。一方 v0.5 開発中には when 節の規則追加で L2 文が 94%→92% に下がる干渉が起き、品詞の曖昧性解消で回復した。</p>
+    </section>
+
+    <section class="box">
+      <h2>6. 学習曲線（版ごとの改良）</h2>
+      <img src="../results/figures/learning_curve.png" alt="学習曲線">
+      <p class="note">v0.3 → v0.8 で短文 71% → 93.8%。各版で評価用は 1 回だけ測定。開発用（99%）との差が、ルールベースの汎化の限界を示す。</p>
+    </section>
+
+    <section class="box">
+      <h2>7. 考察と今後</h2>
+      <ul>
+        <li><b>RQ1</b>：短文では 9 割超、品詞は約 88%。残る誤りの主因はライブラリの品詞誤り（名詞／動詞、固有名詞）と節の終端判定。</li>
+        <li><b>RQ3</b>：評価用で残る誤りは、複合名詞の主語、so…that、強調構文、分詞構文（文末）、接触節など<b>入試レベルの構文</b>に集中。</li>
+        <li><b>RQ4</b>：長文で 73%。文の長さそのものより記号処理（引用・括弧・コンマ）と入試構文が要因。記号処理の導入で開発用長文は 30%→100%。</li>
+        <li><b>教育利用</b>：無料・オフライン・説明可能（適用規則を表示）。色覚多様性に配慮した表示。構造訳は「訳を見る」より「構造から読む」練習を促す設計。</li>
+        <li><b>今後</b>：学習者実験（可視化あり／なし）、小型 AI モデルとの精度・速度・サイズ比較、規則の自動獲得。</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <span>データ：UD English-EWT（CC BY-SA 4.0）、EJDict-hand（CC0）、compromise.js（MIT）。コード・評価結果・図はすべて GitHub リポジトリ（224096-cmd/eng-structure-viewer）で公開。</span>
+    <span>v0.8</span>
+  </footer>
+</div>
+</body>
+</html>

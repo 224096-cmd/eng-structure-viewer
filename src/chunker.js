@@ -35,12 +35,17 @@ export function chunk(tokens, options = { level: 1 }) {
 
     // ---- 名詞句 ----
     const moreThan = p === 'ADV' && /^(more|less|fewer)$/.test(txt(k)) && txt(k + 1) === 'than' && (pos(k + 2) === 'NUM' || pos(k + 2) === 'NOUN' || pos(k + 2) === 'DET');
+    if (txt(k) === 'a' && /^(lot|number|couple|bit|kind|sort|great deal)$/.test(txt(k + 1)) && txt(k + 2) === 'of') {
+      const sub = chunk(tokens.slice(k + 3), options);
+      const len = sub.length && sub[0].type === 'NP' ? sub[0].tokens.length : 0;
+      chunks.push({ type: 'NP', tokens: range(k, k + 3 + len), head: len ? k + 2 + len : k + 1 }); k += 3 + len; continue;
+    }
     if (p === 'DET' || p === 'ADJ' || p === 'NOUN' || p === 'PROPN' || p === 'PRON' || p === 'NUM' || moreThan) {
       start = k;
       if (moreThan) k += 2;
       const NAMING = new Set(['call', 'name', 'elect', 'appoint', 'consider', 'make', 'choose', 'declare', 'crown', 'nominate']);
       const herAfterNaming = txt(k) === 'her' && k > 0 && pos(k - 1) === 'VERB' && NAMING.has(lem(k - 1)) && pos(k + 1) === 'NOUN' && (k + 2 >= n || pos(k + 2) !== 'NOUN');
-      const possWithNoun = p === 'PRON' && tokens[k].tags.includes('Possessive') && ['ADJ', 'NOUN', 'PROPN', 'NUM'].includes(pos(k + 1)) && !herAfterNaming;
+      const possWithNoun = (p === 'PRON' || p === 'NOUN' || p === 'PROPN') && tokens[k].tags.includes('Possessive') && ['ADJ', 'NOUN', 'PROPN', 'NUM'].includes(pos(k + 1)) && !herAfterNaming;
       if (p === 'PRON' && !possWithNoun) {
         chunks.push({ type: 'NP', tokens: [k], head: k, pronoun: true, wh: tokens[k].tags.includes('QuestionWord'), existential: txt(k) === 'there', it: txt(k) === 'it' });
         k++; continue;
@@ -91,7 +96,7 @@ export function chunk(tokens, options = { level: 1 }) {
       const noVPYet = !chunks.some(c => c.type === 'VP' || c.type === 'VP_be');
       const afterBareADP = k > 0 && pos(k - 1) === 'ADP';
       const pcEndsParticle = pc && pc.type === 'VP' && tokens[pc.tokens[pc.tokens.length - 1]].pos === 'PART';
-      if (level >= 2 && isIng && !pcEndsParticle && (prevType() === 'VP' || prevType() === null || prevType() === 'ADJP' || afterBareADP || ((prevType() === 'PP' || prevType() === 'ADVP') && noVPYet && pc.commaAfter) || (pc && pc.auxOnly)) && !(pc && pc.type === 'VP' && !pc.auxOnly && pc.commaAfter)) {
+      if (level >= 2 && isIng && !pcEndsParticle && (prevType() === 'VP' || prevType() === null || prevType() === 'ADJP' || afterBareADP || ((prevType() === 'PP' || prevType() === 'ADVP') && noVPYet && (pc.commaAfter || (prevType() === 'ADVP' && pc.tokens.length === 1))) || (pc && pc.auxOnly)) && !(pc && pc.type === 'VP' && !pc.auxOnly && pc.commaAfter)) {
         const sub = chunk(tokens.slice(k), options);
         if (sub.length && sub[0].type === 'NP') { k += sub[0].tokens.length; if (k < n && pos(k) === 'VERB' && !/(ing|ed|s)$/.test(tokens[k].text) && (k + 1 >= n || pos(k + 1) !== 'VERB')) k++; }
         chunks.push({ type: 'NP', tokens: range(start, k), head, gerund: true });

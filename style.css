@@ -84,3 +84,7 @@ td.ok { color: var(--O); } td.ng { color: var(--V); font-weight: 600; }
 .chunk { word-break: normal; }
 .tokens { line-height: 2.5; }
 .hint { font-size: .85rem; color: #92400e; background: #fef3c7; border-radius: 8px; padding: 6px 10px; margin-top: 4px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.gloss { font-size: .95rem; margin: 2px 0 4px; padding: 6px 10px; background: #f8fafc; border-left: 3px solid #94a3b8; border-radius: 0 8px 8px 0; }
+.gl-label { font-size: .7rem; font-weight: 700; color: #475569; background: #e2e8f0; border-radius: 6px; padding: 1px 6px; margin-right: 8px; vertical-align: middle; }
+.sentence.heading .tokens { font-weight: 700; }
+@media print { header nav, .controls, #status, .tree-btn, footer, details { display: none !important; } body { background: #fff; } .card { box-shadow: none; border: 1px solid #ddd; } }

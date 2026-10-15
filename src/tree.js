@@ -1,5 +1,5 @@
 // tree.js — 構造図（SVG）。文型 → 役割（S/V/O/C/M）→ チャンク → 単語（品詞）の階層を描く
-import { escapeHtml, ROLE_JA } from './render.js?v=0.7';
+import { escapeHtml, ROLE_JA } from './render.js?v=0.8';
 
 const COLORS = { S: 'var(--S)', V: 'var(--V)', O: 'var(--O)', C: 'var(--C)', M: 'var(--M)' };
 

@@ -1,6 +1,6 @@
 # English Structure Viewer
 
-英文を入力すると、文構造（SVOC）・品詞・原形をブラウザ内だけで解析して可視化する Web アプリ。
+英文を入力すると、文構造（SVOC）・品詞・原形・訳語・構造訳（日本語）をブラウザ内だけで解析して可視化する Web アプリ。
 
 - 公開 URL: https://224096-cmd.github.io/eng-structure-viewer/
 - 評価モード: https://224096-cmd.github.io/eng-structure-viewer/eval.html
@@ -18,6 +18,8 @@
 | `src/render.js` | 描画・ホバーカード |
 | `src/dict.js` | 英和辞書の読み込み（EJDict-hand、CC0） |
 | `src/tree.js` | 構造図（SVG） |
+| `src/gloss.js` | 構造訳（日本語）: 役割と辞書から機械的に組み立てる |
+| `scripts/gloss_eval.mjs` | 構造訳の辞書カバー率と一覧出力 |
 | `sw.js`, `manifest.json`, `icon.svg` | オフライン対応（PWA） |
 | `scripts/evaluate.mjs` | 評価を一括実行して results/ に保存（`node scripts/evaluate.mjs v0.5`） |
 | `scripts/make_figures.py` | 図の生成（`python scripts/make_figures.py`） |
@@ -34,15 +36,17 @@
 | `results/` | 評価結果（版ごとのフォルダ、`summary_all.csv`、`figures/`） |
 | `vendor/compromise.js` | 品詞タグ付けライブラリ（MIT License） |
 
-## 現在の精度（v0.7、評価用 130 文・長文 2 編・UD 300 文）
+## 現在の精度（v0.8、評価用 130 文・長文 2 編・UD 300 文）
 - 文型（短文）: 93.8%（レベル1の文 98%、レベル2の文 98%、レベル3の文 80%）
 - 文型（入試長文、未知 2 編 33 文）: 73%
-- 品詞: 87.8%（UD 規約）、原形: 93.4%
+- 品詞: 87.7%（UD 規約）、原形: 93.4%
+- 構造訳の辞書カバー率: 99.3%（評価用 130 文の内容語）
 - 速度: 約 2,000 語（120 文）を 0.5 秒（PC）
 
 ![学習曲線](results/figures/learning_curve.png)
 
 ## 更新履歴
+- v0.8 : 構造訳（日本語）、見出しの扱い、コンマ付き関係詞節・複合名詞・as/like の判別など（ユーザー提供長文 11/11）、辞書を 4 義に拡張、ポスター
 - v0.7 : 評価用の誤り項目に基づく規則拡張（不定詞の形容詞的用法・whether 節・強調構文・分詞構文など）、開発用 +34 文、卒論骨子。評価用 130 文: 93.8%、長文 73%
 - v0.6 : 長文対応（略語・引用符を考慮した文分割、記号による句の区切り、引用・括弧・ダッシュ・同格・接触節・伝達の倒置など）、長文向け表示（文番号・文型別の絞り込み・構造図の折りたたみ）、長文テストセット
 - v0.5 : レベル3規則（重文・分詞構文・関係副詞・what 節・間接疑問・倒置など）、訳語表示（EJDict-hand）、構造図（SVG）、オフライン対応、評価スクリプト・図の自動生成。評価用 130 文: 89.2%

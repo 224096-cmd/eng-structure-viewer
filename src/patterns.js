@@ -31,6 +31,7 @@ export function detectPattern(chunks, rulesJson, level = 1) {
   }
   if (level >= 2) work = foldRelativeClauses(work, transforms, level);
   if (level >= 2) work = foldInfinitiveModifiers(work, transforms);
+  if (level >= 2) work = foldPostAdjectives(work, transforms);
   if (level >= 3) {
     work = foldAppositives(work, transforms);
     work = foldContactClauses(work, transforms);
@@ -45,10 +46,14 @@ export function detectPattern(chunks, rulesJson, level = 1) {
 
   const core = work.filter(c => !mods.has(c.type) && !['X', 'CCONJ', 'SCONJ', 'REL'].includes(c.type));
   const coreTypes = core.map(c => c.type);
+  // 動詞句が 1 つも無い → 見出し・名詞句のみ（文型なし）
+  if (!chunks.some(c => c.type === 'VP' || c.type === 'VP_be')) {
+    return { type: 'HEADING', ruleId: null, roles: work.map(c => ({ chunkIndex: c.idx, role: null, folded: c.folded })), core: coreTypes, note: '動詞がないため文型はありません（見出し・名詞句）', transforms };
+  }
 
   for (const r of rules) {
     if (matchCore(core, r.core) && (!r.require || core.some(c => (c.type === 'VP' || c.type === 'VP_be') && matchCore([c], [c.type + ':' + r.require])))) {
-      const roles = work.map(c => ({ chunkIndex: c.idx, role: mods.has(c.type) ? 'M' : null, folded: c.folded }));
+      const roles = work.map(c => ({ chunkIndex: c.idx, role: mods.has(c.type) ? 'M' : null, folded: c.folded, kind: c.type, clause: !!c.clause, quote: !!c.quote, wh: !!c.wh, gerund: !!c.gerund, infinitive: !!c.infinitive }));
       core.forEach((c, i) => {
         const k = roles.findIndex(x => x.chunkIndex === c.idx);
         if (k >= 0) roles[k].role = r.roles[i];
@@ -56,7 +61,7 @@ export function detectPattern(chunks, rulesJson, level = 1) {
       return { type: r.type, ruleId: r.id, roles, core: coreTypes, note: r.note, transforms };
     }
   }
-  return { type: 'UNKNOWN', ruleId: null, roles: work.map(c => ({ chunkIndex: c.idx, role: mods.has(c.type) ? 'M' : null, folded: c.folded })), core: coreTypes, note: '一致する規則がありません', transforms };
+  return { type: 'UNKNOWN', ruleId: null, roles: work.map(c => ({ chunkIndex: c.idx, role: mods.has(c.type) ? 'M' : null, folded: c.folded, kind: c.type, clause: !!c.clause, quote: !!c.quote, wh: !!c.wh })), core: coreTypes, note: '一致する規則がありません', transforms };
 }
 
 function matchCore(core, spec) {
@@ -423,26 +428,54 @@ function splitCompound(work, transforms) {
 function isParticipleVP(c) { return c.bare && !c.auxOnly && /(ing|ed|en)$/.test(c.headText || ''); }
 
 // 関係詞節: NP REL ... → RELCL（修飾語）。節の終わり = 節内で動詞句を見たあと、次の動詞句の直前または文末
+// 「名詞, which …, 動詞」型（コンマ付きの非制限用法）は、コンマで終わる区間のあとに主節の動詞句が来たところで終わる
 function foldRelativeClauses(work, transforms, level = 2) {
   const out = [];
   for (let i = 0; i < work.length; i++) {
     const c = work[i];
-    const prevT = out.length ? out[out.length - 1].type : null;
+    const prevC = out.length ? out[out.length - 1] : null;
+    const prevT = prevC ? prevC.type : null;
     if (c.type === 'REL' && (prevT === 'NP' || (level >= 3 && (prevT === 'PP' || prevT === 'ADVP')))) {
       let j = i + 1, vpSeen = 0;
       const members = [c];
+      const commaRel = !!(prevC && prevC.commaAfter);
       while (j < work.length) {
         const t = work[j].type;
+        const prevComma = j - 1 >= i + 1 && work[j - 1].commaAfter;
+        if (commaRel) {
+          if (vpSeen >= 1 && prevComma && (t === 'VP' || t === 'VP_be')) break;
+          if (vpSeen >= 1 && prevComma && t === 'NP' && work[j + 1] && ['VP', 'VP_be'].includes(work[j + 1].type) && !work[j].commaAfter) break;
+          if (t === 'VP' || t === 'VP_be') vpSeen++;
+          members.push(work[j]); j++; continue;
+        }
         if (t === 'VP' || t === 'VP_be') { if (vpSeen >= 1) break; vpSeen++; }
         if (t === 'CCONJ' && work[j + 1] && ['VP', 'VP_be'].includes(work[j + 1].type) && vpSeen >= 1) { members.push(work[j], work[j + 1]); j += 2; continue; }
         if (t === 'CCONJ' && work[j + 1] && work[j + 1].type === 'REL') { members.push(work[j], work[j + 1]); j += 2; vpSeen = 0; continue; }
+        if (t === 'CCONJ' && vpSeen >= 1 && work[j + 1] && ['NP', 'PP'].includes(work[j + 1].type) && !(work[j + 2] && ['VP', 'VP_be'].includes(work[j + 2].type))) { members.push(work[j], work[j + 1]); j += 2; continue; }
         if (t === 'SCONJ' || t === 'CCONJ') break;
         members.push(work[j]); j++;
       }
-      out.push({ type: (prevT === 'PP' || prevT === 'ADVP') ? 'SUBCL' : 'RELCL', idx: c.idx, tokens: members.flatMap(m => m.tokens), head: c.head, folded: members.slice(1).map(m => m.idx) });
+      const last = members[members.length - 1];
+      out.push({ type: (prevT === 'PP' || prevT === 'ADVP') ? 'SUBCL' : 'RELCL', idx: c.idx, tokens: members.flatMap(m => m.tokens), head: c.head, folded: members.slice(1).map(m => m.idx), commaAfter: !!last.commaAfter });
       transforms.push((prevT === 'PP' || prevT === 'ADVP') ? 'cleft_clause' : 'relative_clause');
       i = j - 1;
       continue;
+    }
+    out.push(c);
+  }
+  return out;
+}
+
+// 名詞の後置修飾の形容詞句（a diet rich in …）: NP ADJP PP → 修飾語（レベル2）
+const POST_ADJ = new Set(['rich', 'full', 'free', 'capable', 'responsible', 'famous', 'similar', 'different', 'available', 'ready', 'interested', 'aware', 'worth', 'suitable', 'eager', 'present', 'involved', 'close', 'related', 'opposite', 'due']);
+function foldPostAdjectives(work, transforms) {
+  const out = [];
+  for (let i = 0; i < work.length; i++) {
+    const c = work[i];
+    const prev = out[out.length - 1], next = work[i + 1];
+    if (c.type === 'ADJP' && prev && prev.type === 'NP' && !prev.commaAfter && next && next.type === 'PP' && POST_ADJ.has(c.headText || '') && out.some(x => x.type === 'VP' || x.type === 'VP_be')) {
+      out.push({ type: 'RELCL', idx: c.idx, tokens: [...c.tokens, ...next.tokens], head: c.head, folded: [next.idx], commaAfter: next.commaAfter });
+      transforms.push('postnominal_adjective'); i++; continue;
     }
     out.push(c);
   }
@@ -468,9 +501,10 @@ function foldParticiples(work, transforms, level = 2) {
       const asSub = prev.type !== 'NP';
       let j = i + 1;
       const members = [c];
-      while (j < work.length && ['NP', 'PP', 'ADVP'].includes(work[j].type)) {
+      while (j < work.length && (['NP', 'PP', 'ADVP'].includes(work[j].type) || (asSub && work[j].type === 'CCONJ' && work[j + 1] && isParticipleVP(work[j + 1])))) {
         // 分詞の目的語・修飾語を吸収。ただし次が動詞句なら、その直前の NP は主節の要素なので残す
-        if (work[j].type === 'NP' && work[j + 1] && (work[j + 1].type === 'VP' || work[j + 1].type === 'VP_be')) {
+        if (work[j].type === 'CCONJ') { members.push(work[j], work[j + 1]); j += 2; continue; } // reducing … and conserving …
+        if (work[j].type === 'NP' && work[j + 1] && (work[j + 1].type === 'VP' || work[j + 1].type === 'VP_be') && !isParticipleVP(work[j + 1])) {
           // playing the piano is → the piano は分詞の目的語
           members.push(work[j]); j++; break;
         }
@@ -500,15 +534,17 @@ function foldSubordinateClauses(work, transforms, level = 2) {
       transforms.push('if_clause_object'); break;
     }
     if (c.type === 'SCONJ' && (c.headText !== 'that' || soThat)) {
-      let j = i + 1, vpSeen = 0;
+      let j = i + 1, vpSeen = 0, sawComma = false;
       const members = [c];
       while (j < work.length) {
         const t = work[j].type;
+        if (t === 'CCONJ' && vpSeen >= 1 && !sawComma && work[j + 1] && work[j + 1].type === 'NP' && work[j + 2] && ['VP', 'VP_be'].includes(work[j + 2].type)) { members.push(work[j], work[j + 1]); j += 2; vpSeen = 0; continue; } // 従属節内の重文
         if (t === 'VP' || t === 'VP_be') { if (vpSeen >= 1) break; vpSeen++; }
-        if (vpSeen >= 1 && t === 'NP' && j + 1 < work.length && ['VP', 'VP_be'].includes(work[j + 1].type)) break;
-        members.push(work[j]); j++;
+        if (vpSeen >= 1 && t === 'NP') { let q = j + 1; while (q < work.length && ['PP', 'ADVP', 'ADJP'].includes(work[q].type)) q++; if (q < work.length && ['VP', 'VP_be'].includes(work[q].type)) break; }
+        if (vpSeen >= 1 && work[j - 1] !== c && work[j - 1].commaAfter) break; // 節の終わりのコンマ
+        members.push(work[j]); if (work[j].commaAfter) sawComma = true; j++;
       }
-      out.push({ type: 'SUBCL', idx: c.idx, tokens: members.flatMap(m => m.tokens), head: c.head, folded: members.slice(1).map(m => m.idx) });
+      out.push({ type: 'SUBCL', idx: c.idx, tokens: members.flatMap(m => m.tokens), head: c.head, folded: members.slice(1).map(m => m.idx), commaAfter: !!members[members.length - 1].commaAfter });
       transforms.push('subordinate_clause');
       i = j - 1;
       continue;

@@ -28,6 +28,25 @@
     "SV",
     "SVC"
    ]
+  },
+  {
+   "id": "P-DEV-2",
+   "title": "The Power of Urban Gardening（開発用・ユーザー提供）",
+   "level": 3,
+   "text": "Reading Passage: The Power of Urban Gardening\n\nIn recent years, urban gardening has gained widespread popularity in major cities around the world. As urban areas expand and concrete structures replace natural landscapes, many city dwellers are looking for ways to reconnect with nature. Urban gardening, which involves growing plants, vegetables, and fruits in small spaces such as rooftops, balconies, and community lots, offers a practical solution to this problem.\n\nOne of the primary benefits of urban gardening is its positive impact on the environment. Plants absorb carbon dioxide and release oxygen, helping to clean the air in polluted city environments. Furthermore, rooftop gardens can lower building temperatures during hot summer months, reducing the need for air conditioning and conserving energy.\n\nBeyond environmental advantages, urban gardening also promotes social connection and personal health. Community gardens bring neighbors together, fostering a sense of belonging and mutual support among residents. Additionally, growing one's own food encourages a healthier diet rich in fresh produce while providing a relaxing activity that reduces stress. Although limited space and soil quality can present challenges, innovative methods like vertical farming are making urban agriculture more accessible than ever.",
+   "gold": [
+    "HEADING",
+    "SVO",
+    "SVO",
+    "SVO",
+    "SVC",
+    "SVO",
+    "SVO",
+    "SVO",
+    "SVO",
+    "SVO",
+    "SVOC"
+   ]
   }
  ]
 }

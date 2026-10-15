@@ -168,3 +168,16 @@ D3-049,3,It was the teacher that helped me most.,SVC,強調構文（名詞）
 D3-050,3,It was yesterday that I saw him.,SV,強調構文（副詞）
 D3-051,3,The woman standing by the door is my aunt and the man next to her is my uncle.,SVC,分詞修飾＋重文
 D3-052,3,At night when the streets are quiet you can hear the river.,SVO,文頭の副詞句＋when 節
+D3-053,3,As prices rise and wages stay flat many families are struggling.,SV,as 節（文頭・重文内）
+D3-054,3,As the sun set we walked home.,SV,as 節（文頭）
+D3-055,3,"My brother, who lives in Osaka, visits us every summer.",SVO,挿入の関係詞節（コンマ）
+D3-056,3,"The museum, which opened last year, attracts many tourists.",SVO,挿入の関係詞節（コンマ）
+D3-057,3,Rooftop gardens cool the building.,SVO,複合名詞の主語
+D3-058,3,Community gardens bring people together.,SVO,複合名詞の主語
+D3-059,3,Sports cars use a lot of fuel.,SVO,複合名詞の主語
+D3-060,3,Finally growing vegetables at home saves money.,SVO,副詞＋動名詞主語
+D3-061,3,Innovative methods like online learning are changing education.,SVO,like（前置詞）
+D3-062,3,Animals like dogs and cats need daily care.,SVO,like（前置詞）
+D3-063,3,The company is making its products more affordable.,SVOC,make O C（進行形）
+D3-064,3,Chapter One: The Beginning,HEADING,見出し
+D3-065,3,Lowering building temperatures saves energy.,SVO,動名詞主語＋複合名詞

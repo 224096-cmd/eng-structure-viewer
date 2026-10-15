@@ -1,0 +1,12 @@
+﻿i,sentence,gold,pred,correct,core,transforms
+1,"Reading Passage: The Power of Urban Gardening",HEADING,HEADING,1,"NP NP",""
+2,"In recent years, urban gardening has gained widespread popularity in major cities around the world.",SVO,SVO,1,"NP VP NP","leading_adverbial"
+3,"As urban areas expand and concrete structures replace natural landscapes, many city dwellers are looking for ways to reconnect with nature.",SVO,SVO,1,"NP VP NP","infinitive_modifier+subordinate_clause"
+4,"Urban gardening, which involves growing plants, vegetables, and fruits in small spaces such as rooftops, balconies, and community lots, offers a practical solution to this problem.",SVO,SVO,1,"NP VP NP","relative_clause"
+5,"One of the primary benefits of urban gardening is its positive impact on the environment.",SVC,SVC,1,"NP VP_be NP",""
+6,"Plants absorb carbon dioxide and release oxygen, helping to clean the air in polluted city environments.",SVO,SVO,1,"NP VP NP","compound_sentence"
+7,"Furthermore, rooftop gardens can lower building temperatures during hot summer months, reducing the need for air conditioning and conserving energy.",SVO,SVO,1,"NP VP NP","leading_adverbial+participial_construction"
+8,"Beyond environmental advantages, urban gardening also promotes social connection and personal health.",SVO,SVO,1,"NP VP NP","leading_adverbial"
+9,"Community gardens bring neighbors together, fostering a sense of belonging and mutual support among residents.",SVO,SVO,1,"NP VP NP","participle_modifier"
+10,"Additionally, growing one's own food encourages a healthier diet rich in fresh produce while providing a relaxing activity that reduces stress.",SVO,SVO,1,"NP VP NP","leading_adverbial+relative_clause+postnominal_adjective+subordinate_clause"
+11,"Although limited space and soil quality can present challenges, innovative methods like vertical farming are making urban agriculture more accessible than ever.",SVOC,SVOC,1,"NP VP NP ADJP","subordinate_clause"

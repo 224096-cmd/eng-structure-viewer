@@ -1,5 +1,5 @@
 // render.js — 解析結果の描画（色＋記号による役割表示、ホバー／タップのカード、長文向けの文カード）
-import { lookup } from './dict.js?v=0.7';
+import { lookup } from './dict.js?v=0.8';
 
 const ROLE_JA = { S: '主語', V: '動詞', O: '目的語', C: '補語', M: '修飾語' };
 const ROLE_MARK = { S: '○', V: '□', O: '△', C: '◇', M: '…' };
@@ -28,20 +28,20 @@ const TRANSFORM_JA = {
   subordinate_clause: '従属節', that_clause: 'that 節', that_omitted: 'that 省略', wh_clause: 'wh 節', wh_clause_in_pp: '前置詞＋wh 節',
   compound_sentence: '重文', coordinated_predicate: '並列述語', the_comparative: 'the 比較級', cleft_clause: '強調構文',
   quotation: '引用', quote_merge: '引用', reporting_inversion: '伝達の倒置', reporting_order: '伝達', parenthesis: '括弧', dash_insert: 'ダッシュ挿入',
-  colon_explanation: 'コロン以降は補足', leading_adverbial: '文頭の副詞句', leading_clause: '文頭の節', appositive: '同格', contact_clause: '接触節（関係詞省略）', gerund_after_adjective: '形容詞＋動名詞'
+  colon_explanation: 'コロン以降は補足', leading_adverbial: '文頭の副詞句', leading_clause: '文頭の節', appositive: '同格', postnominal_adjective: '形容詞の後置修飾', infinitive_modifier: '不定詞の形容詞的用法', whether_subject: 'whether 節の主語', if_clause_object: 'if/whether 節', negative_inversion: '倒置', contact_clause: '接触節（関係詞省略）', gerund_after_adjective: '形容詞＋動名詞'
 };
 const CHUNK_JA = { APPOS: '同格', RELCL: '関係詞節', SUBCL: '従属節', COORDCL: '並列節', PAREN: '挿入', EXPL: '補足', LEADM: '文頭の副詞句', PP: '前置詞句', ADVP: '副詞（句）' };
 
 export function renderResult(result, container, opts = {}) {
   const el = document.createElement('div');
-  el.className = 'sentence' + (result.pattern.type === 'UNKNOWN' ? ' unknown' : '');
+  el.className = 'sentence' + (result.pattern.type === 'UNKNOWN' ? ' unknown' : '') + (result.pattern.type === 'HEADING' ? ' heading' : '');
   if (result.index) el.id = 's' + result.index;
 
   const header = document.createElement('div');
   header.className = 'sentence-head';
   const num = result.index ? `<span class="snum">${result.paragraph ? result.paragraph + '-' : ''}${result.index}</span>` : '';
   const tf = [...new Set((result.pattern.transforms || []).map(t => TRANSFORM_JA[t]).filter(Boolean))].map(t => `<span class="chip">${t}</span>`).join('');
-  header.innerHTML = `${num}<span class="pattern-badge ${result.pattern.type === 'UNKNOWN' ? 'unk' : ''}">${result.pattern.type === 'UNKNOWN' ? '判定不能' : result.pattern.type}</span>
+  header.innerHTML = `${num}<span class="pattern-badge ${result.pattern.type === 'UNKNOWN' ? 'unk' : ''}">${result.pattern.type === 'UNKNOWN' ? '判定不能' : result.pattern.type === 'HEADING' ? '見出し' : result.pattern.type}</span>
     <span class="pattern-note">${escapeHtml(result.pattern.note)}</span>${tf}${result.fragment ? '<span class="chip muted">；で区切った節</span>' : ''}
     <span class="time">${result.timeMs} ms</span>`;
   el.appendChild(header);
