@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>English Structure Viewer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>English Structure Viewer</h1>
+    <p class="sub">英文の文構造・品詞・訳語をブラウザ内で可視化する（卒業研究 v0.1）</p>
+  </header>
+  <main>
+    <section class="card">
+      <h2>動作確認</h2>
+      <p id="status">JavaScript が読み込まれていません。</p>
+      <textarea id="input" rows="3" placeholder="英文を入力（v0.1 では単語数を数えるだけです）">The cat sat on the mat.</textarea>
+      <button id="run">解析</button>
+      <p id="result"></p>
+    </section>
+  </main>
+  <footer>
+    <small>三重大学 教育学部 技術・ものづくり教育コース 卒業研究 / GitHub Pages 上で動作</small>
+  </footer>
+  <script src="app.js"></script>
+</body>
+</html>
