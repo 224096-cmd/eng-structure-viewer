@@ -9,12 +9,18 @@
 <body>
   <header>
     <h1>評価モード</h1>
-    <p class="sub">テストセット（<code>data/testset.csv</code>）を一括解析し、文型の正解率・混同行列・処理時間を算出して CSV / JSON で保存します。</p>
+    <p class="sub">テストセット（<code>data/testset_dev.csv</code> / <code>testset_eval.csv</code>）を一括解析し、文型の正解率・混同行列・処理時間を算出して CSV / JSON で保存します。</p>
     <nav><a href="index.html">← 解析画面へ</a></nav>
   </header>
   <main>
     <section class="card">
       <div class="controls">
+        <label>テストセット
+          <select id="dataset">
+            <option value="data/testset_dev.csv">開発用（規則を作りながら見た 50 文）</option>
+            <option value="data/testset_eval.csv" selected>評価用（未知の 100 文）</option>
+          </select>
+        </label>
         <label>有効にする規則のレベル
           <select id="level">
             <option value="1">1 のみ</option>
@@ -52,6 +58,20 @@
     <section class="card" id="detailSec" style="display:none">
       <h2>詳細（誤りは赤）</h2>
       <div id="detail"></div>
+    </section>
+    <section class="card">
+      <h2>品詞タグ付けの評価（UD English-EWT）</h2>
+      <p class="small muted">公開コーパス Universal Dependencies English-EWT（CC BY-SA 4.0）のテスト部分から抽出した 300 文（<code>data/ud_ewt_sample.json</code>）で、本システムの品詞タグを正解（UPOS）と比較します。句読点は除外し、語数が一致しない文は「整列失敗」として集計から外します。</p>
+      <div class="controls"><button id="runPos" class="primary">品詞評価を実行</button><label><input type="checkbox" id="udMode" checked> UD の規約に合わせる（be 動詞を AUX として比較）</label></div>
+      <div id="posMetrics"></div>
+      <h3>品詞ごとの正解率（正解側の品詞で集計）</h3>
+      <div id="posPerTag"></div>
+      <h3>混同行列（行＝正解、列＝出力）</h3>
+      <div id="posConfusion"></div>
+      <div class="controls">
+        <button id="dlPos">品詞評価 JSON を保存</button>
+        <button id="dlPosErr">誤り一覧 CSV を保存</button>
+      </div>
     </section>
   </main>
   <script src="vendor/compromise.js"></script>

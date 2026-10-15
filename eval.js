@@ -1,10 +1,12 @@
 import { loadRules, analyzeSentence } from './src/analyzer.js';
 import { escapeHtml } from './src/render.js';
+import { tagSentence } from './src/pos.js';
 
 const $ = id => document.getElementById(id);
 const PATTERNS = ['SV', 'SVC', 'SVO', 'SVOO', 'SVOC'];
 let testset = [];
-let lastDetail = null, lastSummary = null, lastCross = null;
+let lastDetail = null, lastSummary = null, lastCross = null, lastPos = null;
+let datasetName = 'testset_eval.csv';
 
 function parseCSV(text) {
   const lines = text.replace(/\r/g, '').split('\n').filter(l => l.trim());
@@ -59,10 +61,16 @@ function table(head, rows, rowClass) {
     rows.map((r, i) => `<tr>${r.map((c, j) => `<td class="${rowClass && j === 4 ? rowClass[i] : ''}">${c}</td>`).join('')}</tr>`).join('') + '</tbody></table>';
 }
 
+async function loadDataset(url) {
+  testset = parseCSV(await (await fetch(url)).text());
+  datasetName = url.split('/').pop();
+  $('status').textContent = `${datasetName} を読み込みました（${testset.length} 文）。「一括評価」を押してください。`;
+}
+
 function runOne() {
   const lv = Number($('level').value);
   const s = evaluate(testset, lv);
-  lastDetail = s.detail; lastSummary = { ...s, detail: undefined, userAgent: navigator.userAgent, evaluatedAt: new Date().toISOString(), testsetSize: testset.length };
+  lastDetail = s.detail; lastSummary = { ...s, detail: undefined, dataset: datasetName, userAgent: navigator.userAgent, evaluatedAt: new Date().toISOString(), testsetSize: testset.length };
   renderSummary(s);
   $('status').textContent = `評価完了（${testset.length} 文）`;
 }
@@ -96,8 +104,55 @@ $('run').onclick = runOne;
 $('runAll').onclick = runCross;
 $('file').onchange = async e => { const f = e.target.files[0]; if (!f) return; testset = parseCSV(await f.text()); $('status').textContent = `${f.name} を読み込みました（${testset.length} 文）`; };
 
+$('dataset').onchange = e => loadDataset(e.target.value);
+
+// ---------- 品詞評価 ----------
+const UPOS_ORDER = ['NOUN', 'VERB', 'AUX', 'ADJ', 'ADV', 'ADP', 'DET', 'PRON', 'PROPN', 'CCONJ', 'SCONJ', 'PART', 'NUM', 'INTJ'];
+const norm = w => w.toLowerCase().replace(/[^a-z0-9]/g, '');
+// UD の規約: be 動詞（コピュラ）は常に AUX。本システムは本動詞の be を VERB とするため、比較時に合わせるオプションを用意
+function mapForCompare(t, udMode) {
+  if (t.pos === 'REL') return 'PRON';
+  if (udMode && t.pos === 'VERB' && t.lemma === 'be') return 'AUX';
+  return t.pos;
+}
+
+async function runPos() {
+  const udMode = $('udMode').checked;
+  const data = await (await fetch('data/ud_ewt_sample.json')).json();
+  const t0 = performance.now();
+  let aligned = 0, unaligned = 0, nTok = 0, nOk = 0, lemmaN = 0, lemmaOk = 0;
+  const perTag = {}; const conf = {}; const errors = [];
+  for (const s of data.sentences) {
+    const gold = s.tokens.filter(t => t.upos !== 'PUNCT');
+    const pred = tagSentence(s.text).map(t => ({ ...t, n: norm(t.text) })).filter(t => t.n);
+    const goldN = gold.map(t => norm(t.form));
+    if (pred.length !== gold.length || pred.some((t, i) => t.n !== goldN[i])) { unaligned++; continue; }
+    aligned++;
+    gold.forEach((g, i) => {
+      const p = mapForCompare(pred[i], udMode);
+      nTok++;
+      perTag[g.upos] = perTag[g.upos] || { n: 0, ok: 0 };
+      perTag[g.upos].n++;
+      conf[g.upos] = conf[g.upos] || {}; conf[g.upos][p] = (conf[g.upos][p] || 0) + 1;
+      if (p === g.upos) { nOk++; perTag[g.upos].ok++; } else errors.push({ id: s.id, word: g.form, gold: g.upos, pred: p, sentence: s.text });
+      if (g.upos !== 'PROPN' && g.upos !== 'PUNCT') { lemmaN++; if (pred[i].lemma.toLowerCase() === g.lemma.toLowerCase()) lemmaOk++; }
+    });
+  }
+  const ms = performance.now() - t0;
+  lastPos = { source: data.source, license: data.license, udCopulaAsAux: udMode, sentences: data.sentences.length, aligned, unaligned, tokens: nTok, posAccuracy: nOk / nTok, lemmaAccuracy: lemmaOk / lemmaN, perTag, confusion: conf, errors, totalMs: ms, userAgent: navigator.userAgent, evaluatedAt: new Date().toISOString() };
+  $('posMetrics').innerHTML = `<span class="metric">品詞正解率 <b>${(100 * nOk / nTok).toFixed(1)}%</b> (${nOk}/${nTok} 語)</span>
+    <span class="metric">原形正解率 <b>${(100 * lemmaOk / lemmaN).toFixed(1)}%</b> (${lemmaOk}/${lemmaN} 語、固有名詞除く)</span>
+    <span class="metric">整列成功 <b>${aligned}</b> 文 / 失敗 ${unaligned} 文</span>
+    <span class="metric">処理時間 <b>${ms.toFixed(0)}</b> ms（${aligned} 文）</span>`;
+  const tags = UPOS_ORDER.filter(t => perTag[t]);
+  $('posPerTag').innerHTML = table(['品詞', '語数', '正解', '正解率'], tags.map(t => [t, perTag[t].n, perTag[t].ok, (100 * perTag[t].ok / perTag[t].n).toFixed(1) + '%']));
+  $('posConfusion').innerHTML = table(['正解＼出力', ...tags, 'X'], tags.map(a => [a, ...tags.map(b => conf[a][b] || 0), conf[a]['X'] || 0]));
+}
+$('runPos').onclick = runPos;
+$('dlPos').onclick = () => lastPos && dl(`pos_eval_${stamp()}.json`, JSON.stringify({ ...lastPos, errors: undefined }, null, 2), 'application/json');
+$('dlPosErr').onclick = () => lastPos && dl(`pos_errors_${stamp()}.csv`, '\uFEFF' + ['id,word,gold,pred,sentence', ...lastPos.errors.map(e => [e.id, csvq(e.word), e.gold, e.pred, csvq(e.sentence)].join(','))].join('\n'), 'text/csv');
+
 (async () => {
   await loadRules();
-  testset = parseCSV(await (await fetch('data/testset.csv')).text());
-  $('status').textContent = `testset.csv を読み込みました（${testset.length} 文）。「一括評価」を押してください。`;
+  await loadDataset($('dataset').value);
 })();

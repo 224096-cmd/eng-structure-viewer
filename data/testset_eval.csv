@@ -1,0 +1,101 @@
+id,level,sentence,pattern,grammar_tag
+E1-001,1,Dogs bark.,SV,自動詞
+E1-002,1,My brother lives in Osaka.,SV,前置詞句の修飾
+E1-003,1,The sun rises in the east.,SV,前置詞句の修飾
+E1-004,1,We walked to school together.,SV,前置詞句＋副詞
+E1-005,1,The train stopped suddenly.,SV,副詞の修飾
+E1-006,1,Her eyes are blue.,SVC,be＋形容詞
+E1-007,1,Mr. Brown is our English teacher.,SVC,be＋名詞句
+E1-008,1,The soup smells delicious.,SVC,感覚動詞＋形容詞
+E1-009,1,It is getting dark.,SVC,get＋形容詞
+E1-010,1,The room was very quiet.,SVC,副詞＋形容詞
+E1-011,1,I love my family.,SVO,他動詞＋名詞句
+E1-012,1,She reads books every day.,SVO,時の副詞句
+E1-013,1,We cleaned the classroom after school.,SVO,前置詞句の修飾
+E1-014,1,He speaks three languages.,SVO,数詞つき目的語
+E1-015,1,The boy broke the window.,SVO,他動詞
+E1-016,1,My aunt sent me a letter.,SVOO,send A B
+E1-017,1,I will give you some advice.,SVOO,助動詞＋SVOO
+E1-018,1,She taught us math.,SVOO,teach A B
+E1-019,1,He bought his son a bike.,SVOO,buy A B
+E1-020,1,Could you lend me your pen?,SVOO,疑問文＋SVOO
+E1-021,1,Close the door.,SVO,命令文
+E1-022,1,Look at the sky.,SV,命令文＋前置詞句
+E1-023,1,There is a book on the desk.,SV,There is 構文
+E1-024,1,The kids are in the garden.,SV,be＋場所
+E1-025,1,I do not know his name.,SVO,否定文
+E1-026,1,She can play the guitar well.,SVO,助動詞＋SVO
+E1-027,1,They did not come yesterday.,SV,否定＋時の副詞
+E1-028,1,We had lunch at noon.,SVO,have 本動詞
+E1-029,1,My grandmother is eighty years old.,SVC,be＋形容詞句
+E1-030,1,The baby cried all night.,SV,時の名詞句
+E1-031,1,Do you like tennis?,SVO,疑問文
+E1-032,1,Is this your bag?,SVC,be 疑問文
+E1-033,1,The students listened to the teacher carefully.,SV,前置詞句＋副詞
+E1-034,1,She looked at me.,SV,look at（前置詞句）
+E1-035,1,He became famous.,SVC,become＋形容詞
+E1-036,1,We enjoyed the party.,SVO,他動詞
+E1-037,1,The weather turned cold.,SVC,turn＋形容詞
+E1-038,1,Tom and I are good friends.,SVC,等位接続の主語
+E1-039,1,I usually get up at six.,SV,頻度の副詞＋句動詞
+E1-040,1,She wrote her mother a long letter.,SVOO,write A B
+E1-041,1,The movie starts at seven.,SV,時の前置詞句
+E1-042,1,You look happy today.,SVC,look＋形容詞
+E1-043,1,We must finish this work.,SVO,助動詞＋SVO
+E1-044,1,Birds sing in the morning.,SV,前置詞句
+E1-045,1,My father is a doctor.,SVC,be＋名詞
+E1-046,1,I found my keys.,SVO,他動詞
+E1-047,1,Please show me your ticket.,SVOO,命令文＋SVOO
+E1-048,1,The children are playing outside.,SV,進行形＋副詞
+E1-049,1,This cake tastes sweet.,SVC,感覚動詞＋形容詞
+E1-050,1,She has two cats.,SVO,have 本動詞
+E2-001,2,The teacher made the students quiet.,SVOC,make O C
+E2-002,2,We named the dog Max.,SVOC,name O C
+E2-003,2,I believe him honest.,SVOC,believe O C
+E2-004,2,They elected her president.,SVOC,elect O C
+E2-005,2,The music kept me awake.,SVOC,keep O C
+E2-006,2,She left the door open.,SVOC,leave O C
+E2-007,2,You should keep your room clean.,SVOC,助動詞＋SVOC
+E2-008,2,The letter was sent yesterday.,SV,受動態
+E2-009,2,English is spoken in many countries.,SV,受動態＋前置詞句
+E2-010,2,The cake was eaten by the children.,SV,受動態＋by
+E2-011,2,I hope that you will come.,SVO,that 節
+E2-012,2,She said that she was tired.,SVO,that 節
+E2-013,2,We know that the earth is round.,SVO,that 節
+E2-014,2,He wants to be a pilot.,SVO,不定詞の目的語
+E2-015,2,I like to read books.,SVO,不定詞の目的語
+E2-016,2,They began to run.,SVO,不定詞の目的語
+E2-017,2,She enjoys playing tennis.,SVO,動名詞の目的語
+E2-018,2,I finished reading the book.,SVO,動名詞の目的語
+E2-019,2,The girl who is singing is my sister.,SVC,関係代名詞（主格）
+E2-020,2,The book that I read was interesting.,SVC,関係代名詞（目的格）
+E2-021,2,I know the man who wrote this letter.,SVO,関係代名詞（主格）
+E2-022,2,This is the house which my uncle built.,SVC,関係代名詞（目的格）
+E2-023,2,Swimming is my favorite sport.,SVC,動名詞主語
+E2-024,2,To learn English is important.,SVC,不定詞主語
+E2-025,2,I have never seen such a beautiful picture.,SVO,現在完了＋否定
+E2-026,2,She has lived here for ten years.,SV,現在完了（継続）
+E2-027,2,We were watching TV when he came.,SVO,when 節
+E2-028,2,Because it was cold we stayed inside.,SV,because 節（文頭）
+E2-029,2,I will call you when I get home.,SVO,when 節
+E2-030,2,If you study hard you will pass the exam.,SVO,if 節（文頭）
+E2-031,2,Although he was tired he kept working.,SVO,although 節
+E2-032,2,She was happy because she won the game.,SVC,because 節
+E2-033,2,I think he is a good player.,SVO,that 省略
+E2-034,2,The boy running over there is my cousin.,SVC,分詞の後置修飾
+E2-035,2,He gave me a book written in English.,SVOO,分詞の後置修飾
+E2-036,2,It is important to help each other.,SVC,形式主語 it
+E2-037,2,She asked me to open the window.,SVOC,ask O to do
+E2-038,2,My parents let me go abroad.,SVOC,使役 let
+E2-039,2,I saw him cross the street.,SVOC,知覚動詞
+E2-040,2,He has been studying since morning.,SV,現在完了進行形
+E2-041,2,The news that he told me was surprising.,SVC,関係代名詞 that
+E2-042,2,We can see many stars at night.,SVO,助動詞＋SVO
+E2-043,2,She looked after the children.,SVO,句動詞（他動詞扱い）
+E2-044,2,I was given a chance.,SVO,受動態（SVOO の受動）
+E2-045,2,He made me a cup of tea.,SVOO,make A B
+E2-046,2,The question seemed difficult to me.,SVC,seem＋形容詞
+E2-047,2,She found it hard to say no.,SVOC,形式目的語 it
+E2-048,2,They have decided to move to Tokyo.,SVO,現在完了＋不定詞
+E2-049,2,There were many people in the hall.,SV,There were 構文
+E2-050,2,What do you want to eat?,SVO,wh 疑問文
